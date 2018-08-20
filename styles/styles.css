@@ -1,0 +1,122 @@
+.links line {
+  stroke: #ff0;
+  stroke-opacity: 1.0;
+}
+
+.nodes circle {
+  stroke: #fff;
+  stroke-width: 1.5px;
+}
+
+.centered {
+	margin: auto;
+}
+
+.small-white-text {
+	color: #dddddd;
+	font-size: 8pt;
+}
+
+
+.pianoContainer {
+	width: 500px;
+	height: 360px;
+	background: #203720;
+	align-content: center;
+	border-right: 3px solid #405740;
+	border-bottom: 3px solid #405740;
+	border-radius: 0px 0px 4px 4px;
+}
+
+.pianoContainerTop {
+	width: 100%;
+	height: 70px;
+	background: #304f30;
+	border-right: 3px solid #506f50;
+	border-bottom: 3px solid #506f50;
+	border-radius: 0px 0px 4px 4px;
+}
+
+.pianoTable {
+	background: #102710; /* darkness between keys */
+	border-spacing: 2px 0px;
+}
+
+
+/* White keys are divided into upper and lower sections */
+.pianoWhite[highlight=false] {
+	background: #cccccc;
+}
+
+.pianoWhite[highlight=true] {
+	background: #3355ee;
+}
+
+.pianoWhite.pianoBot {
+	border-right: 3px solid #eeeeee;
+	border-bottom: 3px solid #eeeeee;
+	border-radius: 0px 0px 5px 5px;
+}
+.pianoWhite.pianoBot[highlight=true] {
+	border-right: 3px solid #5375ff;
+	border-bottom: 3px solid #5375ff;
+}
+.pianoWhite.pianoTopSmall,
+.pianoWhite.pianoTopExtraSmall {
+	border-right: 3px solid #eeeeee;
+	border-radius: 3px 3px 0px 0px;
+}
+.pianoWhite.pianoTopSmall[highlight=true],
+.pianoWhite.pianoTopExtraSmall[highlight=true] {
+	border-right: 3px solid #5375ff;
+}
+
+.pianoBlack {
+	background: #202020;
+	border-right: 3px solid #484848;
+	border-bottom: 3px solid #484848;
+	border-radius: 3px 3px 5px 5px;
+}
+.pianoBlack[highlight=true] {
+	background: #3355ee;
+	border-right: 3px solid #5375ff;
+	border-bottom: 3px solid #5375ff;
+}
+
+/*
+5*40 + 3(s+3) + 4(x+3) = 7(b+3)
+194 + 3s + 4x = 7b
+7b - (3s + 4x) = 194
+*/
+
+
+/*
+3s + 2m = 3b
+4s + 3m = 4b */
+.pianoTopSmall {
+	padding: 0 !important;
+	margin: 0 !important;
+	width: 30px !important;
+	height: 160px !important;
+}
+
+.pianoTopExtraSmall {
+	padding: 0 !important;
+	margin: 0 !important;
+	width: 26px !important;
+	height: 160px !important;
+}
+
+.pianoTopMed {
+	padding: 0 !important;
+	margin: 0 !important;
+	width: 36px !important;
+	height: 157px !important;
+}
+
+.pianoBot {
+	padding: 0 !important;
+	margin: 0 !important;
+	width: 57px !important;
+	height: 107px !important;
+}

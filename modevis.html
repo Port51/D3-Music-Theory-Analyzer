@@ -17,7 +17,6 @@
 
 		<!--<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@0.12.5" integrity="sha384-E/+1ci0VPB8A5v/ouQWJMlsC63Nu+e/Dsp3KT27K5h1HrvCXvsfiXQKVwg9/cnjA" crossorigin="anonymous"></script>-->
 
-
 		<script src="scripts/tempData.js"></script>
 		<script src="scripts/factorRoot.js"></script>
 		<script src="scripts/simpleCompromise.js"></script>
@@ -25,122 +24,7 @@
 		<script src="scripts/scores.js"></script>
 		<script src="scripts/modevis.js"></script>
 
-<style type="text/css">
-.links line {
-  stroke: #ff0;
-  stroke-opacity: 1.0;
-}
-
-.nodes circle {
-  stroke: #fff;
-  stroke-width: 1.5px;
-}
-
-.centered {
-	margin: auto;
-}
-
-
-.pianoContainer {
-	width: 500px;
-	height: 360px;
-	background: #203720;
-	align-content: center;
-	border-right: 3px solid #405740;
-	border-bottom: 3px solid #405740;
-}
-
-.pianoTable {
-	background: #102710; /* darkness between keys */
-	border-spacing: 2px 0px;
-}
-
-.pianoTop {
-	width: 100%;
-	height: 70px;
-	background: #304f30;
-	border-right: 3px solid #506f50;
-	border-bottom: 3px solid #506f50;
-}
-
-
-
-.pianoWhite[highlight=false] {
-	background: #cccccc;
-}
-
-.pianoWhite[highlight=true] {
-	background: #3355ee;
-}
-
-.pianoWhite.pianoBot[highlight=false] {
-	border-right: 3px solid #eeeeee;
-	border-bottom: 3px solid #eeeeee;
-}
-.pianoWhite.pianoBot[highlight=true] {
-	border-right: 3px solid #5375ff;
-	border-bottom: 3px solid #5375ff;
-}
-.pianoWhite.pianoTopSmall[highlight=false],
-.pianoWhite.pianoTopExtraSmall[highlight=false] {
-	border-right: 3px solid #eeeeee;
-}
-.pianoWhite.pianoTopSmall[highlight=true],
-.pianoWhite.pianoTopExtraSmall[highlight=true] {
-	border-right: 3px solid #5375ff;
-}
-
-.pianoBlack[highlight=false] {
-	background: #202020;
-	border-right: 3px solid #484848;
-	border-bottom: 3px solid #484848;
-}
-
-.pianoBlack[highlight=true] {
-	background: #3355ee;
-	border-right: 3px solid #5375ff;
-	border-bottom: 3px solid #5375ff;
-}
-
-/*
-5*40 + 3(s+3) + 4(x+3) = 7(b+3)
-194 + 3s + 4x = 7b
-7b - (3s + 4x) = 194
-*/
-
-
-/*
-3s + 2m = 3b
-4s + 3m = 4b */
-.pianoTopSmall {
-	padding: 0 !important;
-	margin: 0 !important;
-	width: 30px !important;
-	height: 160px !important;
-}
-
-.pianoTopExtraSmall {
-	padding: 0 !important;
-	margin: 0 !important;
-	width: 26px !important;
-	height: 160px !important;
-}
-
-.pianoTopMed {
-	padding: 0 !important;
-	margin: 0 !important;
-	width: 36px !important;
-	height: 157px !important;
-}
-
-.pianoBot {
-	padding: 0 !important;
-	margin: 0 !important;
-	width: 57px !important;
-	height: 107px !important;
-}
-
-</style>
+		<link rel="stylesheet" type="text/css" href="styles/styles.css">
 		
 	</head>
 
@@ -178,8 +62,8 @@
 	</td><td>
 	<div class="pianoContainer">
 		<div class="centered">
-			<div class="pianoTop">
-				<div class="centered" style="color: #dddddd; font-size: 8pt">This piano was designed by a professional piano-designer and is on sale for the low price of $30,000</div>
+			<div class="pianoContainerTop">
+				<div class="centered small-white-text">This piano was designed by a professional piano-designer and is on sale for the low price of $30,000</div>
 			</div>
 			<table class="centered pianoTable">
 				<tr>
