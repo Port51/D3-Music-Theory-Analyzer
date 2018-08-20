@@ -1,0 +1,274 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"bucket",
+				"bucketItem"
+			],
+			[
+				"fCount",
+				"fCountTotal"
+			],
+			[
+				"bit",
+				"bittersweet"
+			],
+			[
+				"data",
+				"datasetID"
+			],
+			[
+				"click",
+				"clickKey"
+			],
+			[
+				"wFactor",
+				"wFactorNoteSimilarity"
+			],
+			[
+				"wFa",
+				"wFactorIntervalCount"
+			],
+			[
+				"trait",
+				"traitCurve"
+			],
+			[
+				"add",
+				"add_op"
+			],
+			[
+				"file",
+				"file_name"
+			],
+			[
+				"copy",
+				"copy_to_root"
+			],
+			[
+				"path",
+				"path_item"
+			],
+			[
+				"imgInfo",
+				"imgRawInfo"
+			],
+			[
+				"butt",
+				"buttonCount"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 0.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/G/_PROJECTS/D3-Music-Theory-Analyzer"
+	],
+	"file_history":
+	[
+		"/G/Prog1/modevis/modevis.html",
+		"/G/Prog1/tensor/simplerun/1_sess/ex5.py",
+		"/G/Prog1/tensor/simplerun/1_sess/play2.py",
+		"/G/Prog1/tensor/simplerun/1_sess/play1.py",
+		"/G/Prog1/tensor/simplerun/0_setup/test.py",
+		"/G/Prog1/Util/BackupMusic.py",
+		"/G/_PERSONAL/NoteDepository/Music/SONG TITLES.txt",
+		"/G/_PERSONAL/NoteDepository/Music/GREAT INSTRUMENTS",
+		"/G/_PERSONAL/NoteDepository/Security/accs.txt",
+		"/G/_PERSONAL/NoteDepository/Reddit/nfp",
+		"/G/_PERSONAL/NoteDepository/SI_Reduce/SI_Reduce.txt",
+		"/G/_PERSONAL/NoteDepository/Reddit/da3209",
+		"/G/_PERSONAL/NoteDepository/Music/TRACK MUSIC PIECES.tx",
+		"/G/_PERSONAL/NoteDepository/SI_Reduce/BRAINSTORM VERY REDUCED VERSION",
+		"/G/_PERSONAL/NoteDepository/Game_Ideas/snowboardgame.txt",
+		"/G/_PERSONAL/NoteDepository/Music/Albums/06_Chimes",
+		"/G/_PERSONAL/NoteDepository/Music/Albums/05_Trio",
+		"/G/_PERSONAL/NoteDepository/Music/VST to consider.txt",
+		"/G/_PERSONAL/NoteDepository/IdentitySup/idSupTodo.txt",
+		"/G/_PERSONAL/NoteDepository/Security/securityLog.txt",
+		"/G/_PERSONAL/NoteDepository/Music/Albums/07_Waltzes",
+		"/G/_PERSONAL/NoteDepository/TODO_Lists/todoCarpetBreak",
+		"/G/_PERSONAL/NoteDepository/Music/TRACK MAIN",
+		"/G/_PERSONAL/NoteDepository/Music/ALL STAR INSTRUMENTS",
+		"/G/_PERSONAL/NoteDepository/Game_Ideas/depositoryOfIdeas",
+		"/G/_PERSONAL/NoteDepository/Reddit/security",
+		"/G/_PERSONAL/NoteDepository/TODO_Lists/todoBackAtMoffitt",
+		"/C/Sandbox/MainCentral/DefaultBox/RegHive",
+		"/G/Unity_Medical/TumorVis1/TumorVis1/Assets/Scripts/ImageAnalysis/ImageWindow.js",
+		"/G/_PERSONAL/NoteDepository/Music/MODES and SCALES.txt",
+		"/G/_PERSONAL/NoteDepository/MedProjects/3dVis.txt",
+		"/G/Unity_Medical/TumorVis1/TumorVis1/Assets/Scripts/packSimpleMenu/SimpleMenu.js",
+		"/G/_PERSONAL/NoteDepository/Music/MUSIC PIECE IDEAS.txt",
+		"/G/_PERSONAL/NoteDepository/NoteDepository.sublime-project",
+		"/G/Unity_Medical/TumorVis1/TumorVis1/Assets/Scripts/ImageAnalysis/sImageProcess.js",
+		"/G/Unity_Medical/TumorVis1/TumorVis1/Assets/Scripts/MeshGeneral/ApplyMesh.js",
+		"/G/Unity_Medical/TumorVis1/TumorVis1/Assets/Scripts/MeshGeneral/MeshData.js",
+		"/G/Unity_Medical/TumorVis1/TumorVis1/Assets/Scripts/MeshVoxel/ImgToVoxels.js",
+		"/G/Unity_Medical/TumorVis1/TumorVis1/Assets/Scripts/tumor1.shader",
+		"/G/Unity_Medical/TumorVis1/TumorVis1/Assets/Scripts/ImageAnalysis/ImageCore.js",
+		"/G/Unity_Medical/TumorVis1/TumorVis1/Assets/Scripts/GUI_Handle.js",
+		"/G/Unity_Medical/TumorVis1/TumorVis1/Sublime_TumorVis1.sublime-project",
+		"/G/Unity_Medical/TumorVis1/TumorVis1/Assets/Scripts/packStaticGUI/sGUI.js",
+		"/G/Unity_Medical/TumorVis1/TumorVis1/Assets/Scripts/SimpleMenu.js",
+		"/G/Unity_Medical/TumorVis1/TumorVis1/Assets/Scripts/CamMove.js",
+		"/G/Unity_Medical/TumorVis1/TumorVis1/Assets/Scripts/KeyboardInput.js",
+		"/G/Unity_Medical/TumorVis1/TumorVis1/Assets/Scripts/Links.js",
+		"/G/Unity_Medical/TumorVis1/TumorVis1/Assets/Scripts/sGUI.js",
+		"/G/Unity_Medical/TumorVis1/TumorVis1/Assets/Scripts/Theme.js",
+		"/G/Unity_Medical/TumorVis1/output/WebGL_Tests/2018_7_9 test web player/index.html"
+	],
+	"find":
+	{
+		"height": 25.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 25.0
+	},
+	"input":
+	{
+		"height": 39.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "D3-Music-Theory-Analyzer.sublime-project",
+	"replace":
+	{
+		"height": 46.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 215.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

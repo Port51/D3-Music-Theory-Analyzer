@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="description" content="">
+		<meta name="author" content="">
+		
+		<!-- Load TensorFlow.js -->
+		<!-- Load TensorFlow.js -->
+		<!--<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@0.12.5"> </script>-->
+
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<script src="https://d3js.org/d3.v4.min.js"></script>
+		<script src="http://marvl.infotech.monash.edu/webcola/cola.min.js"></script>
+
+		<!--<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@0.12.5" integrity="sha384-E/+1ci0VPB8A5v/ouQWJMlsC63Nu+e/Dsp3KT27K5h1HrvCXvsfiXQKVwg9/cnjA" crossorigin="anonymous"></script>-->
+
+
+		<script src="scripts/tempData.js"></script>
+		<script src="scripts/factorRoot.js"></script>
+		<script src="scripts/simpleCompromise.js"></script>
+		<script src="scripts/mood.js"></script>
+		<script src="scripts/scores.js"></script>
+		<script src="scripts/modevis.js"></script>
+
+<style type="text/css">
+.links line {
+  stroke: #ff0;
+  stroke-opacity: 1.0;
+}
+
+.nodes circle {
+  stroke: #fff;
+  stroke-width: 1.5px;
+}
+
+.centered {
+	margin: auto;
+}
+
+
+.pianoContainer {
+	width: 500px;
+	height: 360px;
+	background: #203720;
+	align-content: center;
+	border-right: 3px solid #405740;
+	border-bottom: 3px solid #405740;
+}
+
+.pianoTable {
+	background: #102710; /* darkness between keys */
+	border-spacing: 2px 0px;
+}
+
+.pianoTop {
+	width: 100%;
+	height: 70px;
+	background: #304f30;
+	border-right: 3px solid #506f50;
+	border-bottom: 3px solid #506f50;
+}
+
+
+
+.pianoWhite[highlight=false] {
+	background: #cccccc;
+}
+
+.pianoWhite[highlight=true] {
+	background: #3355ee;
+}
+
+.pianoWhite.pianoBot[highlight=false] {
+	border-right: 3px solid #eeeeee;
+	border-bottom: 3px solid #eeeeee;
+}
+.pianoWhite.pianoBot[highlight=true] {
+	border-right: 3px solid #5375ff;
+	border-bottom: 3px solid #5375ff;
+}
+.pianoWhite.pianoTopSmall[highlight=false],
+.pianoWhite.pianoTopExtraSmall[highlight=false] {
+	border-right: 3px solid #eeeeee;
+}
+.pianoWhite.pianoTopSmall[highlight=true],
+.pianoWhite.pianoTopExtraSmall[highlight=true] {
+	border-right: 3px solid #5375ff;
+}
+
+.pianoBlack[highlight=false] {
+	background: #202020;
+	border-right: 3px solid #484848;
+	border-bottom: 3px solid #484848;
+}
+
+.pianoBlack[highlight=true] {
+	background: #3355ee;
+	border-right: 3px solid #5375ff;
+	border-bottom: 3px solid #5375ff;
+}
+
+/*
+5*40 + 3(s+3) + 4(x+3) = 7(b+3)
+194 + 3s + 4x = 7b
+7b - (3s + 4x) = 194
+*/
+
+
+/*
+3s + 2m = 3b
+4s + 3m = 4b */
+.pianoTopSmall {
+	padding: 0 !important;
+	margin: 0 !important;
+	width: 30px !important;
+	height: 160px !important;
+}
+
+.pianoTopExtraSmall {
+	padding: 0 !important;
+	margin: 0 !important;
+	width: 26px !important;
+	height: 160px !important;
+}
+
+.pianoTopMed {
+	padding: 0 !important;
+	margin: 0 !important;
+	width: 36px !important;
+	height: 157px !important;
+}
+
+.pianoBot {
+	padding: 0 !important;
+	margin: 0 !important;
+	width: 57px !important;
+	height: 107px !important;
+}
+
+</style>
+		
+	</head>
+
+<body>
+
+<div>
+	<table><tr><td>
+	<div class="sliderContainer">
+		<table>
+			<tr>
+				<td><label>Dataset:</label></td>
+				<td><select id="datasetID">
+					<option value="0" selected="selected">Medieval Modes</option>
+					<option value="1">Lots of Modes</option>
+					<option value="2">Random Modes</option>
+				</select>
+			</td></tr>
+			<tr><td><label>Note Similarity</label></td><td><input id="noteSim" type="range" min="0" max="100" value="90" def="90" class="slider"></td></tr>
+			<tr><td><label>How bad is it to add notes?</label></td><td><input id="noteAdd" type="range" min="0" max="100" value="25" def="25" class="slider"></td></tr>
+			<tr><td><label>How bad is it to remove notes?</label></td><td><input id="noteRem" type="range" min="0" max="100" value="85" def="85" class="slider"></td></tr>
+			<tr><td><label>Root Inclusion Importance</label></td><td><input id="rootMissing" type="range" min="0" max="100" value="100" def="100" class="slider"></td></tr>
+			<tr><td><label>Root Offset Penalty</label></td><td><input id="rootOff" type="range" min="0" max="100" value="67" def="67" class="slider"></td></tr>
+			<tr><td><label>Mood Estimation</label></td><td><input id="moodEstim" type="range" min="0" max="100" value="100" def="100" class="slider"></td></tr>
+			<tr><td><label>Interval Counts</label></td><td><input id="iCount" type="range" min="0" max="100" value="25" def="25" class="slider"></td></tr>
+			<tr><td><label>Openness</label></td><td><input id="iOpen" type="range" min="0" max="100" value="25" def="25" class="slider"></td></tr>
+			<tr><td><label>Max Results</label></td><td><input id="filterResultMax" type="range" min="1" max="50" value="20" def="20" class="slider"></td></tr>slider"></td></tr>
+		</table>
+		<button id="setSlidersZero">Set to zero</button>
+		<button id="setSlidersMid">Set to mid</button>
+		<button id="setSlidersDefault">Set to default</button>
+		<button id="setSlidersFull">Set to full!</button>
+		<br />
+		<button id="runSim">Click here to run!</button>
+	</div>
+	</td><td>
+	<div class="pianoContainer">
+		<div class="centered">
+			<div class="pianoTop">
+				<div class="centered" style="color: #dddddd; font-size: 8pt">This piano was designed by a professional piano-designer and is on sale for the low price of $30,000</div>
+			</div>
+			<table class="centered pianoTable">
+				<tr>
+					<td value="0" class="pianoKey pianoWhite pianoTopSmall"  highlight="false"></td>
+					<td value="1" class="pianoKey pianoBlack pianoTopMed"  highlight="false"></td>
+					<td value="2" class="pianoKey pianoWhite pianoTopSmall"  highlight="false"></td>
+					<td value="3" class="pianoKey pianoBlack pianoTopMed"  highlight="false"></td>
+					<td value="4" class="pianoKey pianoWhite pianoTopSmall" style="width: 29px !important;" highlight="false"></td>
+					<td value="5" class="pianoKey pianoWhite pianoTopExtraSmall" style="width: 27px !important;" highlight="false"></td>
+					<td value="6" class="pianoKey pianoBlack pianoTopMed"  highlight="false"></td>
+					<td value="7" class="pianoKey pianoWhite pianoTopExtraSmall"  highlight="false"></td>
+					<td value="8" class="pianoKey pianoBlack pianoTopMed"  highlight="false"></td>
+					<td value="9" class="pianoKey pianoWhite pianoTopExtraSmall"  highlight="false"></td>
+					<td value="10" class="pianoKey pianoBlack pianoTopMed"  highlight="false"></td>
+					<td value="11" class="pianoKey pianoWhite pianoTopExtraSmall"  highlight="false"></td>
+				</tr>
+			</table>
+			<table class="centered pianoTable">
+				<tr>
+					<td value="0" class="pianoKey pianoWhite pianoBot"  highlight="false"></td>
+					<td value="2" class="pianoKey pianoWhite pianoBot"  highlight="false"></td>
+					<td value="4" class="pianoKey pianoWhite pianoBot"  highlight="false"></td>
+					<td value="5" class="pianoKey pianoWhite pianoBot"  highlight="false"></td>
+					<td value="7" class="pianoKey pianoWhite pianoBot"  highlight="false"></td>
+					<td value="9" class="pianoKey pianoWhite pianoBot"  highlight="false"></td>
+					<td value="11" class="pianoKey pianoWhite pianoBot"  highlight="false"></td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	</td></tr></table>
+	
+</div>
+<svg width="900" height="500"><rect width="100%" height="100%" fill="black"></rect></svg>
+
+<script>
+
+	// Shared data
+	var keySel =		[false, false, false, false, false, false, false, false, false, false, false];
+	var keySelVis =		[false, false, false, false, false, false, false, false, false, false, false];
+
+	// Create settings
+	var createSettings = () => {
+		// Get inputs
+		let noteSim = 0.75;
+
+		return {
+			datasetID:  				parseInt($("#datasetID").find(":selected").val()),
+			wFactorRootMissing: 		parseFloat($("#rootMissing").val() / 100),
+			wFactorNoteSimilarity: 		parseFloat($("#noteSim").val() / 100),
+			wFactorAdd: 				parseFloat($("#noteAdd").val() / 100),
+			wFactorRemove: 				parseFloat($("#noteRem").val() / 100),
+			wFactorRootOffset: 			parseFloat($("#rootOff").val() / 25),
+			wFactorMoodEstimation: 		parseFloat($("#moodEstim").val() / 100),
+			wFactorIntervalCount: 		parseFloat($("#iCount").val() / 100),
+			wFactorIntervalOpenness: 	parseFloat($("#iOpen").val() / 100),
+			filterResultMax: 			parseInt($("#filterResultMax").val()),
+		};
+	}
+
+	var clickKey = (event) => {
+		const note = event.data.note;
+		//alert("Key press id = " + note);
+		keySel[note] = !keySel[note];
+
+		setKeyColors();
+	}
+
+	// Update colors for keys that have changed
+	var setKeyColors = () => {
+		for (let i = 0; i < 12; ++i) {
+			if (keySelVis[i] != keySel[i]) {
+				let color = '';
+				if (keySel[i])
+					color = '#3355ee';
+				else if (i === 1 || i === 3 || i === 6 || i === 8 || i === 10)
+					color = '#222222';
+				else
+					color = '#cccccc';
+
+				// Change color
+				//$(".pianoKey[value=" + i + "]").css({'background': color});
+				if (keySel[i])
+					$(".pianoKey[value=" + i + "]").attr('highlight', 'true');
+				else
+					$(".pianoKey[value=" + i + "]").attr('highlight', 'false');
+
+				// Remember
+				keySelVis[i] = keySel[i];
+			}
+		}
+	}
+
+	var createUserMode = () => {
+		let mode = {};
+		mode.label = "- YOUR SCALE";
+		mode.isUser = true;
+		mode.key = 0;
+		mode.name = GetNoteName(mode.key) + ' ' + mode.label;
+		mode.n = [];
+		for (let i = 0; i < 12; ++i) {
+			mode.n.push(keySel[i]);
+		}
+		mode.c = mode.n;
+		return mode;
+	}
+
+	// Slider manip
+	var slidersZero = () => { $(".slider").val("0"); }
+	var slidersMid = () => { $(".slider").val("50"); $("#filterResultMax").val("20"); }
+	var slidersDefault = () => { $(".slider").each(function() { $(this).val($(this).attr('def')) }); }
+	var slidersFull = () => { $(".slider").val("100"); }
+
+	$(document).ready(() => {
+		$("#runSim").click(runSim);
+		$("#setSlidersZero").click(slidersZero);
+		$("#setSlidersMid").click(slidersMid);
+		$("#setSlidersDefault").click(slidersDefault);
+		$("#setSlidersFull").click(slidersFull);
+		$(".pianoKey").each(function() {
+			$(this).click({ note: parseInt($(this).attr('value')) }, clickKey);
+		});
+	});
+
+	var runSim = () => {
+		settings = createSettings();
+		exa = createUserMode();
+
+		useGraph = true;
+		if (!useGraph) {
+			// DEBUG: Just print results to console
+			runAnalysis(0.0, settings, exa);
+		}
+		else {
+			// DEBUG: Handle D3 graph
+			var svg = d3.select("svg");
+			svg.empty();
+			svg.selectAll("*").remove();
+
+			// Redraw background color
+			svg.append("rect").attr("x", "0").attr("y", "0").attr("width", "100%").attr("height", "100%").style("fill", "#000000")
+
+			//svg.attr('width', 900);
+			//svg.attr('height', 400);
+			var width = +svg.attr("width");
+			var height = +svg.attr("height");
+
+			var color = d3.scaleOrdinal(d3.schemeCategory20);
+
+			const results = runAnalysis(0.01, settings, exa);
+			const graph = convertAnalysisToGraph(results.modes, results.data, 2, 0.01, settings);
+
+			const edgeStrAdd = 0.00045;
+			const edgeStr = 0.00035;
+			const edgePow = 0.200;
+			const sepStr = 4000;
+			const edgeWiMin = 0.5;
+			const edgeWiMax = 30.0;
+			const edgeWiPow = 0.75;
+			var weightScale = d3.scaleLinear().domain(d3.extent(graph.links, function(d) { return Math.pow(d.weight, edgePow) * edgeStr })).range([.1, 1]);
+			var colScale = d3.scaleLinear()
+				.domain(d3.ticks(0, 100, 4))
+				.range(["#ff0000", "#8800ff", "#0000cc", "#00ff00"]);
+
+			var simulation = d3.forceSimulation()
+				.force("link", d3.forceLink().strength(function(d){return weightScale(Math.pow(d.weight, edgePow) * edgeStr + edgeStrAdd);}).id(function(d) {
+					return d.id;
+				}))
+				.force("charge", d3.forceManyBody().strength(-sepStr))
+				.force('x', d3.forceX(width * 0.5).strength(0.15))
+				.force('y', d3.forceY(height * 0.5).strength(0.15))
+				//.force("center", d3.forceCenter(width / 2, height / 2).strength(-1))
+				;
+
+			var link = svg.append("g")
+				.attr("class", "links")
+				.selectAll("line")
+				.data(graph.links)
+				.enter().append("line")
+				.attr("stroke-width", function(d) { return d.alpha * Math.pow(d.value, edgeWiPow) * (edgeWiMax - edgeWiMin) + edgeWiMin; })
+				.style("stroke", function(d) { return colScale(d.value * 100.0); })
+				.style("pointer-events", "none")
+				.style("stroke-opacity", function(d) { return d.alpha; });
+
+			var node = svg.append("g")
+				.attr("class", "nodes")
+				.selectAll("foo")
+				.data(graph.nodes)
+				.enter().append("g");
+
+			var circles = node.append("circle")
+				.attr("r", 30)
+				.attr("fill", function(d) { return color(d.group); })
+				.call(d3.drag()
+					.on("start", dragstarted)
+					.on("drag", dragged)
+					.on("end", dragended));
+
+			var labels = node.append("text")
+				.text(function(d) { return d.id; })
+				.attr("text-anchor", "middle")
+				.style("pointer-events", "none")
+				.style("fill", "#fff");
+
+			node.append("title")
+				.text(function(d) { return d.id; });
+
+			simulation
+				.nodes(graph.nodes)
+				.on("tick", ticked)
+				;
+
+			simulation.force("link")
+				.links(graph.links)
+				;
+
+			function ticked() {
+				link
+					.attr("x1", function(d) { return d.source.x; })
+					.attr("y1", function(d) { return d.source.y; })
+					.attr("x2", function(d) { return d.target.x; })
+					.attr("y2", function(d) { return d.target.y; });
+
+				node
+					.attr("transform", function(d) { return "translate(" +
+						Math.max(20, Math.min(width - 20, d.x)) + "," +
+						Math.max(20, Math.min(height - 20, d.y)) + ")"; })
+			}
+			
+
+			function dragstarted(d) {
+				if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+				d.fx = d.x;
+				d.fy = d.y;
+			}
+
+			function dragged(d) {
+				d.fx = d3.event.x;
+				d.fy = d3.event.y;
+			}
+
+			function dragended(d) {
+				if (!d3.event.active) simulation.alphaTarget(0);
+				d.fx = null;
+				d.fy = null;
+			}
+		} // end useGraph
+	} // end runSim
+
+</script>
+
+</body>
+</html>

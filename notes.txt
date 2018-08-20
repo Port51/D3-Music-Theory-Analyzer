@@ -1,0 +1,62 @@
+NOTES
+
+Methods:
+
+	COMPARE! (let M = # of modes stored)
+*	Stores modes in array of booleans
+*	Compares via score function
+*	Massive penalty if root not included from either side
+	O(12M)
+
+	Output nodes, modes w/ keys
+	Let N = # of nodes <= 12M
+
+*	Compare each node to each other
+	O(0.5 * N^2)
+
+	Entire complexity = O(72M^2 + 12M)
+
+	GRAPH!
+	Create force directed graph with findings
+	Special attention to mystery mode
+
+	
+
+COOL STUFF:
+-	Special FX when press note button...
+	-	Have note name fade out or something...
+	-	Piano key vibrates
+
+INPUT IDEA:
+	* Allow multiple scale inputs
+	* Start graph with them, and similarity edge between them
+
+INPUT:
+	* Better to add or take away notes? (balance)
+
+INPUT:
+	* Soft Parameters / Extreme Parameters - makes EVERY score value raised to certain power
+	* Put this at the end
+	* Labels: "Be forgiving" and "Stick to parameters"
+
+CLUSTERING IDEA:
+	INPUT: graphDepth
+
+	* Get entire network
+	* Get list of interesting connections to user scale
+	* Identical modes => network (not clustered)
+	* Reduce to clusters based on:
+		- Close scores to user scale
+		- Close scores to each other
+	* Clusters => network
+	* Edges between clusters => network
+		Cutoff: (1 / graphDepth)
+	* Modes connected to clusters => network (duplicate each, so not a mess of connections?????)
+		Cutoff: (2 / graphDepth)
+		Connect to each other too. Not to user scale
+	* Modes connected to those...
+		Cutoff: (3 / graphDepth)
+		Connect to each other too. Not to user scale
+
+
+

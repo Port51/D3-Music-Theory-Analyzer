@@ -1,0 +1,137 @@
+// GROUP: Classical
+//							 C D EF G A B
+Ionian						[# # ## # # #]
+Dorian						[# ## # # ## ]
+Phrygian					[## # # ## # ]
+Lydian						[# # # ## # #]
+//							 C D EF G A B
+Mixolydian					[# # ## # ## ]
+Aeolian						[# ## # ## # ]
+Locrian						[## # ## # # ]
+
+// GROUP: Modified Classical
+//							 C D EF G A B
+Harmonic Minor				[# ## # ##  #]
+Melodic Minor				[# ## # # # #]
+Harmonic Major				[# # ## ##  #]
+
+// GROUP: Ones I made up (do they correspond with other modes??)
+//							 C D EF G A B
+Dorian #4					[# ##  ## ## ]
+
+// GROUP: Unique, need special settings
+//							 C D EF G A B
+Whole Tone Scale			[# # # # # # ]
+Chromatic					[############]
+
+// GROUP: From Rick Beato
+//							 C D EF G A B
+Lydian #9					[#  ## ## # #]
+Double Harmonic Major		[##  ## ##  #]
+
+// GROUP: Can't remember where from
+//							 C D EF G A B
+Scriabin					[# # # #  ## ]
+Mystic Minor				[## # # # ## ]
+//							 C D EF G A B
+
+// GROUP: From Wikipedia
+//							 C D EF G A B
+Altered Scale				[## ## # # # ]
+Blues						[# ## ###  # ]
+Enigmatic					[##  # # # ##]
+Flamenco					[##  ## ##  #]
+//							 C D EF G A B
+Gypsy						[# ##  ### # ]
+Half Diminished				[# ##  # # # ]
+Hirajoshi					[#   # ##   #]
+Hungarian Minor				[# ##  ###  #]
+//							 C D EF G A B
+In Scale					[##   # ##  #]
+Insen Scale					[##   # #  # ]
+Istrian						[## ## #   # ]
+Iwato						[##   ##   # ]
+//							 C D EF G A B
+Lydian Augmented			[# # # # ## #]
+Major Bebop					[# # ## ### #]
+Major Locrian (Arabian)		[# # ### # # ]
+Major Pentatonic			[# # #  # #  ]
+Chinese						[# # #  # #  ]
+//							 C D EF G A B
+Minor Pentatonic			[#  # # #  # ]
+Neapolitan Major			[## # # # # #]
+Neapolitan Minor			[## # # ##  #]
+Pelog (approx)				[## #  ### # ]
+//							 C D EF G A B
+Persian						[##  ### #  #]
+Pfluke Scale				[# ##  ## # #]
+Phrigian Dominant			[##  ## ## # ]
+Prometheus					[# # # #  ## ]
+//							 C D EF G A B
+Tritone Scale				[##  # ##  # ]
+Urkainian Dorian			[# ##  ## ## ]
+Yo Scale					[#  # # #  # ]
+Acoustic					[# # # ## ## ]
+Bebop Dominant				[# # ## # ###]
+//							 C D EF G A B
+
+// GROUP: From Andrulian Blog
+//							 C D EF G A B
+New Pentatonic				[# # # #  #  ]
+Pentatonic (Japan)			[##   # ##   ]
+Pentatonic (Balinese)		[##   ## #   ]
+Pentatonic (Pelog)			[## #   #  # ]
+//							 C D EF G A B
+Hemitonic Pentatonic 3		[# ##   #   #]
+Pentatonic Variation		[#   #  # ## ]
+Harmonic Minor Dom 7th		[#  #   #   #]
+Melodic Minor Dom 7th		[#  # #   #  ]
+//							 C D EF G A B
+Esoteric 6th				[  #  #   # #]
+Augmented					[#  ##  ##  #]
+Diminished					[# ## ## ## #]
+Gypsy (Byzantine)			[##  ## ##  #]
+//							 C D EF G A B
+Spanish (8 tone)			[## #### # # ]
+Hungarian Gypsy				[# ##  ### # ]
+Native American				[# # # #  # #]
+//							 C D EF G A B
+
+// GROUP: From LotusMusic.com
+//							 C D EF G A B
+Hungarian Folk				[##  #  ##  #]
+Leading Tone				[# # # # # ##]
+Overtone					[# # # ### # ]
+//							 C D EF G A B
+Hindu						[# # ## ## # ]
+Spanish Gypsy				[##  ## ## # ]
+Arabian						[# # ### # # ]
+Oriental					[##  ###  ## ]
+//							 C D EF G A B
+Gypsy Minor					[# ##  ### # ]
+Javanese					[## # # # ## ]
+Scottish					[# #  # # #  ]
+Kumoi						[##   # ##   ]
+//							 C D EF G A B
+Egyptian					[# #  # #  # ]
+Yo							[#  # # #  # ]
+Hirojoshi					[# ##   ##   ]
+Balinese					[## #   ##   ]
+//							 C D EF G A B
+Mongolian					[# # #  # #  ]
+Ryo							[# # #  # #  ]
+Mystic						[# # # #  ## ]
+Bebop Dorian				[# ## # # ###]
+//							 C D EF G A B
+
+// TESTING: CHORDPAIRS
+//							 C D EF G A B
+Antagonism					[## #  ## #  ]
+Vader Theme					[#  #   ##  #]
+
+
+
+
+
+
+
