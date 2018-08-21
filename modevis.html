@@ -30,74 +30,26 @@
 
 <body>
 
-<div>
-	<table><tr><td>
-	<div class="sliderContainer">
-		<table>
-			<tr>
-				<td><label>Dataset:</label></td>
-				<td><select id="datasetID">
-					<option value="0" selected="selected">Medieval Modes</option>
-					<option value="1">Lots of Modes</option>
-					<option value="2">Random Modes</option>
-				</select>
-			</td></tr>
-			<tr><td><label>Note Similarity</label></td><td><input id="noteSim" type="range" min="0" max="100" value="90" def="90" class="slider"></td></tr>
-			<tr><td><label>How bad is it to add notes?</label></td><td><input id="noteAdd" type="range" min="0" max="100" value="25" def="25" class="slider"></td></tr>
-			<tr><td><label>How bad is it to remove notes?</label></td><td><input id="noteRem" type="range" min="0" max="100" value="85" def="85" class="slider"></td></tr>
-			<tr><td><label>Root Inclusion Importance</label></td><td><input id="rootMissing" type="range" min="0" max="100" value="100" def="100" class="slider"></td></tr>
-			<tr><td><label>Root Offset Penalty</label></td><td><input id="rootOff" type="range" min="0" max="100" value="67" def="67" class="slider"></td></tr>
-			<tr><td><label>Mood Estimation</label></td><td><input id="moodEstim" type="range" min="0" max="100" value="100" def="100" class="slider"></td></tr>
-			<tr><td><label>Interval Counts</label></td><td><input id="iCount" type="range" min="0" max="100" value="25" def="25" class="slider"></td></tr>
-			<tr><td><label>Openness</label></td><td><input id="iOpen" type="range" min="0" max="100" value="25" def="25" class="slider"></td></tr>
-			<tr><td><label>Max Results</label></td><td><input id="filterResultMax" type="range" min="1" max="50" value="20" def="20" class="slider"></td></tr>
-		</table>
-		<button id="setSlidersZero">Set to zero</button>
-		<button id="setSlidersMid">Set to mid</button>
-		<button id="setSlidersDefault">Set to default</button>
-		<button id="setSlidersFull">Set to full!</button>
-		<br />
-		<button id="runSim">Click here to run!</button>
+	<div>
+		<table><tr><td>
+			<span class="loadTemplate" value="templates/inputSimilarity.html"></span>
+			<br />
+			<button id="runSim">Click here to run!</button>
+		</td><td>
+			<span class="loadTemplate" value="templates/largePiano.html"></span>
+		</td></tr></table>
+		
 	</div>
-	</td><td>
-	<div class="pianoContainer">
-		<div class="centered">
-			<div class="pianoContainerTop">
-				<div class="centered small-white-text">This piano was designed by a professional piano-designer and is on sale for the low price of $30,000</div>
-			</div>
-			<table class="centered pianoTable">
-				<tr>
-					<td value="0" class="pianoKey pianoWhite pianoTopSmall"  highlight="false"></td>
-					<td value="1" class="pianoKey pianoBlack pianoTopMed"  highlight="false"></td>
-					<td value="2" class="pianoKey pianoWhite pianoTopSmall"  highlight="false"></td>
-					<td value="3" class="pianoKey pianoBlack pianoTopMed"  highlight="false"></td>
-					<td value="4" class="pianoKey pianoWhite pianoTopSmall" style="width: 29px !important;" highlight="false"></td>
-					<td value="5" class="pianoKey pianoWhite pianoTopExtraSmall" style="width: 27px !important;" highlight="false"></td>
-					<td value="6" class="pianoKey pianoBlack pianoTopMed"  highlight="false"></td>
-					<td value="7" class="pianoKey pianoWhite pianoTopExtraSmall"  highlight="false"></td>
-					<td value="8" class="pianoKey pianoBlack pianoTopMed"  highlight="false"></td>
-					<td value="9" class="pianoKey pianoWhite pianoTopExtraSmall"  highlight="false"></td>
-					<td value="10" class="pianoKey pianoBlack pianoTopMed"  highlight="false"></td>
-					<td value="11" class="pianoKey pianoWhite pianoTopExtraSmall"  highlight="false"></td>
-				</tr>
-			</table>
-			<table class="centered pianoTable">
-				<tr>
-					<td value="0" class="pianoKey pianoWhite pianoBot"  highlight="false"></td>
-					<td value="2" class="pianoKey pianoWhite pianoBot"  highlight="false"></td>
-					<td value="4" class="pianoKey pianoWhite pianoBot"  highlight="false"></td>
-					<td value="5" class="pianoKey pianoWhite pianoBot"  highlight="false"></td>
-					<td value="7" class="pianoKey pianoWhite pianoBot"  highlight="false"></td>
-					<td value="9" class="pianoKey pianoWhite pianoBot"  highlight="false"></td>
-					<td value="11" class="pianoKey pianoWhite pianoBot"  highlight="false"></td>
-				</tr>
-			</table>
-		</div>
-	</div>
-	</td></tr></table>
-	
-</div>
-<svg width="900" height="500"><rect width="100%" height="100%" fill="black"></rect></svg>
+	<svg width="900" height="500"><rect width="100%" height="100%" fill="black"></rect></svg>
+
+<script>
+	// Load HTML templates
+	$(function() {
+		$(".loadTemplate").each(function(){
+			$(this).load($(this).attr('value'));
+		});
+	});
+</script>
 
 <script>
 
