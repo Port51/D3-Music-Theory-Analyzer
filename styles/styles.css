@@ -83,6 +83,24 @@
 	border-bottom: 3px solid #5375ff;
 }
 
+.jitterKey {
+	position: relative;
+	left: 0px;
+	top: 0px;
+	animation-name: jitterTheKey;
+	animation-duration: 0.34s;
+	animation-iteration-count: 2;
+}
+
+@keyframes jitterTheKey {
+	0% { left: 0px; top 0px; }
+	15% { left: 3px; top -3px; }
+	33% { left: -3px; top -5px; }
+	66% { left: 3px; top 2px; }
+	85% { left: -3px; top 6px; }
+	100% { left: 0px; top 0px; }
+}
+
 /*
 5*40 + 3(s+3) + 4(x+3) = 7(b+3)
 194 + 3s + 4x = 7b
@@ -96,27 +114,27 @@
 .pianoTopSmall {
 	padding: 0 !important;
 	margin: 0 !important;
-	width: 30px !important;
+	width: 30px;
 	height: 160px !important;
 }
 
 .pianoTopExtraSmall {
 	padding: 0 !important;
 	margin: 0 !important;
-	width: 26px !important;
+	width: 26px;
 	height: 160px !important;
 }
 
 .pianoTopMed {
 	padding: 0 !important;
 	margin: 0 !important;
-	width: 36px !important;
+	width: 36px;
 	height: 157px !important;
 }
 
 .pianoBot {
 	padding: 0 !important;
 	margin: 0 !important;
-	width: 57px !important;
+	width: 57px;
 	height: 107px !important;
 }

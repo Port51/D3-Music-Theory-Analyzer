@@ -84,6 +84,13 @@
 		setKeyColors();
 	}
 
+	var resetAnimation = (elem, animName) => {
+		elem.each(function() {
+			$(this).removeClass(animName).width($(this).width()).addClass(animName);
+		});
+		
+	}
+
 	// Update colors for keys that have changed
 	var setKeyColors = () => {
 		for (let i = 0; i < 12; ++i) {
@@ -98,8 +105,11 @@
 
 				// Change color
 				//$(".pianoKey[value=" + i + "]").css({'background': color});
-				if (keySel[i])
+				if (keySel[i]) {
 					$(".pianoKey[value=" + i + "]").attr('highlight', 'true');
+					// Trigger animation
+					resetAnimation($('.pianoKey[value="' + i + '"]'), "jitterKey");
+				}
 				else
 					$(".pianoKey[value=" + i + "]").attr('highlight', 'false');
 
