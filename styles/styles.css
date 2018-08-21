@@ -1,11 +1,15 @@
+.centerContents {
+	text-align: center;
+}
+
 .links line {
-  stroke: #ff0;
-  stroke-opacity: 1.0;
+	stroke: #ff0;
+	stroke-opacity: 1.0;
 }
 
 .nodes circle {
-  stroke: #fff;
-  stroke-width: 1.5px;
+	stroke: #fff;
+	stroke-width: 1.5px;
 }
 
 .centered {
@@ -42,6 +46,13 @@
 	border-spacing: 2px 0px;
 }
 
+.rootCircle {
+	height: 20px;
+	width: 20px;
+	background: #ffff00;
+	border-radius: 50%;
+	display: inline-block;
+}
 
 /* White keys are divided into upper and lower sections */
 .pianoWhite[highlight=false] {

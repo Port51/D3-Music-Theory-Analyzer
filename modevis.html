@@ -46,7 +46,11 @@
 	// Load HTML templates
 	$(function() {
 		$(".loadTemplate").each(function(){
-			$(this).load($(this).attr('value'));
+			$(this).load($(this).attr('value'), function() {
+				// Call some functions right after loading
+				setRootSelectColors();
+			});
+			
 		});
 	});
 </script>
@@ -54,6 +58,7 @@
 <script>
 
 	// Shared data
+	var rootSel = 0; // key of C
 	var keySel =		[false, false, false, false, false, false, false, false, false, false, false];
 	var keySelVis =		[false, false, false, false, false, false, false, false, false, false, false];
 
@@ -76,6 +81,13 @@
 		};
 	}
 
+	var clickRootSelect = (event) => {
+		const note = event.data.note;
+		rootSel = note;
+
+		setRootSelectColors();
+	}
+
 	var clickKey = (event) => {
 		const note = event.data.note;
 		//alert("Key press id = " + note);
@@ -89,6 +101,20 @@
 			$(this).removeClass(animName).width($(this).width()).addClass(animName);
 		});
 		
+	}
+
+	// Update colors for root selection
+	var setRootSelectColors = () => {
+
+		for (let i = 0; i < 12; ++i) {
+			let color = '';
+			if (rootSel == i) {
+				color = "#ffff00";
+			} else {
+				color = "#444400";
+			}
+			$('.rootSelect[value="' + i + '"]').find("span").css("background", color);
+		}
 	}
 
 	// Update colors for keys that have changed
@@ -123,7 +149,7 @@
 		let mode = {};
 		mode.label = "- YOUR SCALE";
 		mode.isUser = true;
-		mode.key = 0;
+		mode.key = rootSel;
 		mode.name = GetNoteName(mode.key) + ' ' + mode.label;
 		mode.n = [];
 		for (let i = 0; i < 12; ++i) {
@@ -147,6 +173,9 @@
 		$("#setSlidersFull").click(slidersFull);
 		$(".pianoKey").each(function() {
 			$(this).click({ note: parseInt($(this).attr('value')) }, clickKey);
+		});
+		$(".rootSelect").each(function() {
+			$(this).click({ note: parseInt($(this).attr('value')) }, clickRootSelect);
 		});
 	});
 
