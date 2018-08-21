@@ -63,6 +63,33 @@
 	},
 	"buffers":
 	[
+		{
+			"file": "modevis.html",
+			"settings":
+			{
+				"buffer_size": 11843,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "scripts/modevis.js",
+			"settings":
+			{
+				"buffer_size": 17442,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "styles/styles.css",
+			"settings":
+			{
+				"buffer_size": 2186,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		}
 	],
 	"build_system": "",
 	"build_system_choices":
@@ -96,10 +123,13 @@
 	},
 	"expanded_folders":
 	[
-		"/G/_PROJECTS/D3-Music-Theory-Analyzer"
+		"/G/_PROJECTS/D3-Music-Theory-Analyzer",
+		"/G/_PROJECTS/D3-Music-Theory-Analyzer/scripts",
+		"/G/_PROJECTS/D3-Music-Theory-Analyzer/styles"
 	],
 	"file_history":
 	[
+		"/G/_PROJECTS/D3-Music-Theory-Analyzer/D3-Music-Theory-Analyzer.sublime-project",
 		"/G/Prog1/modevis/modevis.html",
 		"/G/Prog1/tensor/simplerun/1_sess/ex5.py",
 		"/G/Prog1/tensor/simplerun/1_sess/play2.py",
@@ -184,8 +214,96 @@
 	"groups":
 	[
 		{
+			"selected": 2,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "modevis.html",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 11843,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3304,
+								3304
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 784.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "scripts/modevis.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 17442,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								9975,
+								9997
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 5837.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "styles/styles.css",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2186,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								544,
+								544
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/CSS/CSS.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 112.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
 			]
 		}
 	],

@@ -2,25 +2,28 @@
 
 const SCALE = 12;
 
-var print = (mode) => {
-	let display = "",
-		num = 0;
-	for (let i = 0; i < SCALE; ++i) {
-		if (mode.n[i]) {
-			if (i == mode.key)
-				display += "@";
-			else
-				display += "#";
-			num++;
+// Convert notes in mode into string that's easy to compare with other modes
+// Each character represents a note
+// KEY:
+// '@'  =  Root note, included in mode
+// '.'  =  Root note, absent from mode
+// '#'  =  Regular note, included in mode
+// ' '  =  Regular note, absent from mode
+var repNotesAsString = (key, arr) => {
+	let display = "";
+	for (let i = 0; i < arr.length; ++i) {
+		if (arr[i]) {
+			display += (i == key) ? "@" : "#";
 		}
 		else {
-			if (i == mode.key)
-				display += ".";
-			else
-				display += " ";
+			display += (i == key) ? "." : " ";
 		}
 	}
-	return '[' + display + '] (' + num + ') ' + mode.name;
+	return display;
+}
+
+var makeModePrintable = (mode) => {
+	return '[' + repNotesAsString(mode.key, mode.n) + ']  ' + mode.name;
 }
 
 var GetNoteName = (id) => {
@@ -235,6 +238,30 @@ var score3 = (a, b) => {
 	return Math.min(Math.max(total, -1.0), 1.0);
 }
 
+// Filters out identical modes
+// Stores them as aliases
+var filterIdenticalModes = (modes) => {
+	let used = {}; // key = notes, val = id of parent
+	let uniqueModes = [];
+	for (let i = 0; i < modes.length; ++i) {
+		const key = repNotesAsString(-1, modes[i].c);
+		if (!(key in used)) {
+			// I am the first mode discovered with this scale
+			// Save this ID
+			used[key] = uniqueModes.length;
+
+			// Use in final dataset
+			uniqueModes.push(modes[i]);
+		} else {
+			// There's already an identical key
+			// Add myself to that mode's aliases
+			uniqueModes[i].aliases.push(modes[i].label);
+		}
+	}
+	console.log("Filtered for unique modes, reducing dataset from size " + modes.length.toString() + " to " + uniqueModes.length.toString());
+
+	return uniqueModes;
+}
 
 var useAllKeys = (modes) => {
 	let newList = [];
@@ -309,17 +336,17 @@ var runTest = (modes, settings, numTop) => {
 	pair = pair.sort((a, b) => { return a.score.score < b.score.score; } );
 	const filterDiv = 1.0 / numTop;
 	let i = 0;
-	let printed = 0;
-	while (i < pair.length && printed < numTop)
+	let makeModePrintableed = 0;
+	while (i < pair.length && makeModePrintableed < numTop)
 	{
-		const needScore = 1.0 - printed * filterDiv;
+		const needScore = 1.0 - makeModePrintableed * filterDiv;
 
 		if ((pair[i].a.isUser || pair[i].b.isUser) && pair[i].score.score <= needScore) {
 			console.log(" ");
-			console.log(print(pair[i].a));
-			console.log(print(pair[i].b));
+			console.log(makeModePrintable(pair[i].a));
+			console.log(makeModePrintable(pair[i].b));
 			console.log("SCORE = " + Math.round(pair[i].score.score * 100) / 100 + "       note similarity = " + Math.round(pair[i].score.comp * 100) / 100 + ", root score = " + Math.round(pair[i].score.root * 100) / 100 + ", mood similarity = " + Math.round(pair[i].score.mood * 100) / 100 );
-			++printed;
+			++makeModePrintableed;
 		}
 		++i;
 	}
@@ -328,45 +355,20 @@ var runTest = (modes, settings, numTop) => {
 	
 }
 
-var GetModes = () => {
-	let m = [];
-	/*									 			 C     D     E  F     G     A     B		 */
-	m.push(createMode("Ionian",						[5, 0, 2, 0, 4, 2, 0, 4, 0, 2, 0, 3]));
-	m.push(createMode("Lydian",						[5, 0, 2, 0, 4, 0, 4, 4, 0, 2, 0, 3]));
-	m.push(createMode("Mixolydian",					[5, 0, 2, 0, 4, 2, 0, 4, 0, 2, 4, 0]));
-	m.push(createMode("Aeolian",					[5, 0, 2, 4, 0, 2, 0, 4, 2, 0, 3, 0]));
-	m.push(createMode("Dorian",						[5, 0, 2, 4, 0, 2, 0, 4, 0, 4, 3, 0]));
-	m.push(createMode("Phrygian",					[5, 4, 0, 2, 0, 2, 0, 2, 2, 0, 3, 0]));
-	m.push(createMode("Locrian",					[5, 4, 0, 2, 0, 1, 3, 0, 2, 0, 3, 0]));
-
-	return m;
-
-	m.push(createMode("Harmonic Minor",				[5, 0, 2, 4, 0, 2, 0, 4, 2, 0, 0, 4]));
-	m.push(createMode("Melodic Minor",				[5, 0, 2, 4, 0, 2, 0, 4, 0, 4, 0, 4]));
-	m.push(createMode("Dorian #4",					[5, 0, 2, 4, 0, 0, 4, 4, 0, 4, 3, 0]));
-	m.push(createMode("Lydian #9",					[5, 0, 0, 4, 4, 0, 4, 3, 0, 2, 0, 3]));
-
-	/*												 C     D     E  F     G     A     B		 */
-	m.push(createMode("Harmonic Major",				[5, 0, 2, 0, 4, 2, 0, 4, 4, 0, 0, 3]));
-	m.push(createMode("Double Harmonic Major",		[5, 3, 0, 0, 4, 3, 0, 4, 3, 0, 0, 3]));
-	m.push(createMode("Whole Tone Scale",			[3, 0, 3, 0, 3, 0, 3, 0, 3, 0, 3, 0]));
-	m.push(createMode("Chromatic",					[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]));
-	m.push(createMode("Altered Scale",				[5, 2, 0, 2, 2, 0, 2, 0, 2, 0, 2, 0]));
-	m.push(createMode("Blues",						[5, 0, 2, 4, 0, 3, 4, 4, 0, 0, 3, 0]));
-	/*												 C     D     E  F     G     A     B		 */
-	m.push(createMode("Enigmatic",					[5, 3, 0, 0, 4, 0, 3, 0, 3, 0, 3, 3]));
-	m.push(createMode("Flamenco",					[5, 3, 0, 0, 4, 2, 0, 3, 3, 0, 0, 3]));
-	m.push(createMode("Gypsy",						[5, 0, 2, 4, 0, 0, 3, 3, 3, 0, 3, 0]));
-	m.push(createMode("Half Diminished",			[5, 0, 2, 4, 0, 0, 3, 0, 3, 0, 3, 0]));
-	/*												 C     D     E  F     G     A     B		 */
-	m.push(createMode("Hirajoshi",					[5, 0, 0, 0, 4, 0, 4, 4, 0, 0, 0, 3]));
-	
-	// CHORD PAIRS
-	/*												 C     D     E  F     G     A     B		 */
-	m.push(createMode("Antagonism",					[5, 3, 0, 3, 0, 0, 5, 3, 0, 3, 0, 0]));
-	m.push(createMode("Vader Theme",				[5, 0, 0, 3, 0, 0, 0, 3, 5, 0, 0, 3]));
-	
-	return m;
+// Classical modes and a few common variations for quick testing
+var getMedievalModes = () => {
+	return [
+		createMode("Ionian",						[5, 0, 2, 0, 4, 2, 0, 4, 0, 2, 0, 3]),
+		createMode("Lydian",						[5, 0, 2, 0, 4, 0, 4, 4, 0, 2, 0, 3]),
+		createMode("Mixolydian",					[5, 0, 2, 0, 4, 2, 0, 4, 0, 2, 4, 0]),
+		createMode("Aeolian",					[5, 0, 2, 4, 0, 2, 0, 4, 2, 0, 3, 0]),
+		createMode("Dorian",						[5, 0, 2, 4, 0, 2, 0, 4, 0, 4, 3, 0]),
+		createMode("Phrygian",					[5, 4, 0, 2, 0, 2, 0, 2, 2, 0, 3, 0]),
+		createMode("Locrian",					[5, 4, 0, 2, 0, 1, 3, 0, 2, 0, 3, 0]),
+		createMode("Harmonic Minor",				[5, 0, 2, 4, 0, 2, 0, 4, 2, 0, 0, 4]),
+		createMode("Melodic Minor",				[5, 0, 2, 4, 0, 2, 0, 4, 0, 4, 0, 4]),
+		createMode("Harmonic Major",				[5, 0, 2, 0, 4, 2, 0, 4, 4, 0, 0, 3]),
+	];
 }
 
 
@@ -375,9 +377,8 @@ var runAnalysis = (edgeCutoff, settings, exa) => {
 
 	// Construct modes
 	const datasetID = settings.datasetID;
-	const killClones = false;
 	if (datasetID == 0)
-		modes = GetModes();
+		modes = getMedievalModes();
 	else if (datasetID == 1)
 		modes = getTempData();
 	else if (datasetID == 2) {
@@ -385,8 +386,9 @@ var runAnalysis = (edgeCutoff, settings, exa) => {
 		for (let i = 0; i < M; ++i) {
 			modes.push(randomMode());
 		}
-		killClones = true;
 	}
+
+	modes = filterIdenticalModes(modes);
 
 	// Add user scale as a mode
 	modes.push(exa);
@@ -696,7 +698,7 @@ const ys = tf.tensor2d([1, 3, 5, 7], [4, 1]);
 model.fit(xs, ys, {epochs: 10}).then(() => {
 	// Use the model to do inference on a data point the model hasn't seen before:
 	// Open the browser devtools to see the output
-	model.predict(tf.tensor2d([5], [1, 1])).print();
+	model.predict(tf.tensor2d([5], [1, 1])).makeModePrintable();
 });
 */
 
