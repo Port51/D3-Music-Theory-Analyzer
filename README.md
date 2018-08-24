@@ -1,4 +1,6 @@
 # D3 Music Theory Analyzer
+NOTE: This is a work-in-progress project!
+
 This is a front end app that takes notes as input, finds similar modes/scales according to settings, and outputs an interactive graph showing results.
 
 Intended use:
