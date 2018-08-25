@@ -12,13 +12,213 @@
 	stroke-width: 1.5px;
 }
 
+.node-labels {
+    font-size: 12px;
+    pointer-events: "none";
+    fill: #fff;
+    /* Disable selection */
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
 .centered {
 	margin: auto;
 }
 
+
+
+input[type=range] {
+  -webkit-appearance: none;
+  margin: 5px 0;
+  width: 100%;
+}
+input[type=range]:focus {
+  outline: none;
+}
+input[type=range]::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 6.4px;
+  cursor: pointer;
+  animate: 0.2s;
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+  background: #3071a9;
+  border-radius: 1.3px;
+  border: 0.2px solid #010101;
+}
+input[type=range]::-webkit-slider-thumb {
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+  border: 1px solid #000000;
+  height: 25px;
+  width: 8px;
+  border-radius: 3px;
+  background: #ffffff;
+  cursor: pointer;
+  -webkit-appearance: none;
+  margin-top: -14px;
+}
+input[type=range]:focus::-webkit-slider-runnable-track {
+  background: #367ebd;
+}
+input[type=range]::-moz-range-track {
+  width: 100%;
+  height: 6.4px;
+  cursor: pointer;
+  animate: 0.2s;
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+  background: #3071a9;
+  border-radius: 1.3px;
+  border: 0.2px solid #010101;
+}
+input[type=range]::-moz-range-thumb {
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+  border: 1px solid #000000;
+  height: 25px;
+  width: 8px;
+  border-radius: 3px;
+  background: #ffffff;
+  cursor: pointer;
+}
+input[type=range]::-ms-track {
+  width: 100%;
+  height: 6.4px;
+  cursor: pointer;
+  animate: 0.2s;
+  background: transparent;
+  border-color: transparent;
+  border-width: 16px 0;
+  color: transparent;
+}
+input[type=range]::-ms-fill-lower {
+  background: #2a6495;
+  border: 0.2px solid #010101;
+  border-radius: 2.6px;
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+}
+input[type=range]::-ms-fill-upper {
+  background: #3071a9;
+  border: 0.2px solid #010101;
+  border-radius: 2.6px;
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+}
+input[type=range]::-ms-thumb {
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+  border: 1px solid #000000;
+  height: 25px;
+  width: 8px;
+  border-radius: 3px;
+  background: #ffffff;
+  cursor: pointer;
+}
+input[type=range]:focus::-ms-fill-lower {
+  background: #3071a9;
+}
+input[type=range]:focus::-ms-fill-upper {
+  background: #367ebd;
+}
+
+.range-label {
+    font-size: 9px;
+}
+.range-label.left {
+    float: left;
+}
+.range-label.right {
+    float: right;
+}
+
+@import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:300);
+.cool-button {
+    position: relative;
+    z-index: 1;
+    color: #dddddd;
+    background: #3071a9;
+    border-radius: 5%;
+    border: 1.75px solid #010101;
+    /* Set transition for box shadow */
+    transition: box-shadow 200ms cubic-bezier(.2,0,.7,1), transform 150ms cubic-bezier(.2,0,.7,1);
+}
+.cool-button.medium {
+    width: 100px;
+    height: 45px;
+    font-size: 13px;
+    margin: 0px 10px;
+}
+.cool-button.large {
+    width: 120px;
+    height: 60px;
+    font-size: 17px;
+    margin: 0px 2px 16px 16px; /* top, bottom, L/R */
+}
+.cool-button:hover {
+    /*transform: rotate(45deg);*/
+    color: #ffffff;
+    background: #4081c9;
+    box-shadow: 0 0 1px 5px rgba(64, 129, 201, 0.15),
+        0 0 1px 12px rgba(64, 129, 201, 0.1),
+        0 0 1px 21px rgba(64, 129, 201, 0.05);
+}
+
+.rootCircle {
+	height: 20px;
+	width: 20px;
+	background: #444400;
+	border-radius: 50%;
+	display: inline-block;
+	border: 1.0px solid #252520;
+	/* Set transition for box shadow */
+    transition: box-shadow 125ms cubic-bezier(.2,0,.7,1), transform 80ms cubic-bezier(.2,0,.7,1);
+}
+.rootCircle[value=true] {
+    background: #bbbb22;
+    border: 1.75px solid #707035;
+    box-shadow: 0 0 1px 2px rgba(255, 255, 40, 0.1),
+        0 0 1px 4px rgba(255, 255, 40, 0.067),
+        0 0 1px 7px rgba(255, 255, 40, 0.033);
+}
+.rootCircle:hover,
+.rootCircle[value=true]:hover {
+    background: #cccc15;
+    border: 1.75px solid #707035;
+    box-shadow: 0 0 1px 3px rgba(255, 255, 40, 0.15),
+        0 0 1px 5px rgba(255, 255, 40, 0.1),
+        0 0 1px 8px rgba(255, 255, 40, 0.05);
+}
+
+
+
+
+
+
 .small-white-text {
 	color: #dddddd;
 	font-size: 8pt;
+}
+
+/* Style the button that is used to open and close the collapsible content */
+.collapse-toggle-button {
+    background-color: #eee;
+    color: #444;
+    cursor: pointer;
+    padding: 9px;
+    width: 100%;
+    border: none;
+    text-align: center;
+    outline: none;
+    font-size: 15px;
+}
+
+/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+.active, .collapse-toggle-button:hover {
+    background-color: #ccc;
+}
+
+.collapsible-input-area {
+    padding: 0 18px;
+    display: block;
+    overflow: hidden;
+    background-color: #f1f1f1;
 }
 
 
@@ -46,21 +246,16 @@
 	border-spacing: 2px 0px;
 }
 
-.rootCircle {
-	height: 20px;
-	width: 20px;
-	background: #ffff00;
-	border-radius: 50%;
-	display: inline-block;
-}
-
 /* White keys are divided into upper and lower sections */
-.pianoWhite[highlight=false] {
+.pianoWhite[highlight=false][mouseover=false] {
 	background: #cccccc;
 }
 
-.pianoWhite[highlight=true] {
-	background: #3355ee;
+.pianoWhite[mouseover=true] {
+	background: #3355ee !important;
+}
+.pianoWhite[highlight=true][mouseover=false] {
+	background: #3071a9;
 }
 
 .pianoWhite.pianoBot {
@@ -68,30 +263,44 @@
 	border-bottom: 3px solid #eeeeee;
 	border-radius: 0px 0px 5px 5px;
 }
-.pianoWhite.pianoBot[highlight=true] {
-	border-right: 3px solid #5375ff;
-	border-bottom: 3px solid #5375ff;
+.pianoWhite.pianoBot[mouseover=true] {
+	border-right: 3px solid #5375ff !important;
+	border-bottom: 3px solid #5375ff !important;
 }
+.pianoWhite.pianoBot[highlight=true][mouseover=false] {
+	border-right: 3px solid #4081b9;
+	border-bottom: 3px solid #4081b9;
+}
+
 .pianoWhite.pianoTopSmall,
 .pianoWhite.pianoTopExtraSmall {
 	border-right: 3px solid #eeeeee;
 	border-radius: 3px 3px 0px 0px;
 }
-.pianoWhite.pianoTopSmall[highlight=true],
-.pianoWhite.pianoTopExtraSmall[highlight=true] {
-	border-right: 3px solid #5375ff;
+.pianoWhite.pianoTopSmall[mouseover=true],
+.pianoWhite.pianoTopExtraSmall[mouseover=true] {
+	border-right: 3px solid #5375ff !important;
+}
+.pianoWhite.pianoTopSmall[highlight=true][mouseover=false],
+.pianoWhite.pianoTopExtraSmall[highlight=true][mouseover=false] {
+	border-right: 3px solid #4081b9;
 }
 
-.pianoBlack {
+.pianoBlack[highlight=false][mouseover=false] {
 	background: #202020;
 	border-right: 3px solid #484848;
 	border-bottom: 3px solid #484848;
 	border-radius: 3px 3px 5px 5px;
 }
-.pianoBlack[highlight=true] {
-	background: #3355ee;
-	border-right: 3px solid #5375ff;
-	border-bottom: 3px solid #5375ff;
+.pianoBlack[mouseover=true] {
+	background: #3355ee !important;
+	border-right: 3px solid #5375ff !important;
+	border-bottom: 3px solid #5375ff !important;
+}
+.pianoBlack[highlight=true][mouseover=false] {
+	background: #3071a9;
+	border-right: 3px solid #4081b9;
+	border-bottom: 3px solid #4081b9;
 }
 
 .jitterKey {
@@ -112,16 +321,6 @@
 	100% { left: 0px; top 0px; }
 }
 
-/*
-5*40 + 3(s+3) + 4(x+3) = 7(b+3)
-194 + 3s + 4x = 7b
-7b - (3s + 4x) = 194
-*/
-
-
-/*
-3s + 2m = 3b
-4s + 3m = 4b */
 .pianoTopSmall {
 	padding: 0 !important;
 	margin: 0 !important;
