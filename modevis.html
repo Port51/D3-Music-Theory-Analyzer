@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
+	    <title>Music Mode Analysis</title>
+
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta name="description" content="">
 		<meta name="author" content="">
-		
+
 		<!-- Load TensorFlow.js -->
 		<!-- Load TensorFlow.js -->
 		<!--<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@0.12.5"> </script>-->
@@ -25,22 +27,45 @@
 		<script src="scripts/modevis.js"></script>
 
 		<link rel="stylesheet" type="text/css" href="styles/styles.css">
-		
+
 	</head>
 
 <body>
 
-	<div>
-		<table><tr><td>
-			<span class="loadTemplate" value="templates/inputSimilarity.html"></span>
-			<br />
-			<button id="runSim">Click here to run!</button>
-		</td><td>
-			<span class="loadTemplate" value="templates/largePiano.html"></span>
-		</td></tr></table>
-		
-	</div>
-	<svg width="900" height="500"><rect width="100%" height="100%" fill="black"></rect></svg>
+    <div id="constant-upper-section">
+        <div id="collapsible-input-area" class="collapsible-input-area">
+            <table width="1400px"><tr><td>
+                <span class="loadTemplate" value="templates/inputSimilarity.html"></span>
+            </td><td align="center">
+                <span class="loadTemplate" value="templates/largePiano.html"></span>
+            </td></tr>
+            <tr><td align="center">
+                <button id="runSim" class="cool-button large">Click here to run!</button>
+            </td><td></td></tr></table>
+
+        </div>
+        <button class="collapse-toggle-button active">Show/Hide Menu</button>
+    </div>
+	<svg width="1400" height="700"><rect width="100%" height="100%" fill="black"></rect></svg>
+
+<script>
+    /* Collapsible input menu */
+    const collapseButton = document.getElementsByClassName("collapse-toggle-button")[0];
+    var isMenuCollapsed = false;
+
+    if (collapseButton) {
+        collapseButton.addEventListener("click", function() {
+            this.classList.toggle("active");
+            isMenuCollapsed = !isMenuCollapsed;
+            const content = document.getElementById("collapsible-input-area");
+            if (isMenuCollapsed) {
+                content.style.display = "none";
+            } else {
+                content.style.display = "block";
+            }
+        });
+    }
+</script>
 
 <script>
 	// Load HTML templates
@@ -49,8 +74,9 @@
 			$(this).load($(this).attr('value'), function() {
 				// Call some functions right after loading
 				setRootSelectColors();
+				setPianoInputFunctions();
 			});
-			
+
 		});
 	});
 </script>
@@ -58,9 +84,11 @@
 <script>
 
 	// Shared data
-	var rootSel = 0; // key of C
+	var rootSel = 0; // default to key of C
 	var keySel =		[false, false, false, false, false, false, false, false, false, false, false];
 	var keySelVis =		[false, false, false, false, false, false, false, false, false, false, false];
+	var mouseOverKey = -1;
+	var keyMouseOverVis =	[false, false, false, false, false, false, false, false, false, false, false];
 
 	// Create settings
 	var createSettings = () => {
@@ -74,7 +102,8 @@
 			wFactorAdd: 				parseFloat($("#noteAdd").val() / 100),
 			wFactorRemove: 				parseFloat($("#noteRem").val() / 100),
 			wFactorRootOffset: 			parseFloat($("#rootOff").val() / 25),
-			wFactorMoodEstimation: 		parseFloat($("#moodEstim").val() / 100),
+			wFactorMoodHappy:   		parseFloat($("#moodEstimHappy").val() / 100),
+			wFactorMoodBittersweet:   	parseFloat($("#moodEstimBittersweet").val() / 100),
 			wFactorIntervalCount: 		parseFloat($("#iCount").val() / 100),
 			wFactorIntervalOpenness: 	parseFloat($("#iOpen").val() / 100),
 			filterResultMax: 			parseInt($("#filterResultMax").val()),
@@ -92,34 +121,45 @@
 		const note = event.data.note;
 		//alert("Key press id = " + note);
 		keySel[note] = !keySel[note];
+		if (keySel[note] == null) {
+		    keySel[note] = false;
+		}
 
 		setKeyColors();
 	}
+
+	var hoverKeyOn = function() {
+	    mouseOverKey = parseInt($(this).attr('value'));
+        setKeyColors();
+    }
+
+    var hoverKeyOff = function() {
+        if (mouseOverKey === parseInt($(this).attr('value'))) {
+            mouseOverKey = -1;
+        }
+        setKeyColors();
+    }
 
 	var resetAnimation = (elem, animName) => {
 		elem.each(function() {
 			$(this).removeClass(animName).width($(this).width()).addClass(animName);
 		});
-		
+
 	}
 
 	// Update colors for root selection
 	var setRootSelectColors = () => {
-
 		for (let i = 0; i < 12; ++i) {
-			let color = '';
-			if (rootSel == i) {
-				color = "#ffff00";
-			} else {
-				color = "#444400";
-			}
-			$('.rootSelect[value="' + i + '"]').find("span").css("background", color);
+			$('.rootSelect[value="' + i + '"]').find("span").attr('value', (rootSel == i));
 		}
 	}
 
 	// Update colors for keys that have changed
 	var setKeyColors = () => {
 		for (let i = 0; i < 12; ++i) {
+		    if (keySel[i] == null) {
+                keySel[i] = false;
+            }
 			if (keySelVis[i] != keySel[i]) {
 				let color = '';
 				if (keySel[i])
@@ -130,7 +170,6 @@
 					color = '#cccccc';
 
 				// Change color
-				//$(".pianoKey[value=" + i + "]").css({'background': color});
 				if (keySel[i]) {
 					$(".pianoKey[value=" + i + "]").attr('highlight', 'true');
 					// Trigger animation
@@ -142,6 +181,14 @@
 				// Remember
 				keySelVis[i] = keySel[i];
 			}
+
+			// Mouseover
+			const wMouseOver = (mouseOverKey === i) ? true : false;
+			if (keyMouseOverVis[i] != wMouseOver) {
+                keyMouseOverVis[i] = wMouseOver;
+                $(".pianoKey[value=" + i + "]").attr('mouseover', keyMouseOverVis[i]);
+			}
+
 		}
 	}
 
@@ -155,15 +202,33 @@
 		for (let i = 0; i < 12; ++i) {
 			mode.n.push(keySel[i]);
 		}
-		mode.c = mode.n;
+		// Un-transpose to static version
+		mode.c = [];
+		for (let i = 0; i < 12; ++i) {
+			mode.c.push(mode.n[(i + mode.key) % 12]);
+		}
+		console.log("USER SCALE: (transposed, then static)");
+		console.log(mode.n);
+		console.log(mode.c);
+		mode.aliases = [];
 		return mode;
 	}
 
-	// Slider manip
-	var slidersZero = () => { $(".slider").val("0"); }
-	var slidersMid = () => { $(".slider").val("50"); $("#filterResultMax").val("20"); }
-	var slidersDefault = () => { $(".slider").each(function() { $(this).val($(this).attr('def')) }); }
-	var slidersFull = () => { $(".slider").val("100"); }
+	// Quick slider manip functions
+	var slidersZero = () => { const rememberFilter = $("#filterResultMax").val(); $(".slider").val("0"); $("#filterResultMax").val(rememberFilter); }
+	var slidersMid = () => { const rememberFilter = $("#filterResultMax").val(); $(".slider").val("50"); $("#filterResultMax").val(rememberFilter); }
+	var slidersDefault = () => { const rememberFilter = $("#filterResultMax").val(); $(".slider").each(function() { $(this).val($(this).attr('def')) }); $("#filterResultMax").val(rememberFilter); }
+	var slidersFull = () => { const rememberFilter = $("#filterResultMax").val(); $(".slider").val("100"); $("#filterResultMax").val(rememberFilter); }
+
+	var setPianoInputFunctions = () => {
+        $(".pianoKey").each(function() {
+			$(this).click({ note: parseInt($(this).attr('value')) }, clickKey);
+		});
+		$(".pianoKey").hover(hoverKeyOn, hoverKeyOff);
+		$(".rootSelect").each(function() {
+			$(this).click({ note: parseInt($(this).attr('value')) }, clickRootSelect);
+		});
+	}
 
 	$(document).ready(() => {
 		$("#runSim").click(runSim);
@@ -171,12 +236,6 @@
 		$("#setSlidersMid").click(slidersMid);
 		$("#setSlidersDefault").click(slidersDefault);
 		$("#setSlidersFull").click(slidersFull);
-		$(".pianoKey").each(function() {
-			$(this).click({ note: parseInt($(this).attr('value')) }, clickKey);
-		});
-		$(".rootSelect").each(function() {
-			$(this).click({ note: parseInt($(this).attr('value')) }, clickRootSelect);
-		});
 	});
 
 	var runSim = () => {
@@ -191,35 +250,39 @@
 		else {
 			// DEBUG: Handle D3 graph
 			var svg = d3.select("svg");
-			svg.empty();
-			svg.selectAll("*").remove();
-
-			// Redraw background color
-			svg.append("rect").attr("x", "0").attr("y", "0").attr("width", "100%").attr("height", "100%").style("fill", "#000000")
-
-			//svg.attr('width', 900);
-			//svg.attr('height', 400);
-			var width = +svg.attr("width");
+            var width = +svg.attr("width");
 			var height = +svg.attr("height");
 
-			var color = d3.scaleOrdinal(d3.schemeCategory20);
+			const results = runAnalysis(0.025, settings, exa);
+			const graph = convertAnalysisToGraph(results.modes, results.pairs, 2, width, height, settings);
 
-			const results = runAnalysis(0.01, settings, exa);
-			const graph = convertAnalysisToGraph(results.modes, results.data, 2, 0.01, settings);
-
-			const edgeStrAdd = 0.00045;
-			const edgeStr = 0.00035;
+            // Graph settings (TODO: move these elsewhere)
+            const edgeStrAdd = 0.00025;
+			const edgeStr = 0.00015;
 			const edgePow = 0.200;
-			const sepStr = 4000;
+			const sepStr = 3000;
 			const edgeWiMin = 0.5;
 			const edgeWiMax = 30.0;
 			const edgeWiPow = 0.75;
+			const driftToCenter = 0.25;
 			var weightScale = d3.scaleLinear().domain(d3.extent(graph.links, function(d) { return Math.pow(d.weight, edgePow) * edgeStr })).range([.1, 1]);
 			var colScale = d3.scaleLinear()
 				.domain(d3.ticks(0, 100, 4))
 				.range(["#ff0000", "#8800ff", "#0000cc", "#00ff00"]);
+            //var color = d3.scaleOrdinal(d3.schemeCategory20); //["#ffff00", "#0000ff", "#00aaaa"]
+            var color = d3.scaleOrdinal()
+                .range(["#22dd22", "#2828dd", "#18c6c6"]);
+            var groupRadius = (groupID) => {
+                return 38 - groupID * 8;
+            }
 
-			var simulation = d3.forceSimulation()
+
+			// Clear the graph and redraw background color
+			svg.empty();
+			svg.selectAll("*").remove();
+			svg.append("rect").attr("x", "0").attr("y", "0").attr("width", "100%").attr("height", "100%").style("fill", "#000000")
+
+			/*var simulation = d3.forceSimulation()
 				.force("link", d3.forceLink().strength(function(d){return weightScale(Math.pow(d.weight, edgePow) * edgeStr + edgeStrAdd);}).id(function(d) {
 					return d.id;
 				}))
@@ -227,63 +290,84 @@
 				.force('x', d3.forceX(width * 0.5).strength(0.15))
 				.force('y', d3.forceY(height * 0.5).strength(0.15))
 				//.force("center", d3.forceCenter(width / 2, height / 2).strength(-1))
-				;
+				;*/
+            var simulation = d3.forceSimulation()
+                .force("link", d3.forceLink().id(function(d) { return d.id; }))
+                .force("charge", d3.forceManyBody().strength(-sepStr))
+                .force('x', d3.forceX(width * 0.5).strength(driftToCenter))
+                .force('y', d3.forceY(height * 0.5).strength(driftToCenter));
 
-			var link = svg.append("g")
-				.attr("class", "links")
-				.selectAll("line")
-				.data(graph.links)
-				.enter().append("line")
-				.attr("stroke-width", function(d) { return d.alpha * Math.pow(d.value, edgeWiPow) * (edgeWiMax - edgeWiMin) + edgeWiMin; })
-				.style("stroke", function(d) { return colScale(d.value * 100.0); })
-				.style("pointer-events", "none")
-				.style("stroke-opacity", function(d) { return d.alpha; });
+            if (1 == 1) {
+            var link = svg.append("g")
+                .attr("class", "links")
+                .selectAll("line")
+                .data(graph.links)
+                .enter().append("line")
+                .attr("stroke-width", function(d) { return d.alpha * Math.pow(d.value, edgeWiPow) * (edgeWiMax - edgeWiMin) + edgeWiMin; })
+                .style("stroke", function(d) { return colScale(d.value * 100.0); })
+                .style("pointer-events", "none")
+                .style("stroke-opacity", function(d) { return d.alpha; });
+            } else {
+            var link = svg.append("g")
+                .attr("class", "links")
+                .selectAll("line")
+                .data(graph.links)
+                .enter().append("line")
+                .attr("stroke-width", function(d) { return Math.sqrt(d.value); });
+            }
 
-			var node = svg.append("g")
-				.attr("class", "nodes")
-				.selectAll("foo")
-				.data(graph.nodes)
-				.enter().append("g");
+            var node = svg.append("g")
+                .attr("class", "nodes")
+                .selectAll("foo")
+                .data(graph.nodes)
+                .enter().append("g");
 
-			var circles = node.append("circle")
-				.attr("r", 30)
-				.attr("fill", function(d) { return color(d.group); })
-				.call(d3.drag()
-					.on("start", dragstarted)
-					.on("drag", dragged)
-					.on("end", dragended));
+            var circles = node.append("circle")
+                .attr("r", function(d) { return groupRadius(d.group); })
+                .attr("fill", function(d) { return color(d.group); })
+                .call(d3.drag()
+                    .on("start", dragstarted)
+                    .on("drag", dragged)
+                    .on("end", dragended));
 
-			var labels = node.append("text")
-				.text(function(d) { return d.id; })
-				.attr("text-anchor", "middle")
-				.style("pointer-events", "none")
-				.style("fill", "#fff");
+            var labels = node.append("text")
+                .text(function(d) { return d.id; })
+                .attr("class", "node-labels")
+                .attr("text-anchor", "middle")
+                .call(d3.drag()
+                    .on("start", dragstarted)
+                    .on("drag", dragged)
+                    .on("end", dragended));
 
-			node.append("title")
-				.text(function(d) { return d.id; });
+            node.append("title")
+                .text(function(d) { return d.id; });
 
-			simulation
-				.nodes(graph.nodes)
-				.on("tick", ticked)
-				;
+            simulation
+                .nodes(graph.nodes)
+                .on("tick", ticked)
+                ;
 
-			simulation.force("link")
-				.links(graph.links)
-				;
+            simulation.force("link")
+                .links(graph.links)
+                ;
 
-			function ticked() {
-				link
-					.attr("x1", function(d) { return d.source.x; })
-					.attr("y1", function(d) { return d.source.y; })
-					.attr("x2", function(d) { return d.target.x; })
-					.attr("y2", function(d) { return d.target.y; });
+            function ticked() {
 
-				node
-					.attr("transform", function(d) { return "translate(" +
-						Math.max(20, Math.min(width - 20, d.x)) + "," +
-						Math.max(20, Math.min(height - 20, d.y)) + ")"; })
-			}
-			
+
+                node
+                    .attr("cx", function(d) { return Math.max(20, Math.min(width - 20, d.x)); })
+                    .attr("cy", function(d) { return Math.max(20, Math.min(height - 20, d.y)); })
+                    .attr("transform", function(d) { return "translate(" +
+                        Math.max(20, Math.min(width - 20, d.x)) + "," +
+                        Math.max(20, Math.min(height - 20, d.y)) + ")"; })
+
+                link
+                    .attr("x1", function(d) { return Math.max(20, Math.min(width - 20, d.source.x)); })
+                    .attr("y1", function(d) { return Math.max(20, Math.min(height - 20, d.source.y)); })
+                    .attr("x2", function(d) { return Math.max(20, Math.min(width - 20, d.target.x)); })
+                    .attr("y2", function(d) { return Math.max(20, Math.min(height - 20, d.target.y)); });
+
+            }
 
 			function dragstarted(d) {
 				if (!d3.event.active) simulation.alphaTarget(0.3).restart();
