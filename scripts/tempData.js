@@ -41,7 +41,7 @@ var getTempString = () => {
 	"Pelog (approx)				[## #  ### # ]" +
 	"Persian						[##  ### #  #]" +
 	"Pfluke Scale				[# ##  ## # #]" +
-	"Phrigian Dominant			[##  ## ## # ]" +
+	"Phrygian Dominant			[##  ## ## # ]" +
 	"Prometheus					[# # # #  ## ]" +
 	"Tritone Scale				[##  # ##  # ]" +
 	"Urkainian Dorian			[# ##  ## ## ]" +
@@ -89,7 +89,7 @@ var getTempString = () => {
 var getTempData = () => {
 	const str = getTempString();
 	const spl = str.split(/\[|\]/);
-	
+
 	let i = 0;
 	let modes = [];
 	while (i * 2 + 1 < spl.length) {
@@ -98,7 +98,7 @@ var getTempData = () => {
         mode.isUser = false;
 		mode.key = 0;
 		mode.name = GetNoteName(mode.key) + ' ' + mode.label;
-		
+
 		mode.n = [];
 		const notes = spl[i * 2 + 1].toString();
 		for (let j = 0; j < notes.length; ++j) {
@@ -110,13 +110,14 @@ var getTempData = () => {
 			}
 		}
 		mode.c = mode.n;
-		
+		mode.aliases = [];
+
 		modes.push(mode);
 		++i;
 	}
-	
+
 	//console.log(modes);
-	
+
 	return modes;
 }
 
