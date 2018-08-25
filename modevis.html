@@ -37,7 +37,8 @@
             <table width="1400px"><tr><td>
                 <span class="loadTemplate" value="templates/inputSimilarity.html"></span>
             </td><td align="center">
-                <span class="loadTemplate" value="templates/largePiano.html"></span>
+                <span class="loadTemplate" value="templates/largePiano.html" onload="pianoButtons"></span>
+                <span class="loadTemplate" value="templates/instructions.html"></span>
             </td></tr>
             <tr><td align="center">
                 <button id="runSim" class="cool-button large">Click here to run!</button>
@@ -73,8 +74,10 @@
 		$(".loadTemplate").each(function(){
 			$(this).load($(this).attr('value'), function() {
 				// Call some functions right after loading
-				setRootSelectColors();
-				setPianoInputFunctions();
+				if ($(this).attr('onload') == "pianoButtons") {
+                    setRootSelectColors();
+                    setPianoInputFunctions();
+                }
 			});
 
 		});
