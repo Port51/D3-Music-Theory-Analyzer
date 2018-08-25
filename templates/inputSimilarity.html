@@ -1,86 +1,110 @@
 <html>
-	<div class="sliderContainer" style="padding: 10px;">
-		<table width="100%" cellpadding = "0">
+	<div class="sliderContainer" style="padding: 7px;">
+	    <div style="background: #9540ef; border-radius: 10px; margin-top: 3px;">
+	        <h3 style="padding: 0; margin: 0; text-align: center;">Note-Wise Comparisons:</h3>
+            <table width="100%" cellpadding = "0" style="table-layout: fixed; padding: 2px 10px 0px 10px;">
+                <col width="40%">
+                <tr><td style = "text-indent: 10px;"><label>Shared notes</label>
+                <!--<div id="showHide_0" style="font-size: 12px;">Blah blah blah blah blah blah blah<br />blah blah blah blah blah blah blah blah blah blah blah blah</div>-->
+                </td><td>
+                <span class="range-label left">Notes can be shifted</span>
+                <span class="range-label right">Notes should be the same</span>
+                <input id="noteSim" type="range" min="0" max="100" value="90" def="90" class="slider" /></td></tr>
 
+                <tr><td style = "text-indent: 10px;"><label>Enlarging scale <span style="font-size: 11px">(ex: 5 note scale to 8 note scale...)</span></label></td>
+                <td>
+                <span class="range-label left">Penalty for extra notes</span>
+                <span class="range-label right">Can add notes</span>
+                <input id="noteAdd" type="range" min="0" max="100" value="25" def="25" class="slider" /></td></tr>
 
-			<tr><td><h3 style="padding: 0; margin: 0;">Similarity Factors:</h3></td><td></td></tr>
-			<!--<tr><td style="word-wrap: break-word;"><div>Use the sliders to define what makes modes different.</div></td><td></td></tr>-->
+                <tr><td style = "text-indent: 10px;"><label>Shrinking scale <span style="font-size: 11px">(ex: 7 note scale to 6 note scale...)</span></label></td>
+                <td>
+                <span class="range-label left">Penalty for removing notes</span>
+                <span class="range-label right">Can remove notes</span>
+                <input id="noteRem" type="range" min="0" max="100" value="85" def="85" class="slider" /></td></tr>
+            </table>
+        </div>
 
-			<tr><td style = "text-indent: 10px;"><label>Shared notes</label>
-			<!--<div id="showHide_0" style="font-size: 12px;">Blah blah blah blah blah blah blah<br />blah blah blah blah blah blah blah blah blah blah blah blah</div>-->
-			</td><td>
-            <span class="range-label left">Doesn't matter</span>
-			<span class="range-label right">Does matter</span>
-			<input id="noteSim" type="range" min="0" max="100" value="90" def="90" class="slider" /></td></tr>
+	    <div style="background: #d9b060; border-radius: 10px; margin-top: 3px;">
+	        <h3 style="padding: 0; margin: 0; text-align: center;">Importance of Roots:</h3>
+            <table width="100%" cellpadding = "0" style="table-layout: fixed; padding: 2px 10px 0px 10px;">
+                <col width="40%">
+                <tr><td style = "text-indent: 10px;"><label>Penalty for having different roots</label></td>
+                <td>
+                <span class="range-label left">No penalty</span>
+                <span class="range-label right">Require same root</span>
+                <input id="rootOff" type="range" min="0" max="100" value="67" def="67" class="slider" /></td></tr>
 
-			<tr><td style = "text-indent: 10px;"><label>How bad is it to add notes?</label></td>
-			<td>
-            <span class="range-label left">Doesn't matter</span>
-			<span class="range-label right">Does matter</span>
-            <input id="noteAdd" type="range" min="0" max="100" value="25" def="25" class="slider" /></td></tr>
+                <tr><td style = "text-indent: 10px;"><label>Penalty for not containing root</label></td>
+                <td>
+                <span class="range-label left">No penalty</span>
+                <span class="range-label right">Require both roots</span>
+                <input id="rootMissing" type="range" min="0" max="100" value="100" def="100" class="slider" /></td></tr>
+            </table>
+        </div>
 
-			<tr><td style = "text-indent: 10px;"><label>How bad is it to remove notes?</label></td>
-			<td>
-            <span class="range-label left">Doesn't matter</span>
-			<span class="range-label right">Does matter</span>
-            <input id="noteRem" type="range" min="0" max="100" value="85" def="85" class="slider" /></td></tr>
+	    <div style="background: #60d9b0; border-radius: 10px; margin-top: 3px;">
+	        <h3 style="padding: 0; margin: 0; text-align: center;">Intervals:</h3>
+            <table width="100%" cellpadding = "0" style="table-layout: fixed; padding: 2px 10px 0px 10px;">
+                <col width="40%">
+                <tr><td style = "text-indent: 10px;"><label>Interval statistics factor</label></td>
+                <td>
+                <span class="range-label left">Doesn't matter</span>
+                <span class="range-label right">Does matter</span>
+                <input id="iCount" type="range" min="0" max="100" value="25" def="25" class="slider" /></td></tr>
 
-			<tr><td style = "text-indent: 10px;"><label>Penalty for having different roots</label></td>
-			<td>
-            <span class="range-label left">No penalty</span>
-			<span class="range-label right">Require same root</span>
-            <input id="rootOff" type="range" min="0" max="100" value="67" def="67" class="slider" /></td></tr>
+                <tr><td style = "text-indent: 10px;"><label>Openness factor</label></td>
+                <td>
+                <span class="range-label left">Doesn't matter</span>
+                <span class="range-label right">Does matter</span>
+                <input id="iOpen" type="range" min="0" max="100" value="25" def="25" class="slider" /></td></tr>
+            </table>
+        </div>
 
-            <tr><td style = "text-indent: 10px;"><label>Penalty for not containing root</label></td>
-			<td>
-            <span class="range-label left">No penalty</span>
-			<span class="range-label right">Require both roots</span>
-            <input id="rootMissing" type="range" min="0" max="100" value="100" def="100" class="slider" /></td></tr>
+	    <div style="background: #60b0d9; border-radius: 10px; margin-top: 3px;">
+	        <h3 style="padding: 0; margin: 0; text-align: center;">Mood Estimation:</h3>
+            <table width="100%" cellpadding = "0" style="table-layout: fixed; padding: 2px 10px 0px 10px;">
+                <col width="40%">
+                <tr><td style = "text-indent: 10px;"><label>Mood - happiness</label></td>
+                <td>
+                <span class="range-label left">Doesn't matter</span>
+                <span class="range-label right">Does matter</span>
+                <input id="moodEstimHappy" type="range" min="0" max="100" value="80" def="80" class="slider" /></td></tr>
 
-			<tr><td style = "text-indent: 10px;"><label>Interval statistics factor</label></td>
-			<td>
-            <span class="range-label left">Doesn't matter</span>
-			<span class="range-label right">Does matter</span>
-            <input id="iCount" type="range" min="0" max="100" value="25" def="25" class="slider" /></td></tr>
+                <tr><td style = "text-indent: 10px;"><label>Mood - bittersweetness</label></td>
+                <td>
+                <span class="range-label left">Doesn't matter</span>
+                <span class="range-label right">Does matter</span>
+                <input id="moodEstimBittersweet" type="range" min="0" max="100" value="25" def="25" class="slider" /></td></tr>
+            </table>
+        </div>
 
-			<tr><td style = "text-indent: 10px;"><label>Openness factor</label></td>
-			<td>
-            <span class="range-label left">Doesn't matter</span>
-			<span class="range-label right">Does matter</span>
-            <input id="iOpen" type="range" min="0" max="100" value="25" def="25" class="slider" /></td></tr>
+        <div style="background: #ddd0d0; border-radius: 10px; margin-top: 3px;">
+	        <h3 style="padding: 0; margin: 0; text-align: center;">Processing:</h3>
+            <table width="100%" cellpadding = "0" style="table-layout: fixed; padding: 2px 10px 0px 10px;">
+                <col width="40%">
+                <tr>
+                    <td style = "text-indent: 10px;"><label>Dataset:</label></td>
+                    <td><select id="datasetID">
+                        <option value="0" selected="selected">Medieval Modes</option>
+                        <option value="1">Lots of Modes</option>
+                        <option value="2">Random Modes</option>
+                        <option value="3">Debug Data</option>
+                    </select>
+                </td></tr>
+                <tr><td style = "text-indent: 10px;"><label>Number of Results to Display</label></td><td><input id="filterResultMax" type="range" min="1" max="50" value="20" def="20" class="slider" /></td></tr>
 
-            <tr><td style = "text-indent: 10px;"><label>Mood - happiness</label></td>
-			<td>
-            <span class="range-label left">Doesn't matter</span>
-			<span class="range-label right">Does matter</span>
-            <input id="moodEstimHappy" type="range" min="0" max="100" value="80" def="80" class="slider" /></td></tr>
-
-            <tr><td style = "text-indent: 10px;"><label>Mood - bittersweetness</label></td>
-			<td>
-            <span class="range-label left">Doesn't matter</span>
-			<span class="range-label right">Does matter</span>
-            <input id="moodEstimBittersweet" type="range" min="0" max="100" value="25" def="25" class="slider" /></td></tr>
-
-			<tr><td><h3 style="padding: 0; margin: 0;">Processing:</h3></td><td></td></tr>
-			<tr>
-				<td style = "text-indent: 10px;"><label>Dataset:</label></td>
-				<td><select id="datasetID">
-					<option value="0" selected="selected">Medieval Modes</option>
-					<option value="1">Lots of Modes</option>
-					<option value="2">Random Modes</option>
-					<option value="3">Debug Data</option>
-				</select>
-			</td></tr>
-			<tr><td style = "text-indent: 10px;"><label>Number of Results to Display</label></td><td><input id="filterResultMax" type="range" min="1" max="50" value="20" def="20" class="slider" /></td></tr>
-
-		</table>
-
-		<div class="centerContents">
-            <button id="setSlidersZero" class="cool-button medium">Set sliders to zero</button>
-            <button id="setSlidersMid" class="cool-button medium">Set sliders to mid</button>
-            <button id="setSlidersDefault" class="cool-button medium">Set sliders to default</button>
-            <button id="setSlidersFull" class="cool-button medium">Set sliders to full!</button>
+            </table>
         </div>
 
 	</div>
+
+    <!-- Buttons to quickly change sliders -->
+	<div class="centerContents">
+        <button id="setSlidersZero" class="cool-button medium">Set sliders to zero</button>
+        <button id="setSlidersMid" class="cool-button medium">Set sliders to middle</button>
+        <button id="setSlidersDefault" class="cool-button medium">Set sliders to default</button>
+        <button id="setSlidersFull" class="cool-button medium">Set sliders to full!</button>
+    </div>
+
 </html>
