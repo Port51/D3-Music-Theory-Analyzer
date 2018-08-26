@@ -511,6 +511,11 @@ var convertAnalysisToGraph = (modes, pairs, depth, svgWidth, svgHeight, settings
 		}
 	}
 
+	// Sort links
+	g.links.sort(function(a, b) {
+        return a.value > b.value;
+    });
+
 	return g;
 }
 
