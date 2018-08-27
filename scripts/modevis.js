@@ -43,12 +43,13 @@ var GetNoteName = (id) => {
 }
 
 // Util function for creating built-in modes
-var createMode = (name, arr) => {
+var createMode = (name, type, arr) => {
 	let mode = {};
 	mode.label = name;
 	mode.isUser = false;
 	mode.key = 0;
 	mode.name = GetNoteName(mode.key) + ' ' + mode.label;
+	mode.type = type;
 	mode.n = [];
 	for (let i = 0; i < arr.length; ++i) {
         mode.n.push (arr.charAt(i) !== ' ');
@@ -63,6 +64,7 @@ var randomMode = () => {
 	let mode = {};
 	mode.label = Math.random().toString(26).substr(2, 5);
 	mode.isUser = false;
+	mode.type = 2;
 	mode.key = 0;
 	mode.name = GetNoteName(mode.key) + ' ' + mode.label;
 	mode.n = [];
@@ -165,6 +167,7 @@ var expandModesToAllKeys = (modes) => {
 			let newMode = {};
 			newMode.isUser = modes[i].isUser;
 			newMode.key = key;
+			newMode.type = modes[i].type;
 
 			newMode.label = modes[i].label;
 			newMode.name = GetNoteName(newMode.key) + ' ' + newMode.label;
@@ -245,23 +248,23 @@ var getAllSimilarityPairs = (modes, settings, numTop) => {
 // Classical modes and a few common variations for quick testing
 var getDebugModes = () => {
 	return [
-		createMode("Vader Theme",				"#  #   ##  #"),
+		createMode("Vader Theme", 3,				"#  #   ##  #"),
 	];
 }
 
 // Classical modes and a few common variations for quick testing
 var getMedievalModes = () => {
 	return [
-		createMode("Ionian",					"# # ## # # #"),
-		createMode("Lydian",					"# # # ## # #"),
-		createMode("Mixolydian",				"# # ## # ## "),
-		createMode("Aeolian",					"# ## # ## # "),
-		createMode("Dorian",					"# ## # # ## "),
-		createMode("Phrygian",					"## # # ## # "),
-		createMode("Locrian",					"## # ##  # #"),
-		createMode("Harmonic Minor",			"# ## # ##  #"),
-		createMode("Melodic Minor",				"# ## # # # #"),
-		createMode("Harmonic Major",			"# # ## ##  #"),
+		createMode("Ionian", 1,					"# # ## # # #"),
+		createMode("Lydian", 1, 				"# # # ## # #"),
+		createMode("Mixolydian", 1,				"# # ## # ## "),
+		createMode("Aeolian", 1,				"# ## # ## # "),
+		createMode("Dorian", 1,					"# ## # # ## "),
+		createMode("Phrygian", 1,				"## # # ## # "),
+		createMode("Locrian", 1,				"## # ##  # #"),
+		createMode("Harmonic Minor", 1,			"# ## # ##  #"),
+		createMode("Melodic Minor", 1,			"# ## # # # #"),
+		createMode("Harmonic Major", 1,			"# # ## ##  #"),
 	];
 }
 
@@ -297,8 +300,16 @@ var runAnalysis = (edgeCutoff, settings, exa) => {
 	return { 'pairs': pairs, 'modes': modes };
 }
 
-var createGraphNode = (name, group, svgWidth, svgHeight) => {
-    return {"id": name, "group": group, "fixed": "TRUE", "x": Math.random() * svgWidth, "y": Math.random() * svgHeight};
+// Types: 0 = user, 1 = classical/medieval mode, 2 = other mode, 3 = chord(s)
+var createGraphNode = (name, group, type, svgWidth, svgHeight) => {
+    return {
+        "id": name,
+        "group": group,
+        "type": type,
+        "fixed": "TRUE",
+        "x": Math.random() * svgWidth,
+        "y": Math.random() * svgHeight,
+    };
 }
 
 // Returns JSON of graph info (nodes and edges)
@@ -306,6 +317,7 @@ var convertAnalysisToGraph = (modes, pairs, depth, svgWidth, svgHeight, settings
 	let g = {};
 	g.nodes = [];
 	g.links = [];
+	g.modeDict = {};
 
 	const layer = [
         {maxNodes:                  Math.ceil(0.65 * settings.filterResultMax),
@@ -361,7 +373,9 @@ var convertAnalysisToGraph = (modes, pairs, depth, svgWidth, svgHeight, settings
 	// Add user modes
 	for (let i = 0; i < modes.length; ++i) {
         if (modes[i].isUser) {
-            g.nodes.push(createGraphNode(modes[i].name, 0, svgWidth, svgHeight));
+            g.nodes.push(createGraphNode(modes[i].name, 0, 0, svgWidth, svgHeight));
+            g.modeDict[modes[i].name] = modes[i];
+
             usedNodes.add(modes[i].name);
             connectors.add(modes[i].name);
         }
@@ -417,16 +431,22 @@ var convertAnalysisToGraph = (modes, pairs, depth, svgWidth, svgHeight, settings
 
 		// Get item
 		const nameA = bucketData[useB][bucketItem].a.name;
+		const typeA = bucketData[useB][bucketItem].a.type;
 		const nameB = bucketData[useB][bucketItem].b.name;
+		const typeB = bucketData[useB][bucketItem].b.type;
 		const score = bucketData[useB][bucketItem].score;
 
 		if (!usedNodes.has(nameA)) {
-			g.nodes.push(createGraphNode(nameA, 1, svgWidth, svgHeight));
+			g.nodes.push(createGraphNode(nameA, 1, typeA, svgWidth, svgHeight));
+			g.modeDict[nameA] = bucketData[useB][bucketItem].a;
+
 			usedNodes.add(nameA);
 			connectorsNext.add(nameA);
 		}
 		if (!usedNodes.has(nameB)) {
-			g.nodes.push(createGraphNode(nameB, 1, svgWidth, svgHeight));
+			g.nodes.push(createGraphNode(nameB, 1, typeB, svgWidth, svgHeight));
+			g.modeDict[nameB] = bucketData[useB][bucketItem].b;
+
 			usedNodes.add(nameB);
 			connectorsNext.add(nameB);
 		}
@@ -479,23 +499,29 @@ var convertAnalysisToGraph = (modes, pairs, depth, svgWidth, svgHeight, settings
         let bucketItem = Math.floor(Math.random() * bucket.length);
 
         const nameA = bucket[bucketItem].a.name;
+        const typeA = bucket[bucketItem].a.type;
 		const nameB = bucket[bucketItem].b.name;
+		const typeB = bucket[bucketItem].b.type;
 		const score = bucket[bucketItem].score;
 
-		// Remove from bucket
-		bucket.splice(bucketItem, 1);
-
 		if (!usedNodes.has(nameA)) {
-            g.nodes.push(createGraphNode(nameA, 2, svgWidth, svgHeight));
+            g.nodes.push(createGraphNode(nameA, 2, typeA, svgWidth, svgHeight));
+            g.modeDict[nameA] = bucket[bucketItem].a;
+
             usedNodes.add(nameA);
             connectors.add(nameA);
         }
         if (!usedNodes.has(nameB)) {
-            g.nodes.push(createGraphNode(nameB, 2, svgWidth, svgHeight));
+            g.nodes.push(createGraphNode(nameB, 2, typeB, svgWidth, svgHeight));
+            g.modeDict[nameB] = bucket[bucketItem].b;
+
             usedNodes.add(nameB);
             connectors.add(nameB);
         }
         g.links.push({source: nameA, target: nameB, value: score, weight: score, 'alpha': layer[1].edgeAlpha});
+
+        // Remove from bucket
+		bucket.splice(bucketItem, 1);
 	}
 
 	// Add level 2 edges

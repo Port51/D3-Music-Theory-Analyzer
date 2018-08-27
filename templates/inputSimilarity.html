@@ -1,7 +1,7 @@
 <html>
 	<div class="sliderContainer" style="padding: 7px;">
 	    <div style="background: #9540ef; border-radius: 10px; margin-top: 3px;">
-	        <h3 style="padding: 0; margin: 0; text-align: center;">Note-Wise Comparisons:</h3>
+	        <h3 style="padding: 0; margin: 0; text-align: center;">Note Comparisons:</h3>
             <table width="100%" cellpadding = "0" style="table-layout: fixed; padding: 2px 10px 0px 10px;">
                 <col width="40%">
                 <tr><td style = "text-indent: 10px;"><label>Shared notes</label>
@@ -92,13 +92,15 @@
                         <option value="3">Debug Data</option>
                     </select>
                 </td></tr>
+
                 <!--
                 <tr><td style = "text-indent: 10px;"><label>Sharpness of settings</label></td>
                 <td><span class="range-label left"><svg width="40" height="30"><path d="M0,30 C0,30  40,0  80,30" fill="#fff" stroke="#fff" stroke-width="1px" /></svg></span>
                 <span class="range-label right"><svg width="40" height="30"><path d="M0,30 M40,30 C40,0  50,30  0,30" fill="#fff" stroke="#fff" stroke-width="1px" /></svg></span>
                 <input id="noteSimSharpness" type="range" min="0" max="100" value="90" def="90" class="slider" /></td></tr>
                 -->
-                <tr><td style = "text-indent: 10px;"><label>Number of Results to Display</label></td><td><input id="filterResultMax" type="range" min="1" max="50" value="20" def="20" class="slider" /></td></tr>
+
+                <tr><td style = "text-indent: 10px;"><label>Number of Results to Display</label></td><td><input id="filterResultMax" type="range" min="10" max="40" value="20" def="20" class="slider" /></td></tr>
 
             </table>
         </div>
@@ -111,6 +113,7 @@
         <button id="setSlidersMid" class="cool-button medium">Set sliders to middle</button>
         <button id="setSlidersDefault" class="cool-button medium">Set sliders to default</button>
         <button id="setSlidersFull" class="cool-button medium">Set sliders to full!</button>
+        <button id="runSim" class="cool-button large">Click here to run!</button>
     </div>
 
 </html>

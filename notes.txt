@@ -20,7 +20,7 @@ Methods:
 	Create force directed graph with findings
 	Special attention to mystery mode
 
-	
+
 
 COOL STUFF:
 -	Special FX when press note button...
@@ -60,3 +60,13 @@ CLUSTERING IDEA:
 
 
 
+<!--<svg width="500" height="360">
+        <!-- Piano background
+        <rect x="0" y="0" rx="10" ry="10" width="500" height="360" style="fill: #203720; stroke: #405740; stroke-width:3; opacity:1.0" />
+        <!-- Piano top
+        <rect x="0" y="0" rx="5" ry="5" width="500" height="70" style="fill: #304f30; stroke: #506f50; stroke-width:3; opacity:1.0" />
+        <!-- Root selection circles
+        <!-- Upper part of notes
+        <rect x="10" y="70" rx="5" ry="5" width="20" height="70" style="fill: #304f30; stroke: #506f50; stroke-width:3; opacity:1.0" />
+        <!-- Lower part of notes
+    </svg>-->

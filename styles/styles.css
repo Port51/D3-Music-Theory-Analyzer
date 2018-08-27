@@ -134,20 +134,20 @@ input[type=range]:focus::-ms-fill-upper {
     z-index: 1;
     color: #dddddd;
     background: #3071a9;
-    border-radius: 5%;
+    border-radius: 7%;
     border: 1.75px solid #010101;
     /* Set transition for box shadow */
     transition: box-shadow 200ms cubic-bezier(.2,0,.7,1), transform 150ms cubic-bezier(.2,0,.7,1);
 }
 .cool-button.medium {
     width: 100px;
-    height: 45px;
+    height: 40px;
     font-size: 13px;
     margin: 0px 10px;
 }
 .cool-button.large {
     width: 120px;
-    height: 60px;
+    height: 50px;
     font-size: 17px;
     margin: 0px 2px 16px 16px; /* top, bottom, L/R */
 }
@@ -166,7 +166,7 @@ input[type=range]:focus::-ms-fill-upper {
 	background: #444400;
 	border-radius: 50%;
 	display: inline-block;
-	border: 1.0px solid #252520;
+	border: 1.75px solid #353530;
 	/* Set transition for box shadow */
     transition: box-shadow 125ms cubic-bezier(.2,0,.7,1), transform 80ms cubic-bezier(.2,0,.7,1);
 }
@@ -198,7 +198,7 @@ input[type=range]:focus::-ms-fill-upper {
 
 /* Style the button that is used to open and close the collapsible content */
 .collapse-toggle-button {
-    background-color: #eee;
+    background-color: #fc0;
     color: #444;
     cursor: pointer;
     padding: 9px;
@@ -211,10 +211,11 @@ input[type=range]:focus::-ms-fill-upper {
 
 /* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
 .active, .collapse-toggle-button:hover {
-    background-color: #ccc;
+    background-color: #ff0;
 }
 
 .collapsible-input-area {
+    margin: 0;
     padding: 0 18px;
     display: block;
     overflow: hidden;
@@ -286,7 +287,7 @@ input[type=range]:focus::-ms-fill-upper {
 	border-right: 3px solid #4081b9;
 }
 
-.pianoBlack[highlight=false][mouseover=false] {
+.pianoBlack {
 	background: #202020;
 	border-right: 3px solid #484848;
 	border-bottom: 3px solid #484848;
