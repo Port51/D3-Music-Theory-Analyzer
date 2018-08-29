@@ -401,8 +401,8 @@
 
 			function dragstarted(d) {
 				if (!d3.event.active) simulation.alphaTarget(0.3).restart();
-				d.fx = d.x;
-				d.fy = d.y;
+				d.fx = Math.max(20, Math.min(width - 20, d.x));
+				d.fy = Math.max(20, Math.min(width - 20, d.y));
 
 				// Display on panel
 				if (d.id in modeDict) {
