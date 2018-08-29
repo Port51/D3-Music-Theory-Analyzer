@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-	    <title>Music Mode Analysis</title>
+		<title>Music Mode Analysis</title>
 
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -32,390 +32,404 @@
 
 	</head>
 
-    <body>
-
-        <div id="constant-upper-section">
-            <div id="collapsible-input-area" class="collapsible-input-area">
-                <table width="1400px">
-                <tr><td>
-                    <span class="loadTemplate" value="templates/inputSimilarity.html" onload="sliderButtons"></span>
-                </td>
-                <td align="center">
-                    <span class="loadTemplate" value="templates/largePiano.html" onload="pianoButtons"></span>
-                    <span class="loadTemplate" value="templates/instructions.html"></span>
-                </td>
-                </tr>
-                </table>
-
-            </div>
-            <button id="settings-collapse" class="collapse-toggle-button">Show/Hide Settings</button>
-        </div>
-        <svg width="1400" height="700"><rect width="100%" height="100%" fill="black"></rect></svg>
-
-    <script>
-        /* Collapsible input menu */
-        const collapseButton = document.getElementsByClassName("collapse-toggle-button")[0];
-        var isMenuCollapsed = true;
-        document.getElementById("collapsible-input-area").style.display = "none";
-
-        if (collapseButton) {
-            collapseButton.addEventListener("click", function() {
-                this.classList.toggle("active");
-                isMenuCollapsed = !isMenuCollapsed;
-                const content = document.getElementById("collapsible-input-area");
-                if (isMenuCollapsed) {
-                    content.style.display = "none";
-                } else {
-                    content.style.display = "block";
-                }
-            });
-        }
-
-    </script>
-
-    <script>
-
-        // Shared data
-        var rootSel = 0; // default to key of C
-        var keySel =		    [false, false, false, false, false, false, false, false, false, false, false];
-        var keySelVis =		    [false, false, false, false, false, false, false, false, false, false, false];
-        var mouseOverKey = -1;
-        var keyMouseOverVis =	[false, false, false, false, false, false, false, false, false, false, false];
-        var modeDict = {};
-
-        // Create settings
-        var createSettings = () => {
-            // Get inputs
-            let noteSim = 0.75;
-
-            return {
-                datasetID:  				parseInt($("#datasetID").find(":selected").val()),
-                wFactorRootMissing: 		parseFloat($("#rootMissing").val() / 100),
-                wFactorNoteSimilarity: 		parseFloat($("#noteSim").val() / 100),
-                wFactorAdd: 				parseFloat($("#noteAdd").val() / 100),
-                wFactorRemove: 				parseFloat($("#noteRem").val() / 100),
-                wFactorRootOffset: 			parseFloat($("#rootOff").val() / 25),
-                wFactorMoodHappy:   		parseFloat($("#moodEstimHappy").val() / 100),
-                wFactorMoodBittersweet:   	parseFloat($("#moodEstimBittersweet").val() / 100),
-                wFactorIntervalCount: 		parseFloat($("#iCount").val() / 100),
-                wFactorIntervalOpenness: 	parseFloat($("#iOpen").val() / 100),
-                filterResultMax: 			parseInt($("#filterResultMax").val()),
-            };
-        }
-
-        var clickRootSelect = (event) => {
-            const note = event.data.note;
-            rootSel = note;
-
-            setRootSelectColors();
-        }
-
-        var clickKey = (event) => {
-            const note = event.data.note;
-            //alert("Key press id = " + note);
-            keySel[note] = !keySel[note];
-            if (keySel[note] == null) {
-                keySel[note] = false;
-            }
-
-            setKeyColors();
-        }
-
-        var hoverKeyOn = function() {
-            mouseOverKey = parseInt($(this).attr('value'));
-            setKeyColors();
-        }
-
-        var hoverKeyOff = function() {
-            if (mouseOverKey === parseInt($(this).attr('value'))) {
-                mouseOverKey = -1;
-            }
-            setKeyColors();
-        }
-
-        var resetAnimation = (elem, animName) => {
-            elem.each(function() {
-                $(this).removeClass(animName).width($(this).width()).addClass(animName);
-            });
-
-        }
-
-        // Update colors for root selection
-        var setRootSelectColors = () => {
-            for (let i = 0; i < 12; ++i) {
-                $('.rootSelect[value="' + i + '"]').find("span").attr('value', (rootSel == i));
-            }
-        }
-
-        // Update colors for keys that have changed
-        var setKeyColors = () => {
-            for (let i = 0; i < 12; ++i) {
-                if (keySel[i] == null) {
-                    keySel[i] = false;
-                }
-                if (keySelVis[i] != keySel[i]) {
-                    let color = '';
-                    if (keySel[i])
-                        color = '#3355ee';
-                    else if (i === 1 || i === 3 || i === 6 || i === 8 || i === 10)
-                        color = '#222222';
-                    else
-                        color = '#cccccc';
-
-                    // Change color
-                    if (keySel[i]) {
-                        $(".pianoKey[value=" + i + "]").attr('highlight', 'true');
-                        // Trigger animation
-                        resetAnimation($('.pianoKey[value="' + i + '"]'), "jitterKey");
-                    }
-                    else
-                        $(".pianoKey[value=" + i + "]").attr('highlight', 'false');
-
-                    // Remember
-                    keySelVis[i] = keySel[i];
-                }
-
-                // Mouseover
-                const wMouseOver = (mouseOverKey === i) ? true : false;
-                if (keyMouseOverVis[i] != wMouseOver) {
-                    keyMouseOverVis[i] = wMouseOver;
-                    $(".pianoKey[value=" + i + "]").attr('mouseover', keyMouseOverVis[i]);
-                }
-
-            }
-        }
-
-        var createUserMode = () => {
-            let mode = {};
-            mode.label = "- YOUR SCALE";
-            mode.isUser = true;
-            mode.type = 0;
-            mode.key = rootSel;
-            mode.name = GetNoteName(mode.key) + ' ' + mode.label;
-            mode.n = [];
-            for (let i = 0; i < 12; ++i) {
-                mode.n.push(keySel[i]);
-            }
-            // Un-transpose to static version
-            mode.c = [];
-            for (let i = 0; i < 12; ++i) {
-                mode.c.push(mode.n[(i + mode.key) % 12]);
-            }
-            console.log("USER SCALE: (transposed, then static)");
-            console.log(mode.n);
-            console.log(mode.c);
-            mode.aliases = [];
-            return mode;
-        }
-
-        // Quick slider manip functions
-        var slidersZero = () => { const rememberFilter = $("#filterResultMax").val(); $(".slider").val("0"); $("#filterResultMax").val(rememberFilter); }
-        var slidersMid = () => { const rememberFilter = $("#filterResultMax").val(); $(".slider").val("50"); $("#filterResultMax").val(rememberFilter); }
-        var slidersDefault = () => { const rememberFilter = $("#filterResultMax").val(); $(".slider").each(function() { $(this).val($(this).attr('def')) }); $("#filterResultMax").val(rememberFilter); }
-        var slidersFull = () => { const rememberFilter = $("#filterResultMax").val(); $(".slider").val("100"); $("#filterResultMax").val(rememberFilter); }
-
-        var setSliderInputFunctions = () => {
-            $("#runSim").click(runSim);
-            $("#setSlidersZero").click(slidersZero);
-            $("#setSlidersMid").click(slidersMid);
-            $("#setSlidersDefault").click(slidersDefault);
-            $("#setSlidersFull").click(slidersFull);
-        }
-
-        var setPianoInputFunctions = () => {
-            $(".pianoKey").each(function() {
-                $(this).click({ note: parseInt($(this).attr('value')) }, clickKey);
-            });
-            $(".pianoKey").hover(hoverKeyOn, hoverKeyOff);
-            $(".rootSelect").each(function() {
-                $(this).click({ note: parseInt($(this).attr('value')) }, clickRootSelect);
-            });
-        }
-
-        $(document).ready(() => {
-            runStartingGraph();
-        });
-
-        var runStartingGraph = () => {
-            const graph = {"nodes":[{"id":"G - YOUR SCALE","group":0,"type":0,"fixed":"TRUE","x":178.9522421395139,"y":616.8655506650324},{"id":"G Ionian","group":1,"type":1,"fixed":"TRUE","x":37.73368335260856,"y":375.7795952083115},{"id":"G Acoustic","group":1,"type":2,"fixed":"TRUE","x":1173.11829456031,"y":527.0166879426815},{"id":"G Scottish","group":1,"type":2,"fixed":"TRUE","x":1203.4381989627561,"y":155.34636833139282},{"id":"G Tritone Scale","group":1,"type":2,"fixed":"TRUE","x":1150.8569224180687,"y":35.0677077843903},{"id":"G Lydian","group":1,"type":1,"fixed":"TRUE","x":572.449474853146,"y":440.5196655323541},{"id":"G Double Harmonic Major","group":1,"type":2,"fixed":"TRUE","x":925.6875814797824,"y":400.7900177494152},{"id":"G Overtone","group":1,"type":2,"fixed":"TRUE","x":183.55606057423205,"y":264.97639025274367},{"id":"G Elektra (Chord)","group":1,"type":3,"fixed":"TRUE","x":1192.258275037317,"y":422.25122598302437},{"id":"G Major Bebop","group":1,"type":2,"fixed":"TRUE","x":544.2601255429474,"y":96.89495745958277},{"id":"G Hirajoshi","group":1,"type":2,"fixed":"TRUE","x":66.08552542546403,"y":377.506406289061},{"id":"G Phrygian Dominant","group":1,"type":2,"fixed":"TRUE","x":1213.2425496515198,"y":195.6230244050998},{"id":"G Mixolydian","group":1,"type":1,"fixed":"TRUE","x":363.99035231553745,"y":0.7027006935658053},{"id":"G Bebop Dominant","group":1,"type":2,"fixed":"TRUE","x":656.4909027383125,"y":25.73555586888048},{"id":"G Hindu","group":2,"type":2,"fixed":"TRUE","x":491.4408110869242,"y":390.6954574508244},{"id":"G Major Pentatonic","group":2,"type":2,"fixed":"TRUE","x":57.68125212549453,"y":351.1389461919109},{"id":"G New Pentatonic","group":2,"type":2,"fixed":"TRUE","x":313.10285345463456,"y":49.370969025649615},{"id":"G Pentatonic Variation","group":2,"type":2,"fixed":"TRUE","x":84.10540363011667,"y":482.04302870323124},{"id":"G Harmonic Major","group":2,"type":1,"fixed":"TRUE","x":662.3792527202897,"y":268.7494929299502}],"links":[{"source":"G Scottish","target":"G - YOUR SCALE","value":0.03745312499999998,"weight":0.03745312499999998,"alpha":1},{"source":"G Double Harmonic Major","target":"G - YOUR SCALE","value":0.09800173912519287,"weight":0.09800173912519287,"alpha":1},{"source":"G Phrygian Dominant","target":"G - YOUR SCALE","value":0.09962160258180763,"weight":0.09962160258180763,"alpha":1},{"source":"G Overtone","target":"G - YOUR SCALE","value":0.17592705620659727,"weight":0.17592705620659727,"alpha":1},{"source":"G Ionian","target":"G Acoustic","value":0.2515133088211155,"weight":0.2515133088211155,"alpha":0.6},{"source":"G Lydian","target":"G Mixolydian","value":0.2515133088211155,"weight":0.2515133088211155,"alpha":0.6},{"source":"G Major Bebop","target":"G Acoustic","value":0.25329137978601635,"weight":0.25329137978601635,"alpha":0.6},{"source":"G Tritone Scale","target":"G Acoustic","value":0.253492070928503,"weight":0.253492070928503,"alpha":0.6},{"source":"G Acoustic","target":"G New Pentatonic","value":0.2784225260718372,"weight":0.2784225260718372,"alpha":0.45},{"source":"G Tritone Scale","target":"G - YOUR SCALE","value":0.2797647659866898,"weight":0.2797647659866898,"alpha":1},{"source":"G Harmonic Major","target":"G Double Harmonic Major","value":0.2885160509130181,"weight":0.2885160509130181,"alpha":0.45},{"source":"G Tritone Scale","target":"G Overtone","value":0.2920225390625001,"weight":0.2920225390625001,"alpha":0.6},{"source":"G Tritone Scale","target":"G Elektra (Chord)","value":0.31008337520401,"weight":0.31008337520401,"alpha":0.6},{"source":"G Acoustic","target":"G Elektra (Chord)","value":0.35154595454182735,"weight":0.35154595454182735,"alpha":0.6},{"source":"G Hirajoshi","target":"G Acoustic","value":0.35331746271141107,"weight":0.35331746271141107,"alpha":0.6},{"source":"G Lydian","target":"G Elektra (Chord)","value":0.35748571722807854,"weight":0.35748571722807854,"alpha":0.6},{"source":"G Lydian","target":"G Major Pentatonic","value":0.4065356093696862,"weight":0.4065356093696862,"alpha":0.45},{"source":"G Lydian","target":"G - YOUR SCALE","value":0.4071293402777777,"weight":0.4071293402777777,"alpha":1},{"source":"G Acoustic","target":"G - YOUR SCALE","value":0.4140082465277777,"weight":0.4140082465277777,"alpha":1},{"source":"G Major Bebop","target":"G Major Pentatonic","value":0.4220089285714285,"weight":0.4220089285714285,"alpha":0.45},{"source":"G Major Pentatonic","target":"G Bebop Dominant","value":0.4220089285714285,"weight":0.4220089285714285,"alpha":0.45},{"source":"G Bebop Dominant","target":"G Pentatonic Variation","value":0.4262740384615385,"weight":0.4262740384615385,"alpha":0.45},{"source":"G Lydian","target":"G Major Bebop","value":0.4343423835357992,"weight":0.4343423835357992,"alpha":0.6},{"source":"G Lydian","target":"G Bebop Dominant","value":0.4343423835357992,"weight":0.4343423835357992,"alpha":0.6},{"source":"G Elektra (Chord)","target":"G - YOUR SCALE","value":0.4362821767601172,"weight":0.4362821767601172,"alpha":1},{"source":"G Hirajoshi","target":"G - YOUR SCALE","value":0.43770175000337136,"weight":0.43770175000337136,"alpha":1},{"source":"G Major Pentatonic","target":"G Pentatonic Variation","value":0.45468749999999997,"weight":0.45468749999999997,"alpha":0.35},{"source":"G Acoustic","target":"G Bebop Dominant","value":0.4749213370987806,"weight":0.4749213370987806,"alpha":0.6},{"source":"G Ionian","target":"G Lydian","value":0.5095486111111112,"weight":0.5095486111111112,"alpha":0.6},{"source":"G Mixolydian","target":"G Acoustic","value":0.5095486111111112,"weight":0.5095486111111112,"alpha":0.6},{"source":"G Overtone","target":"G Hindu","value":0.5095486111111112,"weight":0.5095486111111112,"alpha":0.45},{"source":"G Lydian","target":"G Hirajoshi","value":0.5759369893557598,"weight":0.5759369893557598,"alpha":0.6},{"source":"G Ionian","target":"G - YOUR SCALE","value":0.59925,"weight":0.59925,"alpha":1},{"source":"G Major Bebop","target":"G - YOUR SCALE","value":0.605625,"weight":0.605625,"alpha":1},{"source":"G Bebop Dominant","target":"G - YOUR SCALE","value":0.605625,"weight":0.605625,"alpha":1},{"source":"G Mixolydian","target":"G - YOUR SCALE","value":0.6093749999999999,"weight":0.6093749999999999,"alpha":1},{"source":"G Double Harmonic Major","target":"G Phrygian Dominant","value":0.6840228247067156,"weight":0.6840228247067156,"alpha":0.6},{"source":"G Harmonic Major","target":"G Hindu","value":0.6840228247067156,"weight":0.6840228247067156,"alpha":0.35},{"source":"G Ionian","target":"G Mixolydian","value":0.6941253156562301,"weight":0.6941253156562301,"alpha":0.6},{"source":"G Lydian","target":"G Acoustic","value":0.6941253156562301,"weight":0.6941253156562301,"alpha":0.6},{"source":"G Mixolydian","target":"G Major Bebop","value":0.699032428029551,"weight":0.699032428029551,"alpha":0.6},{"source":"G Major Bebop","target":"G Bebop Dominant","value":0.7857142857142857,"weight":0.7857142857142857,"alpha":0.6},{"source":"G Ionian","target":"G Major Bebop","value":0.8524061768879738,"weight":0.8524061768879738,"alpha":0.6},{"source":"G Ionian","target":"G Bebop Dominant","value":0.8524061768879738,"weight":0.8524061768879738,"alpha":0.6},{"source":"G Mixolydian","target":"G Bebop Dominant","value":0.9320432373727348,"weight":0.9320432373727348,"alpha":0.6}],"modeDict":{"G - YOUR SCALE":{"label":"- YOUR SCALE","isUser":true,"type":0,"key":7,"name":"G - YOUR SCALE","n":[false,false,true,false,false,false,false,true,false,false,false,true],"c":[true,false,false,false,true,false,false,true,false,false,false,false],"aliases":[]},"G Ionian":{"isUser":false,"key":7,"type":1,"label":"Ionian","name":"G Ionian","c":[true,false,true,false,true,true,false,true,false,true,false,true],"n":[true,false,true,false,true,false,true,true,false,true,false,true]},"G Acoustic":{"isUser":false,"key":7,"type":2,"label":"Acoustic","name":"G Acoustic","c":[true,false,true,false,true,false,true,true,false,true,true,false],"n":[false,true,true,false,true,true,false,true,false,true,false,true]},"G Scottish":{"isUser":false,"key":7,"type":2,"label":"Scottish","name":"G Scottish","c":[true,false,true,false,false,true,false,true,false,true,false,false],"n":[true,false,true,false,true,false,false,true,false,true,false,false]},"G Tritone Scale":{"isUser":false,"key":7,"type":2,"label":"Tritone Scale","name":"G Tritone Scale","c":[true,true,false,false,true,false,true,true,false,false,true,false],"n":[false,true,true,false,false,true,false,true,true,false,false,true]},"G Lydian":{"isUser":false,"key":7,"type":1,"label":"Lydian","name":"G Lydian","c":[true,false,true,false,true,false,true,true,false,true,false,true],"n":[false,true,true,false,true,false,true,true,false,true,false,true]},"G Double Harmonic Major":{"isUser":false,"key":7,"type":2,"label":"Double Harmonic Major","name":"G Double Harmonic Major","c":[true,true,false,false,true,true,false,true,true,false,false,true],"n":[true,false,true,true,false,false,true,true,true,false,false,true]},"G Overtone":{"isUser":false,"key":7,"type":2,"label":"Overtone","name":"G Overtone","c":[true,false,true,false,true,false,true,true,true,false,true,false],"n":[false,true,true,true,false,true,false,true,false,true,false,true]},"G Elektra (Chord)":{"isUser":false,"key":7,"type":3,"label":"Elektra (Chord)","name":"G Elektra (Chord)","c":[true,true,false,false,true,false,false,true,false,true,false,false],"n":[false,false,true,false,true,false,false,true,true,false,false,true]},"G Major Bebop":{"isUser":false,"key":7,"type":2,"label":"Major Bebop","name":"G Major Bebop","c":[true,false,true,false,true,true,false,true,true,true,false,true],"n":[true,false,true,true,true,false,true,true,false,true,false,true]},"G Hirajoshi":{"isUser":false,"key":7,"type":2,"label":"Hirajoshi","name":"G Hirajoshi","c":[true,false,false,false,true,false,true,true,false,false,false,true],"n":[false,true,true,false,false,false,true,true,false,false,false,true]},"G Phrygian Dominant":{"isUser":false,"key":7,"type":2,"label":"Phrygian Dominant","name":"G Phrygian Dominant","c":[true,true,false,false,true,true,false,true,true,false,true,false],"n":[true,false,true,true,false,true,false,true,true,false,false,true]},"G Mixolydian":{"isUser":false,"key":7,"type":1,"label":"Mixolydian","name":"G Mixolydian","c":[true,false,true,false,true,true,false,true,false,true,true,false],"n":[true,false,true,false,true,true,false,true,false,true,false,true]},"G Bebop Dominant":{"isUser":false,"key":7,"type":2,"label":"Bebop Dominant","name":"G Bebop Dominant","c":[true,false,true,false,true,true,false,true,false,true,true,true],"n":[true,false,true,false,true,true,true,true,false,true,false,true]},"G Hindu":{"isUser":false,"key":7,"type":2,"label":"Hindu","name":"G Hindu","c":[true,false,true,false,true,true,false,true,true,false,true,false],"n":[true,false,true,true,false,true,false,true,false,true,false,true]},"G Major Pentatonic":{"isUser":false,"key":7,"type":2,"label":"Major Pentatonic","name":"G Major Pentatonic","c":[true,false,true,false,true,false,false,true,false,true,false,false],"n":[false,false,true,false,true,false,false,true,false,true,false,true]},"G New Pentatonic":{"isUser":false,"key":7,"type":2,"label":"New Pentatonic","name":"G New Pentatonic","c":[true,false,true,false,true,false,true,false,false,true,false,false],"n":[false,true,false,false,true,false,false,true,false,true,false,true]},"G Pentatonic Variation":{"isUser":false,"key":7,"type":2,"label":"Pentatonic Variation","name":"G Pentatonic Variation","c":[true,false,false,false,true,false,false,true,false,true,true,false],"n":[false,false,true,false,true,true,false,true,false,false,false,true]},"G Harmonic Major":{"isUser":false,"key":7,"type":1,"label":"Harmonic Major","name":"G Harmonic Major","c":[true,false,true,false,true,true,false,true,true,false,false,true],"n":[true,false,true,true,false,false,true,true,false,true,false,true]}}};
-            createD3Graph(graph);
-        }
-
-        var runSim = () => {
-            // Trigger collapse settings
-            $('#settings-collapse').trigger('click');
-
-            settings = createSettings();
-            exa = createUserMode();
-
-            useGraph = true;
-            if (!useGraph) {
-                // DEBUG: Just print results to console
-                runAnalysis(0.0, settings, exa);
-            }
-            else {
-                // DEBUG: Handle D3 graph
-                const svg = d3.select("svg");
-                const width = +svg.attr("width");
-                const height = +svg.attr("height");
-
-                const results = runAnalysis(0.025, settings, exa);
-                const graph = convertAnalysisToGraph(results.modes, results.pairs, 2, width, height, settings);
-                //console.log(JSON.stringify(graph));
-
-                createD3Graph(graph);
-
-
-            } // end useGraph
-        } // end runSim
-
-        var createD3Graph = (graph) => {
-            var svg = d3.select("svg");
-            var width = +svg.attr("width");
-            var height = +svg.attr("height");
-
-            // Graph settings (TODO: move these elsewhere)
-            const edgeWiMin = 0.5;
-            const edgeWiMax = 25.0;
-            const edgeWiPow = 1.0;
-            const d3forces = {
-                edgeStr: 0.20,
-                edgeWeightExtraPull: 0.75,
-                sepStr: 3000,
-                driftToCenter: 0.05,
-            }
-            var weightScale = d3.scaleLinear().domain(d3.extent(graph.links, function(d) { return Math.pow(d.weight, d3forces.edgePow) * d3forces.edgeStr })).range([.1, 1]);
-            var colScale = d3.scaleLinear()
-                .domain(d3.ticks(0, 100, 1))
-                .range(["#3310ef", "#10fcfc"]);
-            //var color = d3.scaleOrdinal(d3.schemeCategory20); //["#ffff00", "#0000ff", "#00aaaa"]
-            // 0 = user, 1 = classical, 2 = other, 3 = chords
-            var color = d3.scaleOrdinal()
-                .range(["#d6d628", "#3310ef", "#10dcdc", "#c6c618"]);
-            var groupRadius = (groupID) => {
-                return 38 - groupID * 8;
-            }
-
-
-            // Clear the graph and redraw background color
-            resetD3Graph(svg);
-
-            // Save mode info
-            modeDict = graph.modeDict;
-
-
-            var simulation = d3.forceSimulation()
-                .force("link", d3.forceLink().strength(function(d){ return d3forces.edgeStr * (1.0 + d3forces.edgeWeightExtraPull * Math.pow(d.weight, 2.0)); }).id(function(d) {
-                    return d.id;
-                }))
-                /*.force("link", d3.forceLink().id(function(d) { return d.id; }))*/
-                .force("charge", d3.forceManyBody().strength(-d3forces.sepStr))
-                .force('x', d3.forceX(width * 0.5).strength(d3forces.driftToCenter))
-                .force('y', d3.forceY(height * 0.5).strength(d3forces.driftToCenter));
-
-            var link = svg.append("g")
-                .attr("class", "links")
-                .selectAll("line")
-                .data(graph.links)
-                .enter().append("line")
-                .attr("stroke-width", function(d) { return d.alpha * Math.pow(d.value, edgeWiPow) * (edgeWiMax - edgeWiMin) + edgeWiMin; })
-                .style("stroke", function(d) { return colScale(d.value * 100.0); })
-                .style("pointer-events", "none")
-                .style("stroke-opacity", function(d) { return d.alpha; });
-
-            // Sort links so larger connections drawn on top
-            var links = d3.selectAll('line.link')
-                .sort(function(a, b) {
-                    return order[a.stroke-width] > order[b.stroke-width] ? -1 : order[b.stroke-width] > order[a.stroke-width] ? 1 : 0;
-                });
-
-            var node = svg.append("g")
-                .attr("class", "nodes")
-                .selectAll("foo")
-                .data(graph.nodes)
-                .enter().append("g");
-
-            var circles = node.append("circle")
-                .attr("r", function(d) { return groupRadius(d.group); })
-                .style("fill", function(d) { return color(d.group); })
-                .style("stroke", function(d) { return (d.type == 1) ? "#ffff00" : "#dddddd"; })
-                .style("stroke-width", "2.0px");
-
-            var labels = node.append("text")
-                .text(function(d) { return d.id; })
-                .attr("class", "node-labels")
-                .attr("text-anchor", "middle")
-
-            node.append("title")
-                .text(function(d) { return d.id; });
-
-            // Set up drag and drop
-            node.call(d3.drag()
-                    .on("start", dragstarted)
-                    .on("drag", dragged)
-                    .on("end", dragended));
-
-            simulation
-                .nodes(graph.nodes)
-                .on("tick", ticked);
-
-            simulation.force("link")
-                .links(graph.links);
-
-            // Add panel showing selected mode
-            createD3Panel(svg, width, height);
-
-
-
-            function ticked() {
-
-
-                node
-                    .attr("cx", function(d) { return Math.max(20, Math.min(width - 20, d.x)); })
-                    .attr("cy", function(d) { return Math.max(20, Math.min(height - 20, d.y)); })
-                    .attr("transform", function(d) { return "translate(" +
-                        Math.max(20, Math.min(width - 20, d.x)) + "," +
-                        Math.max(20, Math.min(height - 20, d.y)) + ")"; })
-
-                link
-                    .attr("x1", function(d) { return Math.max(20, Math.min(width - 20, d.source.x)); })
-                    .attr("y1", function(d) { return Math.max(20, Math.min(height - 20, d.source.y)); })
-                    .attr("x2", function(d) { return Math.max(20, Math.min(width - 20, d.target.x)); })
-                    .attr("y2", function(d) { return Math.max(20, Math.min(height - 20, d.target.y)); });
-
-            }
-
-            function dragstarted(d) {
-                if (!d3.event.active) simulation.alphaTarget(0.3).restart();
-                d.fx = d.x;
-                d.fy = d.y;
-
-                // Display on panel
-                if (d.id in modeDict) {
-                    // Calculate analysis, if haven't yet
-                    // This is info like chord names
-                    if (modeDict[d.id].analysis == null) {
-                        modeDict[d.id].analysis = analyzeModeForPanel(modeDict[d.id]);
-                    }
-
-                    setPanelMode(modeDict[d.id]);
-                }
-
-            }
-
-            function dragged(d) {
-                d.fx += d3.event.dx;
-                d.fy += d3.event.dy;
-            }
-
-            function dragended(d) {
-                if (!d3.event.active) simulation.alphaTarget(0);
-                d.fx = null;
-                d.fy = null;
-            }
-        }
-
-    </script>
-
-    </body>
+	<body>
+
+		<div id="constant-upper-section">
+			<div id="collapsible-input-area" class="collapsible-input-area">
+				<table width="1400px">
+				<tr><td>
+					<span class="loadTemplate" value="templates/inputSimilarity.html" onload="sliderButtons"></span>
+				</td>
+				<td align="center">
+					<span class="loadTemplate" value="templates/largePiano.html" onload="pianoButtons"></span>
+					<span class="loadTemplate" value="templates/instructions.html"></span>
+				</td>
+				</tr>
+				</table>
+
+			</div>
+			<button id="settings-collapse" class="collapse-toggle-button">Show/Hide Settings</button>
+		</div>
+
+		<div class="svg-container">
+			<svg class="svg-content" preserveAspectRatio="xMidYMid meet" viewBox="0 0 1440 675"><rect width="100%" height="100%" fill="black"></rect></svg>
+		</div>
+
+	<script>
+		/* Collapsible input menu */
+		const collapseButton = document.getElementsByClassName("collapse-toggle-button")[0];
+		var isMenuCollapsed = true;
+		document.getElementById("collapsible-input-area").style.display = "none";
+
+		if (collapseButton) {
+			collapseButton.addEventListener("click", function() {
+				this.classList.toggle("active");
+				isMenuCollapsed = !isMenuCollapsed;
+				const content = document.getElementById("collapsible-input-area");
+				if (isMenuCollapsed) {
+					content.style.display = "none";
+				} else {
+					content.style.display = "block";
+				}
+			});
+		}
+
+	</script>
+
+	<script>
+
+		// Shared data
+		var rootSel = 0; // default to key of C
+		var keySel =		    [false, false, false, false, false, false, false, false, false, false, false];
+		var keySelVis =		    [false, false, false, false, false, false, false, false, false, false, false];
+		var mouseOverKey = -1;
+		var keyMouseOverVis =	[false, false, false, false, false, false, false, false, false, false, false];
+		var modeDict = {};
+
+		// Create settings
+		var createSettings = () => {
+			// Get inputs
+			let noteSim = 0.75;
+
+			return {
+				datasetID:  				parseInt($("#datasetID").find(":selected").val()),
+				wFactorRootMissing: 		parseFloat($("#rootMissing").val() / 100),
+				wFactorNoteSimilarity: 		parseFloat($("#noteSim").val() / 100),
+				wFactorAdd: 				parseFloat($("#noteAdd").val() / 100),
+				wFactorRemove: 				parseFloat($("#noteRem").val() / 100),
+				wFactorRootOffset: 			parseFloat($("#rootOff").val() / 25),
+				wFactorMoodHappy:   		parseFloat($("#moodEstimHappy").val() / 100),
+				wFactorMoodBittersweet:   	parseFloat($("#moodEstimBittersweet").val() / 100),
+				wFactorIntervalCount: 		parseFloat($("#iCount").val() / 100),
+				wFactorIntervalOpenness: 	parseFloat($("#iOpen").val() / 100),
+				filterResultMax: 			parseInt($("#filterResultMax").val()),
+			};
+		}
+
+		var clickRootSelect = (event) => {
+			const note = event.data.note;
+			rootSel = note;
+
+			setRootSelectColors();
+		}
+
+		var clickKey = (event) => {
+			const note = event.data.note;
+			//alert("Key press id = " + note);
+			keySel[note] = !keySel[note];
+			if (keySel[note] == null) {
+				keySel[note] = false;
+			}
+
+			setKeyColors();
+		}
+
+		var hoverKeyOn = function() {
+			mouseOverKey = parseInt($(this).attr('value'));
+			setKeyColors();
+		}
+
+		var hoverKeyOff = function() {
+			if (mouseOverKey === parseInt($(this).attr('value'))) {
+				mouseOverKey = -1;
+			}
+			setKeyColors();
+		}
+
+		var resetAnimation = (elem, animName) => {
+			elem.each(function() {
+				$(this).removeClass(animName).width($(this).width()).addClass(animName);
+			});
+
+		}
+
+		// Update colors for root selection
+		var setRootSelectColors = () => {
+			for (let i = 0; i < 12; ++i) {
+				$('.rootSelect[value="' + i + '"]').find("span").attr('value', (rootSel == i));
+			}
+		}
+
+		// Update colors for keys that have changed
+		var setKeyColors = () => {
+			for (let i = 0; i < 12; ++i) {
+				if (keySel[i] == null) {
+					keySel[i] = false;
+				}
+				if (keySelVis[i] != keySel[i]) {
+					let color = '';
+					if (keySel[i])
+						color = '#3355ee';
+					else if (i === 1 || i === 3 || i === 6 || i === 8 || i === 10)
+						color = '#222222';
+					else
+						color = '#cccccc';
+
+					// Change color
+					if (keySel[i]) {
+						$(".pianoKey[value=" + i + "]").attr('highlight', 'true');
+						// Trigger animation
+						resetAnimation($('.pianoKey[value="' + i + '"]'), "jitterKey");
+					}
+					else
+						$(".pianoKey[value=" + i + "]").attr('highlight', 'false');
+
+					// Remember
+					keySelVis[i] = keySel[i];
+				}
+
+				// Mouseover
+				const wMouseOver = (mouseOverKey === i) ? true : false;
+				if (keyMouseOverVis[i] != wMouseOver) {
+					keyMouseOverVis[i] = wMouseOver;
+					$(".pianoKey[value=" + i + "]").attr('mouseover', keyMouseOverVis[i]);
+				}
+
+			}
+		}
+
+		var createUserMode = () => {
+			let mode = {};
+			mode.label = "- YOUR SCALE";
+			mode.isUser = true;
+			mode.type = 0;
+			mode.key = rootSel;
+			mode.name = GetNoteName(mode.key) + ' ' + mode.label;
+			mode.n = [];
+			for (let i = 0; i < 12; ++i) {
+				mode.n.push(keySel[i]);
+			}
+			// Un-transpose to static version
+			mode.c = [];
+			for (let i = 0; i < 12; ++i) {
+				mode.c.push(mode.n[(i + mode.key) % 12]);
+			}
+			console.log("USER SCALE: (transposed, then static)");
+			console.log(mode.n);
+			console.log(mode.c);
+			mode.aliases = [];
+			return mode;
+		}
+
+		// Quick slider manip functions
+		var slidersZero = () => { const rememberFilter = $("#filterResultMax").val(); $(".slider").val("0"); $("#filterResultMax").val(rememberFilter); }
+		var slidersMid = () => { const rememberFilter = $("#filterResultMax").val(); $(".slider").val("50"); $("#filterResultMax").val(rememberFilter); }
+		var slidersDefault = () => { const rememberFilter = $("#filterResultMax").val(); $(".slider").each(function() { $(this).val($(this).attr('def')) }); $("#filterResultMax").val(rememberFilter); }
+		var slidersFull = () => { const rememberFilter = $("#filterResultMax").val(); $(".slider").val("100"); $("#filterResultMax").val(rememberFilter); }
+
+		var setSliderInputFunctions = () => {
+			$("#runSim").click(runSim);
+			$("#setSlidersZero").click(slidersZero);
+			$("#setSlidersMid").click(slidersMid);
+			$("#setSlidersDefault").click(slidersDefault);
+			$("#setSlidersFull").click(slidersFull);
+		}
+
+		var setPianoInputFunctions = () => {
+			$(".pianoKey").each(function() {
+				$(this).click({ note: parseInt($(this).attr('value')) }, clickKey);
+			});
+			$(".pianoKey").hover(hoverKeyOn, hoverKeyOff);
+			$(".rootSelect").each(function() {
+				$(this).click({ note: parseInt($(this).attr('value')) }, clickRootSelect);
+			});
+		}
+
+		$(document).ready(() => {
+			waitForSVGSize();
+		});
+
+		var waitForSVGSize = () => {
+			const svg = d3.select("svg");
+			//alert (+svg.property("viewBox").baseVal.width);
+			if (+svg.property("viewBox").baseVal.width > 0 && +svg.property("viewBox").baseVal.height > 0) {
+				runStartingGraph();
+			} else {
+				window.setTimeout(waitForSVGSize, 100);
+			}
+		}
+
+		var runStartingGraph = () => {
+			const graph = {"nodes":[{"id":"G - YOUR SCALE","group":0,"type":0,"fixed":"TRUE","x":178.9522421395139,"y":616.8655506650324},{"id":"G Ionian","group":1,"type":1,"fixed":"TRUE","x":37.73368335260856,"y":375.7795952083115},{"id":"G Acoustic","group":1,"type":2,"fixed":"TRUE","x":1173.11829456031,"y":527.0166879426815},{"id":"G Scottish","group":1,"type":2,"fixed":"TRUE","x":1203.4381989627561,"y":155.34636833139282},{"id":"G Tritone Scale","group":1,"type":2,"fixed":"TRUE","x":1150.8569224180687,"y":35.0677077843903},{"id":"G Lydian","group":1,"type":1,"fixed":"TRUE","x":572.449474853146,"y":440.5196655323541},{"id":"G Double Harmonic Major","group":1,"type":2,"fixed":"TRUE","x":925.6875814797824,"y":400.7900177494152},{"id":"G Overtone","group":1,"type":2,"fixed":"TRUE","x":183.55606057423205,"y":264.97639025274367},{"id":"G Elektra (Chord)","group":1,"type":3,"fixed":"TRUE","x":1192.258275037317,"y":422.25122598302437},{"id":"G Major Bebop","group":1,"type":2,"fixed":"TRUE","x":544.2601255429474,"y":96.89495745958277},{"id":"G Hirajoshi","group":1,"type":2,"fixed":"TRUE","x":66.08552542546403,"y":377.506406289061},{"id":"G Phrygian Dominant","group":1,"type":2,"fixed":"TRUE","x":1213.2425496515198,"y":195.6230244050998},{"id":"G Mixolydian","group":1,"type":1,"fixed":"TRUE","x":363.99035231553745,"y":0.7027006935658053},{"id":"G Bebop Dominant","group":1,"type":2,"fixed":"TRUE","x":656.4909027383125,"y":25.73555586888048},{"id":"G Hindu","group":2,"type":2,"fixed":"TRUE","x":491.4408110869242,"y":390.6954574508244},{"id":"G Major Pentatonic","group":2,"type":2,"fixed":"TRUE","x":57.68125212549453,"y":351.1389461919109},{"id":"G New Pentatonic","group":2,"type":2,"fixed":"TRUE","x":313.10285345463456,"y":49.370969025649615},{"id":"G Pentatonic Variation","group":2,"type":2,"fixed":"TRUE","x":84.10540363011667,"y":482.04302870323124},{"id":"G Harmonic Major","group":2,"type":1,"fixed":"TRUE","x":662.3792527202897,"y":268.7494929299502}],"links":[{"source":"G Scottish","target":"G - YOUR SCALE","value":0.03745312499999998,"weight":0.03745312499999998,"alpha":1},{"source":"G Double Harmonic Major","target":"G - YOUR SCALE","value":0.09800173912519287,"weight":0.09800173912519287,"alpha":1},{"source":"G Phrygian Dominant","target":"G - YOUR SCALE","value":0.09962160258180763,"weight":0.09962160258180763,"alpha":1},{"source":"G Overtone","target":"G - YOUR SCALE","value":0.17592705620659727,"weight":0.17592705620659727,"alpha":1},{"source":"G Ionian","target":"G Acoustic","value":0.2515133088211155,"weight":0.2515133088211155,"alpha":0.6},{"source":"G Lydian","target":"G Mixolydian","value":0.2515133088211155,"weight":0.2515133088211155,"alpha":0.6},{"source":"G Major Bebop","target":"G Acoustic","value":0.25329137978601635,"weight":0.25329137978601635,"alpha":0.6},{"source":"G Tritone Scale","target":"G Acoustic","value":0.253492070928503,"weight":0.253492070928503,"alpha":0.6},{"source":"G Acoustic","target":"G New Pentatonic","value":0.2784225260718372,"weight":0.2784225260718372,"alpha":0.45},{"source":"G Tritone Scale","target":"G - YOUR SCALE","value":0.2797647659866898,"weight":0.2797647659866898,"alpha":1},{"source":"G Harmonic Major","target":"G Double Harmonic Major","value":0.2885160509130181,"weight":0.2885160509130181,"alpha":0.45},{"source":"G Tritone Scale","target":"G Overtone","value":0.2920225390625001,"weight":0.2920225390625001,"alpha":0.6},{"source":"G Tritone Scale","target":"G Elektra (Chord)","value":0.31008337520401,"weight":0.31008337520401,"alpha":0.6},{"source":"G Acoustic","target":"G Elektra (Chord)","value":0.35154595454182735,"weight":0.35154595454182735,"alpha":0.6},{"source":"G Hirajoshi","target":"G Acoustic","value":0.35331746271141107,"weight":0.35331746271141107,"alpha":0.6},{"source":"G Lydian","target":"G Elektra (Chord)","value":0.35748571722807854,"weight":0.35748571722807854,"alpha":0.6},{"source":"G Lydian","target":"G Major Pentatonic","value":0.4065356093696862,"weight":0.4065356093696862,"alpha":0.45},{"source":"G Lydian","target":"G - YOUR SCALE","value":0.4071293402777777,"weight":0.4071293402777777,"alpha":1},{"source":"G Acoustic","target":"G - YOUR SCALE","value":0.4140082465277777,"weight":0.4140082465277777,"alpha":1},{"source":"G Major Bebop","target":"G Major Pentatonic","value":0.4220089285714285,"weight":0.4220089285714285,"alpha":0.45},{"source":"G Major Pentatonic","target":"G Bebop Dominant","value":0.4220089285714285,"weight":0.4220089285714285,"alpha":0.45},{"source":"G Bebop Dominant","target":"G Pentatonic Variation","value":0.4262740384615385,"weight":0.4262740384615385,"alpha":0.45},{"source":"G Lydian","target":"G Major Bebop","value":0.4343423835357992,"weight":0.4343423835357992,"alpha":0.6},{"source":"G Lydian","target":"G Bebop Dominant","value":0.4343423835357992,"weight":0.4343423835357992,"alpha":0.6},{"source":"G Elektra (Chord)","target":"G - YOUR SCALE","value":0.4362821767601172,"weight":0.4362821767601172,"alpha":1},{"source":"G Hirajoshi","target":"G - YOUR SCALE","value":0.43770175000337136,"weight":0.43770175000337136,"alpha":1},{"source":"G Major Pentatonic","target":"G Pentatonic Variation","value":0.45468749999999997,"weight":0.45468749999999997,"alpha":0.35},{"source":"G Acoustic","target":"G Bebop Dominant","value":0.4749213370987806,"weight":0.4749213370987806,"alpha":0.6},{"source":"G Ionian","target":"G Lydian","value":0.5095486111111112,"weight":0.5095486111111112,"alpha":0.6},{"source":"G Mixolydian","target":"G Acoustic","value":0.5095486111111112,"weight":0.5095486111111112,"alpha":0.6},{"source":"G Overtone","target":"G Hindu","value":0.5095486111111112,"weight":0.5095486111111112,"alpha":0.45},{"source":"G Lydian","target":"G Hirajoshi","value":0.5759369893557598,"weight":0.5759369893557598,"alpha":0.6},{"source":"G Ionian","target":"G - YOUR SCALE","value":0.59925,"weight":0.59925,"alpha":1},{"source":"G Major Bebop","target":"G - YOUR SCALE","value":0.605625,"weight":0.605625,"alpha":1},{"source":"G Bebop Dominant","target":"G - YOUR SCALE","value":0.605625,"weight":0.605625,"alpha":1},{"source":"G Mixolydian","target":"G - YOUR SCALE","value":0.6093749999999999,"weight":0.6093749999999999,"alpha":1},{"source":"G Double Harmonic Major","target":"G Phrygian Dominant","value":0.6840228247067156,"weight":0.6840228247067156,"alpha":0.6},{"source":"G Harmonic Major","target":"G Hindu","value":0.6840228247067156,"weight":0.6840228247067156,"alpha":0.35},{"source":"G Ionian","target":"G Mixolydian","value":0.6941253156562301,"weight":0.6941253156562301,"alpha":0.6},{"source":"G Lydian","target":"G Acoustic","value":0.6941253156562301,"weight":0.6941253156562301,"alpha":0.6},{"source":"G Mixolydian","target":"G Major Bebop","value":0.699032428029551,"weight":0.699032428029551,"alpha":0.6},{"source":"G Major Bebop","target":"G Bebop Dominant","value":0.7857142857142857,"weight":0.7857142857142857,"alpha":0.6},{"source":"G Ionian","target":"G Major Bebop","value":0.8524061768879738,"weight":0.8524061768879738,"alpha":0.6},{"source":"G Ionian","target":"G Bebop Dominant","value":0.8524061768879738,"weight":0.8524061768879738,"alpha":0.6},{"source":"G Mixolydian","target":"G Bebop Dominant","value":0.9320432373727348,"weight":0.9320432373727348,"alpha":0.6}],"modeDict":{"G - YOUR SCALE":{"label":"- YOUR SCALE","isUser":true,"type":0,"key":7,"name":"G - YOUR SCALE","n":[false,false,true,false,false,false,false,true,false,false,false,true],"c":[true,false,false,false,true,false,false,true,false,false,false,false],"aliases":[]},"G Ionian":{"isUser":false,"key":7,"type":1,"label":"Ionian","name":"G Ionian","c":[true,false,true,false,true,true,false,true,false,true,false,true],"n":[true,false,true,false,true,false,true,true,false,true,false,true]},"G Acoustic":{"isUser":false,"key":7,"type":2,"label":"Acoustic","name":"G Acoustic","c":[true,false,true,false,true,false,true,true,false,true,true,false],"n":[false,true,true,false,true,true,false,true,false,true,false,true]},"G Scottish":{"isUser":false,"key":7,"type":2,"label":"Scottish","name":"G Scottish","c":[true,false,true,false,false,true,false,true,false,true,false,false],"n":[true,false,true,false,true,false,false,true,false,true,false,false]},"G Tritone Scale":{"isUser":false,"key":7,"type":2,"label":"Tritone Scale","name":"G Tritone Scale","c":[true,true,false,false,true,false,true,true,false,false,true,false],"n":[false,true,true,false,false,true,false,true,true,false,false,true]},"G Lydian":{"isUser":false,"key":7,"type":1,"label":"Lydian","name":"G Lydian","c":[true,false,true,false,true,false,true,true,false,true,false,true],"n":[false,true,true,false,true,false,true,true,false,true,false,true]},"G Double Harmonic Major":{"isUser":false,"key":7,"type":2,"label":"Double Harmonic Major","name":"G Double Harmonic Major","c":[true,true,false,false,true,true,false,true,true,false,false,true],"n":[true,false,true,true,false,false,true,true,true,false,false,true]},"G Overtone":{"isUser":false,"key":7,"type":2,"label":"Overtone","name":"G Overtone","c":[true,false,true,false,true,false,true,true,true,false,true,false],"n":[false,true,true,true,false,true,false,true,false,true,false,true]},"G Elektra (Chord)":{"isUser":false,"key":7,"type":3,"label":"Elektra (Chord)","name":"G Elektra (Chord)","c":[true,true,false,false,true,false,false,true,false,true,false,false],"n":[false,false,true,false,true,false,false,true,true,false,false,true]},"G Major Bebop":{"isUser":false,"key":7,"type":2,"label":"Major Bebop","name":"G Major Bebop","c":[true,false,true,false,true,true,false,true,true,true,false,true],"n":[true,false,true,true,true,false,true,true,false,true,false,true]},"G Hirajoshi":{"isUser":false,"key":7,"type":2,"label":"Hirajoshi","name":"G Hirajoshi","c":[true,false,false,false,true,false,true,true,false,false,false,true],"n":[false,true,true,false,false,false,true,true,false,false,false,true]},"G Phrygian Dominant":{"isUser":false,"key":7,"type":2,"label":"Phrygian Dominant","name":"G Phrygian Dominant","c":[true,true,false,false,true,true,false,true,true,false,true,false],"n":[true,false,true,true,false,true,false,true,true,false,false,true]},"G Mixolydian":{"isUser":false,"key":7,"type":1,"label":"Mixolydian","name":"G Mixolydian","c":[true,false,true,false,true,true,false,true,false,true,true,false],"n":[true,false,true,false,true,true,false,true,false,true,false,true]},"G Bebop Dominant":{"isUser":false,"key":7,"type":2,"label":"Bebop Dominant","name":"G Bebop Dominant","c":[true,false,true,false,true,true,false,true,false,true,true,true],"n":[true,false,true,false,true,true,true,true,false,true,false,true]},"G Hindu":{"isUser":false,"key":7,"type":2,"label":"Hindu","name":"G Hindu","c":[true,false,true,false,true,true,false,true,true,false,true,false],"n":[true,false,true,true,false,true,false,true,false,true,false,true]},"G Major Pentatonic":{"isUser":false,"key":7,"type":2,"label":"Major Pentatonic","name":"G Major Pentatonic","c":[true,false,true,false,true,false,false,true,false,true,false,false],"n":[false,false,true,false,true,false,false,true,false,true,false,true]},"G New Pentatonic":{"isUser":false,"key":7,"type":2,"label":"New Pentatonic","name":"G New Pentatonic","c":[true,false,true,false,true,false,true,false,false,true,false,false],"n":[false,true,false,false,true,false,false,true,false,true,false,true]},"G Pentatonic Variation":{"isUser":false,"key":7,"type":2,"label":"Pentatonic Variation","name":"G Pentatonic Variation","c":[true,false,false,false,true,false,false,true,false,true,true,false],"n":[false,false,true,false,true,true,false,true,false,false,false,true]},"G Harmonic Major":{"isUser":false,"key":7,"type":1,"label":"Harmonic Major","name":"G Harmonic Major","c":[true,false,true,false,true,true,false,true,true,false,false,true],"n":[true,false,true,true,false,false,true,true,false,true,false,true]}}};
+			createD3Graph(graph);
+		}
+
+		var runSim = () => {
+			// Trigger collapse settings
+			$('#settings-collapse').trigger('click');
+
+			settings = createSettings();
+			exa = createUserMode();
+
+			useGraph = true;
+			if (!useGraph) {
+				// DEBUG: Just print results to console
+				runAnalysis(0.0, settings, exa);
+			}
+			else {
+				// DEBUG: Handle D3 graph
+				const svg = d3.select("svg");
+				const width = +svg.property("viewBox").baseVal.width;
+				const height = +svg.property("viewBox").baseVal.height;
+
+				const results = runAnalysis(0.025, settings, exa);
+				const graph = convertAnalysisToGraph(results.modes, results.pairs, 2, width, height, settings);
+				//console.log(JSON.stringify(graph));
+
+				createD3Graph(graph);
+
+
+			} // end useGraph
+		} // end runSim
+
+		var createD3Graph = (graph) => {
+			var svg = d3.select("svg");
+			var width = +svg.property("viewBox").baseVal.width;
+			var height = +svg.property("viewBox").baseVal.height;
+			//alert(width + " " + height);
+
+			// Graph settings (TODO: move these elsewhere)
+			const edgeWiMin = 0.5;
+			const edgeWiMax = 25.0;
+			const edgeWiPow = 1.0;
+			const d3forces = {
+				edgeStr: 0.20,
+				edgeWeightExtraPull: 0.75,
+				sepStr: 3000,
+				driftToCenter: 0.05,
+			}
+			var weightScale = d3.scaleLinear().domain(d3.extent(graph.links, function(d) { return Math.pow(d.weight, d3forces.edgePow) * d3forces.edgeStr })).range([.1, 1]);
+			var colScale = d3.scaleLinear()
+				.domain(d3.ticks(0, 100, 1))
+				.range(["#3310ef", "#10fcfc"]);
+			//var color = d3.scaleOrdinal(d3.schemeCategory20); //["#ffff00", "#0000ff", "#00aaaa"]
+			// 0 = user, 1 = classical, 2 = other, 3 = chords
+			var color = d3.scaleOrdinal()
+				.range(["#d6d628", "#3310ef", "#10dcdc", "#c6c618"]);
+			var groupRadius = (groupID) => {
+				return 38 - groupID * 8;
+			}
+
+
+			// Clear the graph and redraw background color
+			resetD3Graph(svg);
+
+			// Save mode info
+			modeDict = graph.modeDict;
+
+
+			var simulation = d3.forceSimulation()
+				.force("link", d3.forceLink().strength(function(d){ return d3forces.edgeStr * (1.0 + d3forces.edgeWeightExtraPull * Math.pow(d.weight, 2.0)); }).id(function(d) {
+					return d.id;
+				}))
+				/*.force("link", d3.forceLink().id(function(d) { return d.id; }))*/
+				.force("charge", d3.forceManyBody().strength(-d3forces.sepStr))
+				.force('x', d3.forceX(width * 0.5).strength(d3forces.driftToCenter))
+				.force('y', d3.forceY(height * 0.5).strength(d3forces.driftToCenter));
+
+			var link = svg.append("g")
+				.attr("class", "links")
+				.selectAll("line")
+				.data(graph.links)
+				.enter().append("line")
+				.attr("stroke-width", function(d) { return d.alpha * Math.pow(d.value, edgeWiPow) * (edgeWiMax - edgeWiMin) + edgeWiMin; })
+				.style("stroke", function(d) { return colScale(d.value * 100.0); })
+				.style("pointer-events", "none")
+				.style("stroke-opacity", function(d) { return d.alpha; });
+
+			// Sort links so larger connections drawn on top
+			var links = d3.selectAll('line.link')
+				.sort(function(a, b) {
+					return order[a.stroke-width] > order[b.stroke-width] ? -1 : order[b.stroke-width] > order[a.stroke-width] ? 1 : 0;
+				});
+
+			var node = svg.append("g")
+				.attr("class", "nodes")
+				.selectAll("foo")
+				.data(graph.nodes)
+				.enter().append("g");
+
+			var circles = node.append("circle")
+				.attr("r", function(d) { return groupRadius(d.group); })
+				.style("fill", function(d) { return color(d.group); })
+				.style("stroke", function(d) { return (d.type == 1) ? "#ffff00" : "#dddddd"; })
+				.style("stroke-width", "2.0px");
+
+			var labels = node.append("text")
+				.text(function(d) { return d.id; })
+				.attr("class", "node-labels")
+				.attr("text-anchor", "middle")
+
+			node.append("title")
+				.text(function(d) { return d.id; });
+
+			// Set up drag and drop
+			node.call(d3.drag()
+					.on("start", dragstarted)
+					.on("drag", dragged)
+					.on("end", dragended));
+
+			simulation
+				.nodes(graph.nodes)
+				.on("tick", ticked);
+
+			simulation.force("link")
+				.links(graph.links);
+
+			// Add panel showing selected mode
+			createD3Panel(svg, width, height);
+
+
+
+			function ticked() {
+
+
+				node
+					.attr("cx", function(d) { return Math.max(20, Math.min(width - 20, d.x)); })
+					.attr("cy", function(d) { return Math.max(20, Math.min(height - 20, d.y)); })
+					.attr("transform", function(d) { return "translate(" +
+						Math.max(20, Math.min(width - 20, d.x)) + "," +
+						Math.max(20, Math.min(height - 20, d.y)) + ")"; })
+
+				link
+					.attr("x1", function(d) { return Math.max(20, Math.min(width - 20, d.source.x)); })
+					.attr("y1", function(d) { return Math.max(20, Math.min(height - 20, d.source.y)); })
+					.attr("x2", function(d) { return Math.max(20, Math.min(width - 20, d.target.x)); })
+					.attr("y2", function(d) { return Math.max(20, Math.min(height - 20, d.target.y)); });
+
+			}
+
+			function dragstarted(d) {
+				if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+				d.fx = d.x;
+				d.fy = d.y;
+
+				// Display on panel
+				if (d.id in modeDict) {
+					// Calculate analysis, if haven't yet
+					// This is info like chord names
+					if (modeDict[d.id].analysis == null) {
+						modeDict[d.id].analysis = analyzeModeForPanel(modeDict[d.id]);
+					}
+
+					setPanelMode(modeDict[d.id]);
+				}
+
+			}
+
+			function dragged(d) {
+				d.fx += d3.event.dx;
+				d.fy += d3.event.dy;
+			}
+
+			function dragended(d) {
+				if (!d3.event.active) simulation.alphaTarget(0);
+				d.fx = null;
+				d.fy = null;
+			}
+		}
+
+	</script>
+
+	</body>
 </html>
