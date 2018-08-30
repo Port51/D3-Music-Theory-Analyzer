@@ -480,28 +480,48 @@
 
 
 
+			// Validate positions
+			// Upper corner rect = 300x300
+			var cornerWi = 250;
+			var cornerHei = 250;
+			var validPointX = (d) => {
+				if (d.x < cornerWi && d.y < cornerHei && d.x > d.y) {
+					return cornerWi;
+				} else {
+					return Math.max(20, Math.min(width - 20, d.x));
+				}
+			}
+
+			var validPointY = (d) => {
+				if (d.x < cornerWi && d.y < cornerHei && d.y > d.x) {
+					return cornerHei;
+				} else {
+					return Math.max(20, Math.min(height - 20, d.y));
+				}
+			}
+
 			function ticked() {
 
 
 				node
-					.attr("cx", function(d) { return Math.max(20, Math.min(width - 20, d.x)); })
-					.attr("cy", function(d) { return Math.max(20, Math.min(height - 20, d.y)); })
+					.attr("cx", function(d) { return validPointX(d); })
+					.attr("cy", function(d) { return validPointY(d); })
 					.attr("transform", function(d) { return "translate(" +
-						Math.max(20, Math.min(width - 20, d.x)) + "," +
-						Math.max(20, Math.min(height - 20, d.y)) + ")"; })
+						validPointX(d) + "," +
+						validPointY(d) + ")"; })
 
 				link
-					.attr("x1", function(d) { return Math.max(20, Math.min(width - 20, d.source.x)); })
-					.attr("y1", function(d) { return Math.max(20, Math.min(height - 20, d.source.y)); })
-					.attr("x2", function(d) { return Math.max(20, Math.min(width - 20, d.target.x)); })
-					.attr("y2", function(d) { return Math.max(20, Math.min(height - 20, d.target.y)); });
+					.attr("x1", function(d) { return validPointX(d.source); })
+					.attr("y1", function(d) { return validPointY(d.source); })
+					.attr("x2", function(d) { return validPointX(d.target); })
+					.attr("y2", function(d) { return validPointY(d.target); });
 
 			}
 
 			function dragstarted(d) {
 				if (!d3.event.active) simulation.alphaTarget(0.3).restart();
-				d.fx = Math.max(20, Math.min(width - 20, d.x));
-				d.fy = Math.max(20, Math.min(width - 20, d.y));
+				d.fx = validPointX(d);
+				d.fy = validPointY(d);
 
 				// Display on panel
 				if (d.id in modeDict) {

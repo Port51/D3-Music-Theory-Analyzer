@@ -218,8 +218,8 @@ var createD3Panel = (svg, width, height) => {
         .style("fill", "#fff");
 
     // Default info
-    panel.title = "(MODE NAME)";
-    panel.chords = "(CHORDS)";
+    panel.title = "";
+    panel.chords = "";
 
     // Display
     updateD3Panel();
