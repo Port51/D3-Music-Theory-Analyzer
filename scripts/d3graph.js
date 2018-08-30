@@ -7,6 +7,8 @@ var panelLinks = {};
 /* User piano selection and other buttons */
 var icons = {};
 var hoverIconID = -1;
+var checkboxPhysics = null;
+var checkboxSticky = null;
 
 var resetD3Graph = (svg) => {
     svg.empty();
@@ -73,7 +75,7 @@ var analyzeModeForPanel = (mode) => {
     return analysis;
 }
 
-var createSVGPiano = (svg, panelRect, startY, internalPadding, pianoHei, scale) => {
+var createSVGPiano = (svg, panelRect, rectBorderCol, startY, internalPadding, pianoHei, scale) => {
     let piano = {};
     const wi = (panelRect.wi - 20) * scale;
     internalPadding *= scale;
@@ -86,6 +88,7 @@ var createSVGPiano = (svg, panelRect, startY, internalPadding, pianoHei, scale) 
         .attr("width", wi)
         .attr("height", pianoHei * scale)
         .style("fill", "#113388")
+        .style("stroke", rectBorderCol)
         .style("pointer-events", "none");
 
     // Key data
@@ -183,6 +186,7 @@ var createD3Panel = (svg, width, height) => {
         .attr("ry", 5)
         .attr("width", panelRect.wi)
         .attr("height", panelRect.hei)
+        .style("stroke", "#fff")
         .style("fill", "#5577cc");
 
     // MODE NAME
@@ -196,7 +200,7 @@ var createD3Panel = (svg, width, height) => {
 
     // MODE PIANO
     const pianoHei = 90;
-    panelLinks.piano = createSVGPiano(svg, panelRect, 45, 20, pianoHei - 10, 1.0);
+    panelLinks.piano = createSVGPiano(svg, panelRect, "#ccc", 45, 20, pianoHei - 10, 1.0);
 
     // MODE CHORDS
     svg.append("text")
@@ -226,12 +230,21 @@ var createD3Panel = (svg, width, height) => {
 
 }
 
+var setCheckboxes = () => {
+	if (checkboxPhysics != null) {
+		checkboxPhysics.text(allowD3Physics ? "X" : "");
+	}
+	if (checkboxSticky != null) {
+		checkboxSticky.text(allowD3Sticky ? "X" : "");
+	}
+}
+
 var setIconHover = (id) => {
 	if (hoverIconID != id) {
 		hoverIconID = id;
 
 		// Update display
-		for (let i = 0; i < 3; ++i) {
+		for (let i = 0; i < 5; ++i) {
 			const icon = icons.buttons[i].icon;
 			const label = icons.buttons[i].label;
 			const iconBorder = icons.buttons[i].iconBorder;
@@ -248,7 +261,15 @@ var setIconHover = (id) => {
 
 var clickIconTrigger = function(d,i) {
 	const id = d3.select(this).attr("value");
-	setModalActive(id, true);
+	if (id < 3) {
+		setModalActive(id, true);
+	} else if (id == 3) {
+		setAllowD3Physics(!allowD3Physics);
+		setCheckboxes();
+	} else if (id == 4) {
+		setAllowD3Sticky(!allowD3Sticky);
+		setCheckboxes();
+	}
 }
 
 var mouseOverIconTrigger = function(d,i) {
@@ -300,11 +321,26 @@ var createD3SideIcons = (svg, width, height) => {
 			.attr("opacity", 0.0);
 		iconBorderList.push(iconBorder);
 	}
+	for (let i = 3; i < 5; ++i) {
+		// Border for icon
+		const borderWi = 2;
+		const iconBorder = svg.append("rect")
+			.attr("x", sideRect.x0 + 10 - borderWi)
+			.attr("y", sideRect.y0 + spacingBetweenIcons * (3 + (i - 3) * 0.5) + (i - 3) * 2 - borderWi)
+			.attr("rx", 3)
+			.attr("ry", 3)
+			.attr("width", iconWi * 0.5 + borderWi * 2)
+			.attr("height", iconWi * 0.5 + borderWi * 2)
+			.style("fill", "#fff")
+			.style("pointer-events", "none")
+			.attr("opacity", 0.0);
+		iconBorderList.push(iconBorder);
+	}
 
 	// USER PIANO
 	const pianoHei = 90;
 	// ARGS:      (svg, panelRect, startY, pianoHei, scale)
-	icons.piano = createSVGPiano(svg, sideRect, 0, 5, pianoHei - 10, 0.75*0.7);
+	icons.piano = createSVGPiano(svg, sideRect, "#667", 0, 5, pianoHei - 10, 0.75*0.7);
 
 
 	// PIANO ICON LABEL
@@ -330,7 +366,8 @@ var createD3SideIcons = (svg, width, height) => {
 		.attr("ry", 2)
 		.attr("width", iconWi)
 		.attr("height", iconWi)
-		.attr("fill", "#113388");
+		.attr("fill", "#113388")
+		.attr("stroke", "#667");
 
 	// SETTINGS ICON LABEL
 	iconLabel = svg.append("text")
@@ -355,7 +392,8 @@ var createD3SideIcons = (svg, width, height) => {
 		.attr("ry", 2)
 		.attr("width", iconWi)
 		.attr("height", iconWi)
-		.attr("fill", "#113388");
+		.attr("fill", "#113388")
+		.attr("stroke", "#667");
 
 	// INSTRUCTIONS ICON LABEL
 	iconLabel = svg.append("text")
@@ -368,6 +406,78 @@ var createD3SideIcons = (svg, width, height) => {
 		.style("pointer-events", "none")
 		.style("opacity", 0.5)
 		.text("Instructions");
+	labelList.push(iconLabel);
+
+	// PHYSICS TOGGLE - BUTTON
+	svg.append("rect")
+		.attr("x", sideRect.x0 + 10)
+		.attr("y", sideRect.y0 + spacingBetweenIcons * 3)
+		.attr("rx", 2)
+		.attr("ry", 2)
+		.attr("width", iconWi * 0.5)
+		.attr("height", iconWi * 0.5)
+		.attr("fill", "#113388")
+		.attr("stroke", "#667");
+
+	// PHYSICS TOGGLE - CHECK MARK
+	checkboxPhysics = svg.append("text")
+		.attr("x", sideRect.x0 + iconWi * 0.5)
+		.attr("y", sideRect.y0 + spacingBetweenIcons * 3 + iconWi * 0.35)
+		.attr("text-anchor", "middle")
+		.style("font-size", "14px")
+		.style("font-weight", "normal")
+		.style("fill", "#fff")
+		.style("pointer-events", "none")
+		.style("opacity", 0.5)
+		.text("X");
+
+	// PHYSICS TOGGLE - LABEL
+	iconLabel = svg.append("text")
+		.attr("x", sideRect.x0 + iconWi + 5)
+		.attr("y", sideRect.y0 + spacingBetweenIcons * 3 + 14)
+		.attr("text-anchor", "start")
+		.style("font-size", "14px")
+		.style("font-weight", "normal")
+		.style("fill", "#fff")
+		.style("pointer-events", "none")
+		.style("opacity", 0.5)
+		.text("(Placeholder)");
+	labelList.push(iconLabel);
+
+	// STICKY TOGGLE - BUTTON
+	svg.append("rect")
+		.attr("x", sideRect.x0 + 10)
+		.attr("y", sideRect.y0 + spacingBetweenIcons * 3.5 + 2)
+		.attr("rx", 2)
+		.attr("ry", 2)
+		.attr("width", iconWi * 0.5)
+		.attr("height", iconWi * 0.5)
+		.attr("fill", "#113388")
+		.attr("stroke", "#667");
+
+	// STICKY TOGGLE - CHECK MARK
+	checkboxSticky = svg.append("text")
+		.attr("x", sideRect.x0 + iconWi * 0.5)
+		.attr("y", sideRect.y0 + spacingBetweenIcons * 3.5 + iconWi * 0.35 + 2)
+		.attr("text-anchor", "middle")
+		.style("font-size", "14px")
+		.style("font-weight", "normal")
+		.style("fill", "#fff")
+		.style("pointer-events", "none")
+		.style("opacity", 0.5)
+		.text("X");
+
+	// STICKY TOGGLE - LABEL
+	iconLabel = svg.append("text")
+		.attr("x", sideRect.x0 + iconWi + 5)
+		.attr("y", sideRect.y0 + spacingBetweenIcons * 3.5 + 14 + 2)
+		.attr("text-anchor", "start")
+		.style("font-size", "14px")
+		.style("font-weight", "normal")
+		.style("fill", "#fff")
+		.style("pointer-events", "none")
+		.style("opacity", 0.5)
+		.text("Toggle Sticky Nodes");
 	labelList.push(iconLabel);
 
 	
@@ -412,8 +522,45 @@ var createD3SideIcons = (svg, width, height) => {
 		icons.buttons.push({ 'iconBorder': iconBorderList[i], 'trigger0': iconRect, 'trigger1': labelRect, 'label': labelList[i] })
 	}
 
+	// Store toggles
+	for (let i = 3; i < 5; ++i) {
+		let textWi = 130;
+		if (i == 3) {
+			textWi = 110;
+		} else if (i == 4) {
+			textWi = 145;
+		}
+
+		// Create rectangle to trigger mouseovers and clicks
+		const iconRect = svg.append("rect")
+			.attr("x", sideRect.x0 + 10)
+			.attr("y", sideRect.y0 + spacingBetweenIcons * (3 + (i - 3) * 0.5) + (i - 3) * 2)
+			.attr("width", iconWi * 0.5)
+			.attr("height", iconWi * 0.5)
+			.attr("fill", "#fff")
+			.attr("value", i)
+			.attr("opacity", 0)
+				.on("click", clickIconTrigger)
+				.on("mouseover", mouseOverIconTrigger)
+				.on("mouseout", mouseOutIconTrigger);
+
+		const labelRect = svg.append("rect")
+			.attr("x", sideRect.x0 + iconWi * 0.5 + 10)
+			.attr("y", sideRect.y0 + spacingBetweenIcons * (3 + (i - 3) * 0.5) + (i - 3) * 2)
+			.attr("width", textWi)
+			.attr("height", 20)
+			.attr("fill", "#fff")
+			.attr("value", i)
+			.attr("opacity", 0.0) // set to 0.5 whenever change labels
+				.on("click", clickIconTrigger)
+				.on("mouseover", mouseOverIconTrigger)
+				.on("mouseout", mouseOutIconTrigger);
+		icons.buttons.push({ 'iconBorder': iconBorderList[i], 'trigger0': iconRect, 'trigger1': labelRect, 'label': labelList[i] })
+	}
 
 	updateD3UserPianoIcon();
+	setCheckboxes();
+
 }
 
 // SOURCE: https://bl.ocks.org/mbostock/7555321

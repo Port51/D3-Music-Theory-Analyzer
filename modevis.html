@@ -92,6 +92,12 @@
 		var mouseOverKey = -1;
 		var keyMouseOverVis =	[false, false, false, false, false, false, false, false, false, false, false, false];
 		var modeDict = {};
+		var allowD3Physics = true;
+		var allowD3Sticky = false;
+
+		// D3 objects
+		var simulation = null;
+		var node = null;
 
 		// Create settings
 		var createSettings = () => {
@@ -111,6 +117,22 @@
 				wFactorIntervalOpenness: 	parseFloat($("#iOpen").val() / 100),
 				filterResultMax: 			parseInt($("#filterResultMax").val()),
 			};
+		}
+
+		var setAllowD3Physics = (v) => {
+			allowD3Physics = v;
+		}
+
+		var setAllowD3Sticky = (v) => {
+			allowD3Sticky = v;
+			if (!allowD3Sticky) {
+				// Unstick all nodes
+				node.each(function(d) {
+					d.fx = null;
+					d.fy = null;
+				});
+				simulation.alphaTarget(0.3).restart();
+			}
 		}
 
 		var setModalActive = (id, active) => {
@@ -415,7 +437,7 @@
 			modeDict = graph.modeDict;
 
 
-			var simulation = d3.forceSimulation()
+			simulation = d3.forceSimulation()
 				.force("link", d3.forceLink().strength(function(d){ return d3forces.edgeStr * (1.0 + d3forces.edgeWeightExtraPull * Math.pow(d.weight, 2.0)); }).id(function(d) {
 					return d.id;
 				}))
@@ -440,7 +462,7 @@
 					return order[a.stroke-width] > order[b.stroke-width] ? -1 : order[b.stroke-width] > order[a.stroke-width] ? 1 : 0;
 				});
 
-			var node = svg.append("g")
+			node = svg.append("g")
 				.attr("class", "nodes")
 				.selectAll("foo")
 				.data(graph.nodes)
@@ -543,8 +565,10 @@
 
 			function dragended(d) {
 				if (!d3.event.active) simulation.alphaTarget(0);
-				d.fx = null;
-				d.fy = null;
+				if (!allowD3Sticky) {
+					d.fx = null;
+					d.fy = null;
+				}
 			}
 		}
 
