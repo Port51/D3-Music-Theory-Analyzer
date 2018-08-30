@@ -73,17 +73,18 @@ var analyzeModeForPanel = (mode) => {
     return analysis;
 }
 
-var createSVGPiano = (svg, panelRect, startY, pianoHei, scale) => {
+var createSVGPiano = (svg, panelRect, startY, internalPadding, pianoHei, scale) => {
     let piano = {};
-    const wi = panelRect.wi - 20;
+    const wi = (panelRect.wi - 20) * scale;
+    internalPadding *= scale;
 
     piano.base = svg.append("rect")
         .attr("x", panelRect.x0 + 10)
         .attr("y", panelRect.y0 + startY)
-        .attr("rx", 3)
-        .attr("ry", 3)
+        .attr("rx", 3 * scale)
+        .attr("ry", 3 * scale)
         .attr("width", wi)
-        .attr("height", pianoHei)
+        .attr("height", pianoHei * scale)
         .style("fill", "#113388");
 
     // Key data
@@ -92,7 +93,6 @@ var createSVGPiano = (svg, panelRect, startY, pianoHei, scale) => {
         piano.key.push(null);
 
     // Add white keys
-    const internalPadding = 20;
     const whiteWi = (wi - internalPadding * 2) / 7;
     for (let i = 0; i < 7; ++i) {
 
@@ -108,11 +108,11 @@ var createSVGPiano = (svg, panelRect, startY, pianoHei, scale) => {
 
         piano.key[noteID] = svg.append("rect")
             .attr("x", panelRect.x0 + 10 + internalPadding + whiteWi * i)
-            .attr("y", panelRect.y0 + startY + 5)
-            .attr("rx", 2)
-            .attr("ry", 2)
+            .attr("y", panelRect.y0 + startY + 5 * scale)
+            .attr("rx", 2 * scale)
+            .attr("ry", 2 * scale)
             .attr("width", whiteWi - 1)
-            .attr("height", pianoHei - 10)
+            .attr("height", (pianoHei - 10) * scale)
             .style("fill", "#eeeeee")
             .style("stroke", "#101010");
     }
@@ -147,11 +147,11 @@ var createSVGPiano = (svg, panelRect, startY, pianoHei, scale) => {
 
         piano.key[noteID] = svg.append("rect")
             .attr("x", panelRect.x0 + 10 + internalPadding + whiteWi * nearestWhite + whiteWi * 0.5 + (whiteWi - blackWi) * 0.5)
-            .attr("y", panelRect.y0 + startY + 5)
-            .attr("rx", 2)
-            .attr("ry", 2)
+            .attr("y", panelRect.y0 + startY + 5 * scale)
+            .attr("rx", 2 * scale)
+            .attr("ry", 2 * scale)
             .attr("width", blackWi)
-            .attr("height", pianoHei - 40)
+            .attr("height", (pianoHei - 40) * scale)
             .style("fill", "#222222")
             .style("stroke", "#101010");
     }
@@ -193,7 +193,7 @@ var createD3Panel = (svg, width, height) => {
 
     // MODE PIANO
     const pianoHei = 90;
-    panelLinks.piano = createSVGPiano(svg, panelRect, 45, pianoHei - 10, 1.0);
+    panelLinks.piano = createSVGPiano(svg, panelRect, 45, 20, pianoHei - 10, 1.0);
 
     // MODE CHORDS
     svg.append("text")
@@ -239,7 +239,7 @@ var createD3SideIcons = (svg, width, height) => {
 	// USER PIANO
 	const pianoHei = 90;
 	// ARGS:      (svg, panelRect, startY, pianoHei, scale)
-	iconLinks.piano = createSVGPiano(svg, sideRect, 45, pianoHei - 10, 0.5);
+	iconLinks.piano = createSVGPiano(svg, sideRect, 45, 5, pianoHei - 10, 0.75);
 
 	updateD3UserPianoIcon();
 }
