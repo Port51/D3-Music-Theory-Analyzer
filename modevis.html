@@ -133,10 +133,12 @@
 		// Unselect all notes
 		var buttonResetScale = () => {
 			console.log("buttonResetScale");
+			rootSel = 0;
 			for (let i = 0; i < 12; ++i) {
 				keySel[i] = false;
 			}
 			setKeyColors();
+			setRootSelectColors();
 		}
 
 		var buttonCancelPianoSelect = () => {

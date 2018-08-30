@@ -477,7 +477,7 @@ var createD3SideIcons = (svg, width, height) => {
 		.style("fill", "#fff")
 		.style("pointer-events", "none")
 		.style("opacity", 0.5)
-		.text("Toggle Sticky Nodes");
+		.text("Sticky Nodes");
 	labelList.push(iconLabel);
 
 	
