@@ -57,28 +57,6 @@
 		</div>
 
 	<script>
-		/* Collapsible input menu */
-		/*
-		const collapseButton = document.getElementsByClassName("collapse-toggle-button")[0];
-		var isMenuCollapsed = true;
-		document.getElementById("collapsible-input-area").style.display = "none";
-
-		if (collapseButton) {
-			collapseButton.addEventListener("click", function() {
-				this.classList.toggle("active");
-				isMenuCollapsed = !isMenuCollapsed;
-				const content = document.getElementById("collapsible-input-area");
-				if (isMenuCollapsed) {
-					content.style.display = "none";
-				} else {
-					content.style.display = "block";
-				}
-			});
-		}*/
-
-	</script>
-
-	<script>
 		// DEBUG: Trigger modal windows
 		//$("#modal-2").css('display', 'block');
 	</script>
@@ -93,11 +71,12 @@
 		var keyMouseOverVis =	[false, false, false, false, false, false, false, false, false, false, false, false];
 		var modeDict = {};
 		var allowD3Physics = true;
-		var allowD3Sticky = false;
+		var allowD3Sticky = true;
 
 		// D3 objects
 		var simulation = null;
 		var node = null;
+		var nodeSel = null;
 
 		// Create settings
 		var createSettings = () => {
@@ -462,6 +441,14 @@
 					return order[a.stroke-width] > order[b.stroke-width] ? -1 : order[b.stroke-width] > order[a.stroke-width] ? 1 : 0;
 				});
 
+			// Highlight around selected node
+			nodeSel = svg.append("circle")
+				.attr("r", "100")
+				.style("fill", "#ffbb00")
+				.attr("cx", "0")
+				.attr("cy", "0")
+				.attr("opacity", 0);
+
 			node = svg.append("g")
 				.attr("class", "nodes")
 				.selectAll("foo")
@@ -481,6 +468,7 @@
 
 			node.append("title")
 				.text(function(d) { return d.id; });
+					
 
 			// Set up drag and drop
 			node.call(d3.drag()
@@ -524,13 +512,22 @@
 
 			function ticked() {
 
-
 				node
 					.attr("cx", function(d) { return validPointX(d); })
 					.attr("cy", function(d) { return validPointY(d); })
 					.attr("transform", function(d) { return "translate(" +
 						validPointX(d) + "," +
 						validPointY(d) + ")"; })
+
+				if (nodeSel.source != null) {
+					nodeSel
+						.attr("cx", nodeSel.source.cx)
+						.attr("cy", nodeSel.source.cy)
+						.attr("transform", "translate(" +
+							validPointX(nodeSel.source) + "," +
+							validPointY(nodeSel.source) + ")")
+						.attr("opacity", 0.67);
+				}
 
 				link
 					.attr("x1", function(d) { return validPointX(d.source); })
@@ -554,6 +551,8 @@
 					}
 
 					setPanelMode(modeDict[d.id]);
+					nodeSel.source = d;
+					nodeSel.attr("r", groupRadius(d.group) + 5);
 				}
 
 			}
