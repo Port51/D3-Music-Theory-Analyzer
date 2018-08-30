@@ -9,6 +9,8 @@ $(function() {
                 setPianoInputFunctions();
             } else if (onloadAction == "sliderButtons") {
                 setSliderInputFunctions();
+            } else if (onloadAction == "instructionsButtons") {
+                setInstructionsInputFunctions();
             }
         });
 

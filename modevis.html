@@ -34,22 +34,6 @@
 
 	<body>
 
-		<div id="constant-upper-section">
-			<div id="collapsible-input-area" class="collapsible-input-area" style= "display: none !important;">
-				<table width="1400px">
-				<tr><td>
-					
-				</td>
-				<td align="center">
-					<!--<span class="loadTemplate" value="templates/largePiano.html" onload="pianoButtons"></span>-->
-					<!--<span class="loadTemplate" value="templates/instructions.html"></span>-->
-				</td>
-				</tr>
-				</table>
-
-			</div>
-		</div>
-
 		<div id="modal-0" class="modal-window">
 			<div class="modal-content modal-0">
 				<span class="loadTemplate" value="templates/largePiano.html" onload="pianoButtons"></span>
@@ -59,6 +43,12 @@
 		<div id="modal-1" class="modal-window">
 			<div class="modal-content modal-1">
 				<span class="loadTemplate" value="templates/inputSimilarity.html" onload="sliderButtons"></span>
+			</div>
+		</div>
+
+		<div id="modal-2" class="modal-window">
+			<div class="modal-content modal-2">
+				<span class="loadTemplate" value="templates/instructions.html" onload="instructionsButtons"></span>
 			</div>
 		</div>
 
@@ -90,7 +80,7 @@
 
 	<script>
 		// DEBUG: Trigger modal windows
-		//$("#modal-1").css('display', 'block');
+		//$("#modal-2").css('display', 'block');
 	</script>
 
 	<script>
@@ -156,6 +146,11 @@
 		var buttonCancelSettings = () => {
 			// Close modal window
 			setModalActive(1, false);
+		}
+
+		var buttonCloseInstructions = () => {
+			// Close modal window
+			setModalActive(2, false);
 		}
 
 		var clickRootSelect = (event) => {
@@ -305,6 +300,10 @@
 		var slidersMid = () => { const rememberFilter = $("#filterResultMax").val(); $(".slider").val("50"); $("#filterResultMax").val(rememberFilter); }
 		var slidersDefault = () => { const rememberFilter = $("#filterResultMax").val(); $(".slider").each(function() { $(this).val($(this).attr('def')) }); $("#filterResultMax").val(rememberFilter); }
 		var slidersFull = () => { const rememberFilter = $("#filterResultMax").val(); $(".slider").val("100"); $("#filterResultMax").val(rememberFilter); }
+
+		var setInstructionsInputFunctions = () => {
+			$("#closeInstructions").click(buttonCloseInstructions);
+		}
 
 		var setSliderInputFunctions = () => {
 			$("#runFromSettings").click(buttonRunFromSettings);

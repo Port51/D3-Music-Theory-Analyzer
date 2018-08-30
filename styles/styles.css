@@ -48,6 +48,11 @@
 	width: auto;
 	width: 850px !important; /* piano container is 500px wide */
 }
+.modal-content.modal-2 {
+	margin: 4% auto; /* center it */
+	width: auto;
+	width: 700px !important; /* piano container is 500px wide */
+}
 
 
 
