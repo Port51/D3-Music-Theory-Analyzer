@@ -322,6 +322,16 @@ var createD3SideIcons = (svg, width, height) => {
 
 	
 
+	// SETTINGS ICON (placeholder)
+	svg.append("rect")
+		.attr("x", sideRect.x0 + 10)
+		.attr("y", sideRect.y0 + spacingBetweenIcons * 1)
+		.attr("rx", 2)
+		.attr("ry", 2)
+		.attr("width", iconWi)
+		.attr("height", iconWi)
+		.attr("fill", "#113388");
+
 	// SETTINGS ICON LABEL
 	iconLabel = svg.append("text")
 		.attr("x", sideRect.x0 + iconWi + 20)
@@ -336,6 +346,16 @@ var createD3SideIcons = (svg, width, height) => {
 	labelList.push(iconLabel);
 
 
+
+	// INSTRUCTIONS ICON (placeholder)
+	svg.append("rect")
+		.attr("x", sideRect.x0 + 10)
+		.attr("y", sideRect.y0 + spacingBetweenIcons * 2)
+		.attr("rx", 2)
+		.attr("ry", 2)
+		.attr("width", iconWi)
+		.attr("height", iconWi)
+		.attr("fill", "#113388");
 
 	// INSTRUCTIONS ICON LABEL
 	iconLabel = svg.append("text")
