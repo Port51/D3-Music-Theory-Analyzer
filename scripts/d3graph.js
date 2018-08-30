@@ -4,10 +4,19 @@
 var panel = {};
 var panelLinks = {};
 
+/* User piano selection and other buttons */
+var icons = {};
+var iconLinks = {};
+
 var resetD3Graph = (svg) => {
     svg.empty();
     svg.selectAll("*").remove();
     svg.append("rect").attr("x", "0").attr("y", "0").attr("width", "100%").attr("height", "100%").style("fill", "#000000");
+}
+
+var updateD3UserPianoIcon = () => {
+	// Display notes correctly
+	updateD3Piano(iconLinks.piano, parseInt(rootSel), keySel);
 }
 
 var updateD3Panel = () => {
@@ -17,29 +26,33 @@ var updateD3Panel = () => {
 
     // Display notes
     if (panel.notes) {
-        for (let i = 0; i < panel.notes.length; ++i) {
-            let naturalColor = "";
-            if (i == 1 || i == 3 || i == 6 || i == 8 || i == 10)
-                naturalColor = "#222222";
-            else
-                naturalColor = "#eeeeee";
-
-            let highlightColor = "";
-            if (i == panel.key)
-                highlightColor = "#20eeaa"; // root = greenish cyan
-            else if ((panel.key + 6) % 12 == i || (panel.key + 7) % 12 == i)
-                highlightColor = "#3090dd"; // root = blueish cyan
-            else
-                highlightColor = "#2020ee"; // all other notes = blue
-
-
-            const color = panel.notes[i] ? highlightColor : naturalColor;
-
-            // Set color
-            panelLinks.piano.key[i].style("fill", color);
-
-        }
+        updateD3Piano(panelLinks.piano, panel.key, panel.notes);
     }
+}
+
+var updateD3Piano = (pianoLink, key, notes) => {
+	for (let i = 0; i < notes.length; ++i) {
+		let naturalColor = "";
+		if (i == 1 || i == 3 || i == 6 || i == 8 || i == 10)
+			naturalColor = "#222222";
+		else
+			naturalColor = "#eeeeee";
+
+		let highlightColor = "";
+		if (i == key)
+			highlightColor = "#20eeaa"; // root = greenish cyan
+		else if ((key + 6) % 12 == i || (key + 7) % 12 == i)
+			highlightColor = "#3090dd"; // root = blueish cyan
+		else
+			highlightColor = "#2020ee"; // all other notes = blue
+
+
+		const color = notes[i] ? highlightColor : naturalColor;
+
+		// Set color
+		pianoLink.key[i].style("fill", color);
+
+	}
 }
 
 // User clicks on a node, and it magically appears to the right
@@ -60,7 +73,7 @@ var analyzeModeForPanel = (mode) => {
     return analysis;
 }
 
-var createSVGPiano = (svg, panelRect, startY, pianoHei) => {
+var createSVGPiano = (svg, panelRect, startY, pianoHei, scale) => {
     let piano = {};
     const wi = panelRect.wi - 20;
 
@@ -180,7 +193,7 @@ var createD3Panel = (svg, width, height) => {
 
     // MODE PIANO
     const pianoHei = 90;
-    panelLinks.piano = createSVGPiano(svg, panelRect, 45, pianoHei - 10);
+    panelLinks.piano = createSVGPiano(svg, panelRect, 45, pianoHei - 10, 1.0);
 
     // MODE CHORDS
     svg.append("text")
@@ -208,6 +221,27 @@ var createD3Panel = (svg, width, height) => {
     // Display
     updateD3Panel();
 
+}
+
+// Add panel showing selected mode
+// TODO: Move styles to CSS
+var createD3SideIcons = (svg, width, height) => {
+	// Settings
+	const padding = 10;
+	let sideRect = {
+		wi: 100, hei: 400,
+	};
+	sideRect.x0 = padding;
+	sideRect.y0 = padding;
+	sideRect.x1 = sideRect.x0 + sideRect.wi;
+	sideRect.y1 = sideRect.y0 + sideRect.hei;
+
+	// USER PIANO
+	const pianoHei = 90;
+	// ARGS:      (svg, panelRect, startY, pianoHei, scale)
+	iconLinks.piano = createSVGPiano(svg, sideRect, 45, pianoHei - 10, 0.5);
+
+	updateD3UserPianoIcon();
 }
 
 // SOURCE: https://bl.ocks.org/mbostock/7555321

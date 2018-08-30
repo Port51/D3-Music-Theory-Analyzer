@@ -92,10 +92,10 @@
 
 		// Shared data
 		var rootSel = 0; // default to key of C
-		var keySel =		    [false, false, false, false, false, false, false, false, false, false, false];
-		var keySelVis =		    [false, false, false, false, false, false, false, false, false, false, false];
+		var keySel =		    [false, false, true, false, false, false, false, true, false, false, true, false];
+		var keySelVis =		    [false, false, false, false, false, false, false, false, false, false, false, false];
 		var mouseOverKey = -1;
-		var keyMouseOverVis =	[false, false, false, false, false, false, false, false, false, false, false];
+		var keyMouseOverVis =	[false, false, false, false, false, false, false, false, false, false, false, false];
 		var modeDict = {};
 
 		// Create settings
@@ -432,6 +432,8 @@
 
 			// Add panel showing selected mode
 			createD3Panel(svg, width, height);
+			// Add icons to left
+			createD3SideIcons(svg, width, height);
 
 
 
