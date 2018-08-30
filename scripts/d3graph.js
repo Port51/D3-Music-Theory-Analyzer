@@ -75,7 +75,7 @@ var analyzeModeForPanel = (mode) => {
     return analysis;
 }
 
-var createSVGPiano = (svg, panelRect, rectBorderCol, startY, internalPadding, pianoHei, scale) => {
+var createSVGPiano = (svg, panelRect, rectBorderCol, startY, internalPadding, pianoHei, vertPadding, scale) => {
     let piano = {};
     const wi = (panelRect.wi - 20) * scale;
     internalPadding *= scale;
@@ -112,11 +112,11 @@ var createSVGPiano = (svg, panelRect, rectBorderCol, startY, internalPadding, pi
 
         piano.key[noteID] = svg.append("rect")
             .attr("x", panelRect.x0 + 10 + internalPadding + whiteWi * i)
-            .attr("y", panelRect.y0 + startY + 5 * scale)
+            .attr("y", panelRect.y0 + startY + 5 * scale + vertPadding)
             .attr("rx", 2 * scale)
             .attr("ry", 2 * scale)
             .attr("width", whiteWi - 1)
-            .attr("height", (pianoHei - 10) * scale)
+            .attr("height", (pianoHei - 10) * scale - vertPadding * 2)
             .style("fill", "#eeeeee")
             .style("stroke", "#101010")
             .style("pointer-events", "none");
@@ -152,11 +152,11 @@ var createSVGPiano = (svg, panelRect, rectBorderCol, startY, internalPadding, pi
 
         piano.key[noteID] = svg.append("rect")
             .attr("x", panelRect.x0 + 10 + internalPadding + whiteWi * nearestWhite + whiteWi * 0.5 + (whiteWi - blackWi) * 0.5)
-            .attr("y", panelRect.y0 + startY + 5 * scale)
+            .attr("y", panelRect.y0 + startY + 5 * scale + vertPadding)
             .attr("rx", 2 * scale)
             .attr("ry", 2 * scale)
             .attr("width", blackWi)
-            .attr("height", (pianoHei - 40) * scale)
+            .attr("height", (pianoHei - 40) * scale - vertPadding)
             .style("fill", "#222222")
             .style("stroke", "#101010")
             .style("pointer-events", "none");
@@ -200,7 +200,7 @@ var createD3Panel = (svg, width, height) => {
 
     // MODE PIANO
     const pianoHei = 90;
-    panelLinks.piano = createSVGPiano(svg, panelRect, "#ccc", 45, 20, pianoHei - 10, 1.0);
+    panelLinks.piano = createSVGPiano(svg, panelRect, "#ccc", 45, 20, pianoHei - 10, 0, 1.0);
 
     // MODE CHORDS
     svg.append("text")
@@ -340,7 +340,7 @@ var createD3SideIcons = (svg, width, height) => {
 	// USER PIANO
 	const pianoHei = 90;
 	// ARGS:      (svg, panelRect, startY, pianoHei, scale)
-	icons.piano = createSVGPiano(svg, sideRect, "#667", 0, 5, pianoHei - 10, 0.75*0.7);
+	icons.piano = createSVGPiano(svg, sideRect, "#667", 0, 5, pianoHei - 10, 6, 0.75*0.7);
 
 
 	// PIANO ICON LABEL
