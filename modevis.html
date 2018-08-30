@@ -41,14 +41,20 @@
 					<span class="loadTemplate" value="templates/inputSimilarity.html" onload="sliderButtons"></span>
 				</td>
 				<td align="center">
-					<span class="loadTemplate" value="templates/largePiano.html" onload="pianoButtons"></span>
-					<span class="loadTemplate" value="templates/instructions.html"></span>
+					<!--<span class="loadTemplate" value="templates/largePiano.html" onload="pianoButtons"></span>-->
+					<!--<span class="loadTemplate" value="templates/instructions.html"></span>-->
 				</td>
 				</tr>
 				</table>
 
 			</div>
 			<button id="settings-collapse" class="collapse-toggle-button">Show/Hide Settings</button>
+		</div>
+
+		<div id="modal-1" class="modal-window">
+			<div class="modal-content modal-1">
+				<span class="loadTemplate" value="templates/largePiano.html" onload="pianoButtons"></span>
+			</div>
 		</div>
 
 		<div class="svg-container">
@@ -74,6 +80,12 @@
 			});
 		}
 
+	</script>
+
+	<script>
+		// Modal windows
+		var modal = $("#modal-1");
+		modal.css('display', 'block');
 	</script>
 
 	<script>
@@ -106,6 +118,15 @@
 			};
 		}
 
+		// Unselect all notes
+		var buttonResetScale = () => {
+			console.log("buttonResetScale");
+			for (let i = 0; i < 12; ++i) {
+				keySel[i] = false;
+			}
+			setKeyColors();
+		}
+
 		var clickRootSelect = (event) => {
 			const note = event.data.note;
 			rootSel = note;
@@ -116,9 +137,11 @@
 		var clickKey = (event) => {
 			const note = event.data.note;
 			//alert("Key press id = " + note);
-			keySel[note] = !keySel[note];
-			if (keySel[note] == null) {
-				keySel[note] = false;
+			if (note >= 0 && note < keySel.length) {
+				keySel[note] = !keySel[note];
+				if (keySel[note] == null) {
+					keySel[note] = false;
+				}
 			}
 
 			setKeyColors();
@@ -188,27 +211,51 @@
 			}
 		}
 
+		// Create mode based on notes selected by user
 		var createUserMode = () => {
 			let mode = {};
-			mode.label = "- YOUR SCALE";
+			mode.label = $('#scaleName[name="scaleName"]').val();
 			mode.isUser = true;
 			mode.type = 0;
 			mode.key = rootSel;
 			mode.name = GetNoteName(mode.key) + ' ' + mode.label;
+
 			mode.n = [];
 			for (let i = 0; i < 12; ++i) {
 				mode.n.push(keySel[i]);
 			}
+
 			// Un-transpose to static version
 			mode.c = [];
 			for (let i = 0; i < 12; ++i) {
 				mode.c.push(mode.n[(i + mode.key) % 12]);
 			}
-			console.log("USER SCALE: (transposed, then static)");
+
+			console.log("USER SCALE BELOW: (transposed, then static)");
 			console.log(mode.n);
 			console.log(mode.c);
 			mode.aliases = [];
+
 			return mode;
+		}
+
+		var buttonRunFromPiano = () => {
+			console.log("buttonRunFromPiano");
+			
+			// Check for any notes selected
+			let numNotes = 0;
+			for (let i = 0; i < 12; ++i) {
+				if (keySel[i]) {
+					numNotes++;
+				}
+			}
+
+			// Close modal window
+			$("#modal-1").css('display', 'none');
+
+			// Run analysis
+			runSimulation();
+
 		}
 
 		// Quick slider manip functions
@@ -233,6 +280,13 @@
 			$(".rootSelect").each(function() {
 				$(this).click({ note: parseInt($(this).attr('value')) }, clickRootSelect);
 			});
+
+			// Special handling
+			$("body").on('click', '#resetScale', buttonResetScale);
+			$("body").on('click', '#runFromPiano', buttonRunFromPiano);
+
+			// Select text on focus
+			$("body").on('click', '#scaleName[name="scaleName"]', function(e) { $(this).select(); } );
 		}
 
 		$(document).ready(() => {
@@ -254,7 +308,7 @@
 			createD3Graph(graph);
 		}
 
-		var runSim = () => {
+		var runSimulation = () => {
 			// Trigger collapse settings
 			$('#settings-collapse').trigger('click');
 
