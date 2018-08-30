@@ -34,14 +34,19 @@
 
 .modal-content {
 	background-color: #000000;
-	margin: 15% auto; /* center it */
 	padding: 20px;
 	border: 2px solid #888;
 	border-radius: 10px;
 }
-.modal-content.modal-1 {
+.modal-content.modal-0 {
+	margin: 15% auto; /* center it */
 	width: auto;
 	width: 500px !important; /* piano container is 500px wide */
+}
+.modal-content.modal-1 {
+	margin: 4% auto; /* center it */
+	width: auto;
+	width: 850px !important; /* piano container is 500px wide */
 }
 
 

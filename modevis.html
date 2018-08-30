@@ -38,7 +38,7 @@
 			<div id="collapsible-input-area" class="collapsible-input-area" style= "display: none !important;">
 				<table width="1400px">
 				<tr><td>
-					<span class="loadTemplate" value="templates/inputSimilarity.html" onload="sliderButtons"></span>
+					
 				</td>
 				<td align="center">
 					<!--<span class="loadTemplate" value="templates/largePiano.html" onload="pianoButtons"></span>-->
@@ -51,8 +51,14 @@
 		</div>
 
 		<div id="modal-0" class="modal-window">
-			<div class="modal-content modal-1">
+			<div class="modal-content modal-0">
 				<span class="loadTemplate" value="templates/largePiano.html" onload="pianoButtons"></span>
+			</div>
+		</div>
+
+		<div id="modal-1" class="modal-window">
+			<div class="modal-content modal-1">
+				<span class="loadTemplate" value="templates/inputSimilarity.html" onload="sliderButtons"></span>
 			</div>
 		</div>
 
@@ -84,8 +90,7 @@
 
 	<script>
 		// DEBUG: Trigger modal windows
-		var modal = $("#modal-0");
-		//modal.css('display', 'block');
+		//$("#modal-1").css('display', 'block');
 	</script>
 
 	<script>
@@ -146,6 +151,11 @@
 		var buttonCancelPianoSelect = () => {
 			// Close modal window
 			setModalActive(0, false);
+		}
+
+		var buttonCancelSettings = () => {
+			// Close modal window
+			setModalActive(1, false);
 		}
 
 		var clickRootSelect = (event) => {
@@ -260,6 +270,17 @@
 			return mode;
 		}
 
+		var buttonRunFromSettings = () => {
+			console.log("buttonRunFromSettings");
+
+			// Close modal window
+			setModalActive(1, false);
+
+			// Run analysis
+			runSimulation();
+
+		}
+
 		var buttonRunFromPiano = () => {
 			console.log("buttonRunFromPiano");
 			
@@ -286,7 +307,8 @@
 		var slidersFull = () => { const rememberFilter = $("#filterResultMax").val(); $(".slider").val("100"); $("#filterResultMax").val(rememberFilter); }
 
 		var setSliderInputFunctions = () => {
-			$("#runSim").click(runSim);
+			$("#runFromSettings").click(buttonRunFromSettings);
+			$("#cancelSettings").click(buttonCancelSettings);
 			$("#setSlidersZero").click(slidersZero);
 			$("#setSlidersMid").click(slidersMid);
 			$("#setSlidersDefault").click(slidersDefault);

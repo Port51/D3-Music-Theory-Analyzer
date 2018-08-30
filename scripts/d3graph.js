@@ -267,8 +267,10 @@ var mouseOutIconTrigger = function(d,i) {
 // TODO: Move styles to CSS
 var createD3SideIcons = (svg, width, height) => {
 	// Settings
-	const padding = 10;
-	const spacingBetweenIcons = 65;
+	const padding = 6;
+	const spacingBetweenIcons = 65*0.7;
+	const iconWi = 60*0.7;
+
 	let sideRect = {
 		wi: 100, hei: 400,
 	};
@@ -291,8 +293,8 @@ var createD3SideIcons = (svg, width, height) => {
 			.attr("y", sideRect.y0 + spacingBetweenIcons * i - borderWi)
 			.attr("rx", 3)
 			.attr("ry", 3)
-			.attr("width", 60 + borderWi * 2)
-			.attr("height", 60 + borderWi * 2)
+			.attr("width", iconWi + borderWi * 2)
+			.attr("height", iconWi + borderWi * 2)
 			.style("fill", "#fff")
 			.style("pointer-events", "none")
 			.attr("opacity", 0.0);
@@ -302,12 +304,12 @@ var createD3SideIcons = (svg, width, height) => {
 	// USER PIANO
 	const pianoHei = 90;
 	// ARGS:      (svg, panelRect, startY, pianoHei, scale)
-	icons.piano = createSVGPiano(svg, sideRect, 0, 5, pianoHei - 10, 0.75);
+	icons.piano = createSVGPiano(svg, sideRect, 0, 5, pianoHei - 10, 0.75*0.7);
 
 
 	// PIANO ICON LABEL
 	let iconLabel = svg.append("text")
-		.attr("x", sideRect.x0 + sideRect.wi * 0.8)
+		.attr("x", sideRect.x0 + iconWi + 20)
 		.attr("y", sideRect.y0 + spacingBetweenIcons * 0 + 20)
 		.attr("text-anchor", "start")
 		.style("font-size", "14px")
@@ -322,7 +324,7 @@ var createD3SideIcons = (svg, width, height) => {
 
 	// SETTINGS ICON LABEL
 	iconLabel = svg.append("text")
-		.attr("x", sideRect.x0 + sideRect.wi * 0.8)
+		.attr("x", sideRect.x0 + iconWi + 20)
 		.attr("y", sideRect.y0 + spacingBetweenIcons * 1 + 20)
 		.attr("text-anchor", "start")
 		.style("font-size", "14px")
@@ -337,7 +339,7 @@ var createD3SideIcons = (svg, width, height) => {
 
 	// INSTRUCTIONS ICON LABEL
 	iconLabel = svg.append("text")
-		.attr("x", sideRect.x0 + sideRect.wi * 0.8)
+		.attr("x", sideRect.x0 + iconWi + 20)
 		.attr("y", sideRect.y0 + spacingBetweenIcons * 2 + 20)
 		.attr("text-anchor", "start")
 		.style("font-size", "14px")
@@ -366,8 +368,8 @@ var createD3SideIcons = (svg, width, height) => {
 		const iconRect = svg.append("rect")
 			.attr("x", sideRect.x0 + 10)
 			.attr("y", sideRect.y0 + spacingBetweenIcons * i)
-			.attr("width", 60)
-			.attr("height", 60)
+			.attr("width", iconWi)
+			.attr("height", iconWi)
 			.attr("fill", "#fff")
 			.attr("value", i)
 			.attr("opacity", 0)
@@ -376,7 +378,7 @@ var createD3SideIcons = (svg, width, height) => {
 				.on("mouseout", mouseOutIconTrigger);
 
 		const labelRect = svg.append("rect")
-			.attr("x", sideRect.x0 + 70)
+			.attr("x", sideRect.x0 + iconWi + 10)
 			.attr("y", sideRect.y0 + spacingBetweenIcons * i)
 			.attr("width", textWi)
 			.attr("height", 30)
