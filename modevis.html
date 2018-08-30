@@ -35,7 +35,7 @@
 	<body>
 
 		<div id="constant-upper-section">
-			<div id="collapsible-input-area" class="collapsible-input-area">
+			<div id="collapsible-input-area" class="collapsible-input-area" style= "display: none !important;">
 				<table width="1400px">
 				<tr><td>
 					<span class="loadTemplate" value="templates/inputSimilarity.html" onload="sliderButtons"></span>
@@ -48,7 +48,6 @@
 				</table>
 
 			</div>
-			<button id="settings-collapse" class="collapse-toggle-button">Show/Hide Settings</button>
 		</div>
 
 		<div id="modal-1" class="modal-window">
@@ -63,6 +62,7 @@
 
 	<script>
 		/* Collapsible input menu */
+		/*
 		const collapseButton = document.getElementsByClassName("collapse-toggle-button")[0];
 		var isMenuCollapsed = true;
 		document.getElementById("collapsible-input-area").style.display = "none";
@@ -78,14 +78,14 @@
 					content.style.display = "block";
 				}
 			});
-		}
+		}*/
 
 	</script>
 
 	<script>
-		// Modal windows
+		// DEBUG: Trigger modal windows
 		var modal = $("#modal-1");
-		modal.css('display', 'block');
+		//modal.css('display', 'block');
 	</script>
 
 	<script>
