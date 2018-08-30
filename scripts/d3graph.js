@@ -6,7 +6,7 @@ var panelLinks = {};
 
 /* User piano selection and other buttons */
 var icons = {};
-var iconLinks = {};
+var hoverIconID = -1;
 
 var resetD3Graph = (svg) => {
     svg.empty();
@@ -16,7 +16,7 @@ var resetD3Graph = (svg) => {
 
 var updateD3UserPianoIcon = () => {
 	// Display notes correctly
-	updateD3Piano(iconLinks.piano, parseInt(rootSel), keySel);
+	updateD3Piano(icons.piano, parseInt(rootSel), keySel);
 }
 
 var updateD3Panel = () => {
@@ -85,7 +85,8 @@ var createSVGPiano = (svg, panelRect, startY, internalPadding, pianoHei, scale) 
         .attr("ry", 3 * scale)
         .attr("width", wi)
         .attr("height", pianoHei * scale)
-        .style("fill", "#113388");
+        .style("fill", "#113388")
+        .style("pointer-events", "none");
 
     // Key data
     piano.key = [];
@@ -114,7 +115,8 @@ var createSVGPiano = (svg, panelRect, startY, internalPadding, pianoHei, scale) 
             .attr("width", whiteWi - 1)
             .attr("height", (pianoHei - 10) * scale)
             .style("fill", "#eeeeee")
-            .style("stroke", "#101010");
+            .style("stroke", "#101010")
+            .style("pointer-events", "none");
     }
 
     // Add black keys over top
@@ -153,7 +155,8 @@ var createSVGPiano = (svg, panelRect, startY, internalPadding, pianoHei, scale) 
             .attr("width", blackWi)
             .attr("height", (pianoHei - 40) * scale)
             .style("fill", "#222222")
-            .style("stroke", "#101010");
+            .style("stroke", "#101010")
+            .style("pointer-events", "none");
     }
 
     return piano;
@@ -223,11 +226,49 @@ var createD3Panel = (svg, width, height) => {
 
 }
 
+var setIconHover = (id) => {
+	if (hoverIconID != id) {
+		hoverIconID = id;
+
+		// Update display
+		for (let i = 0; i < 3; ++i) {
+			const icon = icons.buttons[i].icon;
+			const label = icons.buttons[i].label;
+			const iconBorder = icons.buttons[i].iconBorder;
+			if (i == hoverIconID) {
+				iconBorder.style("opacity", "0.7");
+				label.style("opacity", "1.0");
+			} else {
+				iconBorder.style("opacity", "0.0");
+				label.style("opacity", "0.5");
+			}
+		}
+	}
+}
+
+var clickIconTrigger = function(d,i) {
+	const id = d3.select(this).attr("value");
+	setModalActive(id, true);
+}
+
+var mouseOverIconTrigger = function(d,i) {
+	const id = d3.select(this).attr("value");
+	setIconHover(id);
+}
+
+var mouseOutIconTrigger = function(d,i) {
+	const id = d3.select(this).attr("value");
+	if (hoverIconID == id) {
+		setIconHover(-1);
+	}
+}
+
 // Add panel showing selected mode
 // TODO: Move styles to CSS
 var createD3SideIcons = (svg, width, height) => {
 	// Settings
 	const padding = 10;
+	const spacingBetweenIcons = 65;
 	let sideRect = {
 		wi: 100, hei: 400,
 	};
@@ -236,10 +277,119 @@ var createD3SideIcons = (svg, width, height) => {
 	sideRect.x1 = sideRect.x0 + sideRect.wi;
 	sideRect.y1 = sideRect.y0 + sideRect.hei;
 
+	// Reset buttons
+	icons.buttons = [];
+	let labelList = [];
+	let iconBorderList = [];
+
+	// Create borders first (they are behind everything else)
+	for (let i = 0; i < 3; ++i) {
+		// Border for icon
+		const borderWi = 2;
+		const iconBorder = svg.append("rect")
+			.attr("x", sideRect.x0 + 10 - borderWi)
+			.attr("y", sideRect.y0 + spacingBetweenIcons * i - borderWi)
+			.attr("rx", 3)
+			.attr("ry", 3)
+			.attr("width", 60 + borderWi * 2)
+			.attr("height", 60 + borderWi * 2)
+			.style("fill", "#fff")
+			.style("pointer-events", "none")
+			.attr("opacity", 0.0);
+		iconBorderList.push(iconBorder);
+	}
+
 	// USER PIANO
 	const pianoHei = 90;
 	// ARGS:      (svg, panelRect, startY, pianoHei, scale)
-	iconLinks.piano = createSVGPiano(svg, sideRect, 45, 5, pianoHei - 10, 0.75);
+	icons.piano = createSVGPiano(svg, sideRect, 0, 5, pianoHei - 10, 0.75);
+
+
+	// PIANO ICON LABEL
+	let iconLabel = svg.append("text")
+		.attr("x", sideRect.x0 + sideRect.wi * 0.8)
+		.attr("y", sideRect.y0 + spacingBetweenIcons * 0 + 20)
+		.attr("text-anchor", "start")
+		.style("font-size", "14px")
+		.style("font-weight", "normal")
+		.style("fill", "#fff")
+		.style("pointer-events", "none")
+		.style("opacity", 0.5)
+		.text("Change input notes");
+	labelList.push(iconLabel);
+
+	
+
+	// SETTINGS ICON LABEL
+	iconLabel = svg.append("text")
+		.attr("x", sideRect.x0 + sideRect.wi * 0.8)
+		.attr("y", sideRect.y0 + spacingBetweenIcons * 1 + 20)
+		.attr("text-anchor", "start")
+		.style("font-size", "14px")
+		.style("font-weight", "normal")
+		.style("fill", "#fff")
+		.style("pointer-events", "none")
+		.style("opacity", 0.5)
+		.text("Change algorithm settings");
+	labelList.push(iconLabel);
+
+
+
+	// INSTRUCTIONS ICON LABEL
+	iconLabel = svg.append("text")
+		.attr("x", sideRect.x0 + sideRect.wi * 0.8)
+		.attr("y", sideRect.y0 + spacingBetweenIcons * 2 + 20)
+		.attr("text-anchor", "start")
+		.style("font-size", "14px")
+		.style("font-weight", "normal")
+		.style("fill", "#fff")
+		.style("pointer-events", "none")
+		.style("opacity", 0.5)
+		.text("Instructions");
+	labelList.push(iconLabel);
+
+	
+
+	// Store as list of buttons
+	// and attach actions
+	for (let i = 0; i < 3; ++i) {
+		let textWi = 130;
+		if (i == 0) {
+			textWi = 130;
+		} else if (i == 1) {
+			textWi = 170;
+		} else if (i == 2) {
+			textWi = 90;
+		}
+		
+		// Create rectangle to trigger mouseovers and clicks
+		const iconRect = svg.append("rect")
+			.attr("x", sideRect.x0 + 10)
+			.attr("y", sideRect.y0 + spacingBetweenIcons * i)
+			.attr("width", 60)
+			.attr("height", 60)
+			.attr("fill", "#fff")
+			.attr("value", i)
+			.attr("opacity", 0)
+				.on("click", clickIconTrigger)
+				.on("mouseover", mouseOverIconTrigger)
+				.on("mouseout", mouseOutIconTrigger);
+
+		const labelRect = svg.append("rect")
+			.attr("x", sideRect.x0 + 70)
+			.attr("y", sideRect.y0 + spacingBetweenIcons * i)
+			.attr("width", textWi)
+			.attr("height", 30)
+			.attr("fill", "#fff")
+			.attr("value", i)
+			.attr("opacity", 0.0) // set to 0.5 whenever change labels
+				.on("click", clickIconTrigger)
+				.on("mouseover", mouseOverIconTrigger)
+				.on("mouseout", mouseOutIconTrigger);
+
+		icons.buttons.push({ 'iconBorder': iconBorderList[i], 'trigger0': iconRect, 'trigger1': labelRect, 'label': labelList[i] })
+	}
+
 
 	updateD3UserPianoIcon();
 }

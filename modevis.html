@@ -50,7 +50,7 @@
 			</div>
 		</div>
 
-		<div id="modal-1" class="modal-window">
+		<div id="modal-0" class="modal-window">
 			<div class="modal-content modal-1">
 				<span class="loadTemplate" value="templates/largePiano.html" onload="pianoButtons"></span>
 			</div>
@@ -84,14 +84,14 @@
 
 	<script>
 		// DEBUG: Trigger modal windows
-		var modal = $("#modal-1");
+		var modal = $("#modal-0");
 		//modal.css('display', 'block');
 	</script>
 
 	<script>
 
 		// Shared data
-		var rootSel = 0; // default to key of C
+		var rootSel = 7; // default to key of G
 		var keySel =		    [false, false, true, false, false, false, false, true, false, false, true, false];
 		var keySelVis =		    [false, false, false, false, false, false, false, false, false, false, false, false];
 		var mouseOverKey = -1;
@@ -118,6 +118,22 @@
 			};
 		}
 
+		var setModalActive = (id, active) => {
+			console.log("Show modal #" + id);
+			var modal = $("#modal-" + id);
+
+			if (id == 0) {
+				// Ensure correct key highlights
+				setKeyColors();
+			}
+
+			if (active) {
+				modal.css('display', 'block');
+			} else {
+				modal.css('display', 'none');
+			}
+		}
+
 		// Unselect all notes
 		var buttonResetScale = () => {
 			console.log("buttonResetScale");
@@ -125,6 +141,11 @@
 				keySel[i] = false;
 			}
 			setKeyColors();
+		}
+
+		var buttonCancelPianoSelect = () => {
+			// Close modal window
+			setModalActive(0, false);
 		}
 
 		var clickRootSelect = (event) => {
@@ -251,7 +272,7 @@
 			}
 
 			// Close modal window
-			$("#modal-1").css('display', 'none');
+			setModalActive(0, false);
 
 			// Run analysis
 			runSimulation();
@@ -284,6 +305,7 @@
 			// Special handling
 			$("body").on('click', '#resetScale', buttonResetScale);
 			$("body").on('click', '#runFromPiano', buttonRunFromPiano);
+			$("body").on('click', '#cancelNoteSelect', buttonCancelPianoSelect);
 
 			// Select text on focus
 			$("body").on('click', '#scaleName[name="scaleName"]', function(e) { $(this).select(); } );
