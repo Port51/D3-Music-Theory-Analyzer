@@ -52,7 +52,7 @@ var createMode = (name, type, arr) => {
 	mode.type = type;
 	mode.n = [];
 	for (let i = 0; i < arr.length; ++i) {
-        mode.n.push (arr.charAt(i) !== ' ');
+		mode.n.push (arr.charAt(i) !== ' ');
 	}
 	mode.c = mode.n;
 	mode.aliases = [];
@@ -116,26 +116,26 @@ var filterIdenticalModes = (modes) => {
 	let used = {}; // key = notes, val = id of parent
 	let uniqueModes = []; // list of filtered modes
 	for (let i = 0; i < modes.length; ++i) {
-        if (modes[i].isUser) {
-            // User modes are always kept separate
-            uniqueModes.push(modes[i]);
-        } else {
-            const key = repNotesAsString(-1, modes[i].c);
-            if (!(key in used)) {
-                // I am the first mode discovered with this scale
-                // Save this ID
-                used[key] = uniqueModes.length;
+		if (modes[i].isUser) {
+			// User modes are always kept separate
+			uniqueModes.push(modes[i]);
+		} else {
+			const key = repNotesAsString(-1, modes[i].c);
+			if (!(key in used)) {
+				// I am the first mode discovered with this scale
+				// Save this ID
+				used[key] = uniqueModes.length;
 
-                // Use in final dataset
-                uniqueModes.push(modes[i]);
-            } else {
-                // There's already an identical key
-                // So add myself to that mode's aliases
-                const parent = parseInt(used[key]);
-                console.log(parent);
-                uniqueModes[parent].aliases.push(modes[i].label);
-            }
-        }
+				// Use in final dataset
+				uniqueModes.push(modes[i]);
+			} else {
+				// There's already an identical key
+				// So add myself to that mode's aliases
+				const parent = parseInt(used[key]);
+				console.log(parent);
+				uniqueModes[parent].aliases.push(modes[i].label);
+			}
+		}
 	}
 	console.log("Filtered for unique modes, reducing dataset from size " + modes.length.toString() + " to " + uniqueModes.length.toString());
 
@@ -147,8 +147,8 @@ var filterIdenticalModes = (modes) => {
 var expandModesToAllKeys = (modes) => {
 	let newList = [];
 	for (let i = 0; i < modes.length; ++i)
-    {
-        // Factor in special cases where scales don't emphasize one root
+	{
+		// Factor in special cases where scales don't emphasize one root
 		let useKeys = 12;
 		let rootIndependent = false;
 		if (modes[i].isUser) {
@@ -200,34 +200,34 @@ var getAllSimilarityPairs = (modes, settings, numTop) => {
 	for (let i = 0; i < M - 1; ++i) {
 		for (let j = i + 1; j < M; ++j) {
 			// Determine similarity score
-            let s = 0.0;
+			let s = 0.0;
 
-            // XOR isUser property
-            if (modes[i].isUser != modes[j].isUser) {
-                // Calculate a directional score
-                // Where the source is the user mode and the target is the non-user mode
-                if (modes[i].isUser) {
-                    s = score(modes[i], modes[j], settings);
-                } else {
-                    s = score(modes[j], modes[i], settings);
-                }
-            } else {
-                // Calculate both scores and average them
-                // To get an undirected score
-                s = (score(modes[i], modes[j], settings) +
-                    score(modes[j], modes[i], settings)) * 0.5;
-            }
+			// XOR isUser property
+			if (modes[i].isUser != modes[j].isUser) {
+				// Calculate a directional score
+				// Where the source is the user mode and the target is the non-user mode
+				if (modes[i].isUser) {
+					s = score(modes[i], modes[j], settings);
+				} else {
+					s = score(modes[j], modes[i], settings);
+				}
+			} else {
+				// Calculate both scores and average them
+				// To get an undirected score
+				s = (score(modes[i], modes[j], settings) +
+					score(modes[j], modes[i], settings)) * 0.5;
+			}
 
-            // Save score for statistics
-            scores.push(s);
+			// Save score for statistics
+			scores.push(s);
 
-            if (s <= 0.0) {
-                // Don't save interactions at or below zero
-                numZeroScores++;
-            } else {
-                // Save interaction if score > 0.0
-                pairs.push( { a: modes[i], b: modes[j], score: s } );
-            }
+			if (s <= 0.0) {
+				// Don't save interactions at or below zero
+				numZeroScores++;
+			} else {
+				// Save interaction if score > 0.0
+				pairs.push( { a: modes[i], b: modes[j], score: s } );
+			}
 
 		}
 	}
@@ -282,7 +282,7 @@ var runAnalysis = (edgeCutoff, settings, exa) => {
 			modes.push(randomMode());
 		}
 	} else if (datasetID === 3) {
-	    modes = getDebugModes();
+		modes = getDebugModes();
 	}
 
 	modes = filterIdenticalModes(modes);
@@ -302,14 +302,14 @@ var runAnalysis = (edgeCutoff, settings, exa) => {
 
 // Types: 0 = user, 1 = classical/medieval mode, 2 = other mode, 3 = chord(s)
 var createGraphNode = (name, group, type, svgWidth, svgHeight) => {
-    return {
-        "id": name,
-        "group": group,
-        "type": type,
-        "fixed": "TRUE",
-        "x": Math.random() * svgWidth,
-        "y": Math.random() * svgHeight,
-    };
+	return {
+		"id": name,
+		"group": group,
+		"type": type,
+		"fixed": "TRUE",
+		"x": Math.random() * svgWidth,
+		"y": Math.random() * svgHeight,
+	};
 }
 
 // Returns JSON of graph info (nodes and edges)
@@ -320,17 +320,17 @@ var convertAnalysisToGraph = (modes, pairs, depth, svgWidth, svgHeight, settings
 	g.modeDict = {};
 
 	const layer = [
-        {maxNodes:                  Math.ceil(0.65 * settings.filterResultMax),
-        cutoffToAdd:                0.0,
-        edgeAlpha:                  1.0,
-        interconnectionCutoff:      0.25,
-        interconnectionAlpha:       0.6},
+		{maxNodes:                  Math.ceil(0.65 * settings.filterResultMax),
+		cutoffToAdd:                0.0,
+		edgeAlpha:                  1.0,
+		interconnectionCutoff:      0.25,
+		interconnectionAlpha:       0.6},
 
-        {maxNodes:                  Math.ceil(0.35 * settings.filterResultMax),
-        cutoffToAdd:                0.25,
-        edgeAlpha:                  0.45,
-        interconnectionCutoff:      0.30,
-        interconnectionAlpha:       0.35}
+		{maxNodes:                  Math.ceil(0.35 * settings.filterResultMax),
+		cutoffToAdd:                0.25,
+		edgeAlpha:                  0.45,
+		interconnectionCutoff:      0.30,
+		interconnectionAlpha:       0.35}
 	];
 
 	// Count connections to user modes
@@ -347,7 +347,7 @@ var convertAnalysisToGraph = (modes, pairs, depth, svgWidth, svgHeight, settings
 	let buckets = 1;
 	let useThisLayer = layer[0].maxNodes;
 
-    // Define buckets
+	// Define buckets
 	let bucketData = [];
 	buckets = (haveNum > useThisLayer) ? 10 : 1;
 
@@ -357,35 +357,35 @@ var convertAnalysisToGraph = (modes, pairs, depth, svgWidth, svgHeight, settings
 	}
 
 	// Fill buckets
-    for (let i = 0; i < pairs.length; ++i) {
-        if (pairs[i].a.isUser || pairs[i].b.isUser) {
-            if (pairs[i].score >= layer[0].cutoffToAdd) {
-                const bucket = parseInt(Math.max(0, 10 - Math.ceil(pairs[i].score * 10)));
-                bucketData[bucket].push(pairs[i]);
-            }
-        }
-    }
+	for (let i = 0; i < pairs.length; ++i) {
+		if (pairs[i].a.isUser || pairs[i].b.isUser) {
+			if (pairs[i].score >= layer[0].cutoffToAdd) {
+				const bucket = parseInt(Math.max(0, 10 - Math.ceil(pairs[i].score * 10)));
+				bucketData[bucket].push(pairs[i]);
+			}
+		}
+	}
 
 	let usedNodes = new Set();
-    let connectors = new Set();
+	let connectors = new Set();
 	let connectorsNext = new Set();
 
 	// Add user modes
 	for (let i = 0; i < modes.length; ++i) {
-        if (modes[i].isUser) {
-            g.nodes.push(createGraphNode(modes[i].name, 0, 0, svgWidth, svgHeight));
-            g.modeDict[modes[i].name] = modes[i];
+		if (modes[i].isUser) {
+			g.nodes.push(createGraphNode(modes[i].name, 0, 0, svgWidth, svgHeight));
+			g.modeDict[modes[i].name] = modes[i];
 
-            usedNodes.add(modes[i].name);
-            connectors.add(modes[i].name);
-        }
+			usedNodes.add(modes[i].name);
+			connectors.add(modes[i].name);
+		}
 	}
 
 	// Add level 1
 
-    // Buckets:
-    // 1st run = 1 of each
-    // 2nd
+	// Buckets:
+	// 1st run = 1 of each
+	// 2nd
 	let b = 0;
 	for (let i = 0; i < useThisLayer; ++i) {
 		console.log(i + " out of " + useThisLayer);
@@ -462,7 +462,7 @@ var convertAnalysisToGraph = (modes, pairs, depth, svgWidth, svgHeight, settings
 		b = (b + 1) % 23;
 	}
 
-    // Add level 1 edges
+	// Add level 1 edges
 	for (let i = 0; i < pairs.length; ++i) {
 		const nameA = pairs[i].a.name;
 		const nameB = pairs[i].b.name;
@@ -485,42 +485,42 @@ var convertAnalysisToGraph = (modes, pairs, depth, svgWidth, svgHeight, settings
 		if (usedNodes.has(nameA) != usedNodes.has(nameB) && (connectorsNext.has(nameA) || connectorsNext.has(nameB)))
 		{
 			const score = pairs[i].score;
-            if (score >= layer[1].cutoffToAdd) {
-                bucket.push(pairs[i]);
+			if (score >= layer[1].cutoffToAdd) {
+				bucket.push(pairs[i]);
 			}
 		}
 	}
 
 	// Empty bucket
 	for (let i = 0; i < layer[1].maxNodes; ++i) {
-        if (bucket.length <= 0)
-            break;
-        // Choose randomly from bucket
-        let bucketItem = Math.floor(Math.random() * bucket.length);
+		if (bucket.length <= 0)
+			break;
+		// Choose randomly from bucket
+		let bucketItem = Math.floor(Math.random() * bucket.length);
 
-        const nameA = bucket[bucketItem].a.name;
-        const typeA = bucket[bucketItem].a.type;
+		const nameA = bucket[bucketItem].a.name;
+		const typeA = bucket[bucketItem].a.type;
 		const nameB = bucket[bucketItem].b.name;
 		const typeB = bucket[bucketItem].b.type;
 		const score = bucket[bucketItem].score;
 
 		if (!usedNodes.has(nameA)) {
-            g.nodes.push(createGraphNode(nameA, 2, typeA, svgWidth, svgHeight));
-            g.modeDict[nameA] = bucket[bucketItem].a;
+			g.nodes.push(createGraphNode(nameA, 2, typeA, svgWidth, svgHeight));
+			g.modeDict[nameA] = bucket[bucketItem].a;
 
-            usedNodes.add(nameA);
-            connectors.add(nameA);
-        }
-        if (!usedNodes.has(nameB)) {
-            g.nodes.push(createGraphNode(nameB, 2, typeB, svgWidth, svgHeight));
-            g.modeDict[nameB] = bucket[bucketItem].b;
+			usedNodes.add(nameA);
+			connectors.add(nameA);
+		}
+		if (!usedNodes.has(nameB)) {
+			g.nodes.push(createGraphNode(nameB, 2, typeB, svgWidth, svgHeight));
+			g.modeDict[nameB] = bucket[bucketItem].b;
 
-            usedNodes.add(nameB);
-            connectors.add(nameB);
-        }
-        g.links.push({source: nameA, target: nameB, value: score, weight: score, 'alpha': layer[1].edgeAlpha});
+			usedNodes.add(nameB);
+			connectors.add(nameB);
+		}
+		g.links.push({source: nameA, target: nameB, value: score, weight: score, 'alpha': layer[1].edgeAlpha});
 
-        // Remove from bucket
+		// Remove from bucket
 		bucket.splice(bucketItem, 1);
 	}
 
@@ -539,8 +539,8 @@ var convertAnalysisToGraph = (modes, pairs, depth, svgWidth, svgHeight, settings
 
 	// Sort links
 	g.links.sort(function(a, b) {
-        return a.value > b.value;
-    });
+		return a.value > b.value;
+	});
 
 	return g;
 }

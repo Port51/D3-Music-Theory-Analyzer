@@ -1,5 +1,10 @@
 "use strict";
 
+// D3 objects
+var simulation = null;
+var node = null;
+var nodeSel = null;
+
 /* Panel vars */
 var panel = {};
 var panelLinks = {};
@@ -9,6 +14,199 @@ var icons = {};
 var hoverIconID = -1;
 var checkboxPhysics = null;
 var checkboxSticky = null;
+
+var createD3Graph = (graph) => {
+	var svg = d3.select("svg");
+	var width = +svg.property("viewBox").baseVal.width;
+	var height = +svg.property("viewBox").baseVal.height;
+	//alert(width + " " + height);
+
+	// Graph settings (TODO: move these elsewhere)
+	const edgeWiMin = 0.5;
+	const edgeWiMax = 25.0;
+	const edgeWiPow = 1.0;
+	const d3forces = {
+		edgeStr: 0.20,
+		edgeWeightExtraPull: 0.75,
+		sepStr: 3000,
+		driftToCenter: 0.05,
+	}
+	var weightScale = d3.scaleLinear().domain(d3.extent(graph.links, function(d) { return Math.pow(d.weight, d3forces.edgePow) * d3forces.edgeStr })).range([.1, 1]);
+	var colScale = d3.scaleLinear()
+		.domain(d3.ticks(0, 100, 1))
+		.range(["#3310ef", "#10fcfc"]);
+	//var color = d3.scaleOrdinal(d3.schemeCategory20); //["#ffff00", "#0000ff", "#00aaaa"]
+	// 0 = user, 1 = classical, 2 = other, 3 = chords
+	var color = d3.scaleOrdinal()
+		.range(["#10dcdc", "#1090fc", "#306c8c", "#c6c618"]);
+	var groupRadius = (groupID) => {
+		return 38 - groupID * 8;
+	}
+
+
+	// Clear the graph and redraw background color
+	resetD3Graph(svg);
+
+	// Save mode info
+	modeDict = graph.modeDict;
+
+
+	simulation = d3.forceSimulation()
+		.force("link", d3.forceLink().strength(function(d){ return d3forces.edgeStr * (1.0 + d3forces.edgeWeightExtraPull * Math.pow(d.weight, 2.0)); }).id(function(d) {
+			return d.id;
+		}))
+		/*.force("link", d3.forceLink().id(function(d) { return d.id; }))*/
+		.force("charge", d3.forceManyBody().strength(-d3forces.sepStr))
+		.force('x', d3.forceX(width * 0.5).strength(d3forces.driftToCenter))
+		.force('y', d3.forceY(height * 0.5).strength(d3forces.driftToCenter));
+
+	var link = svg.append("g")
+		.attr("class", "links")
+		.selectAll("line")
+		.data(graph.links)
+		.enter().append("line")
+		.attr("stroke-width", function(d) { return d.alpha * Math.pow(d.value, edgeWiPow) * (edgeWiMax - edgeWiMin) + edgeWiMin; })
+		.style("stroke", function(d) { return colScale(d.value * 100.0); })
+		.style("pointer-events", "none")
+		.style("stroke-opacity", function(d) { return d.alpha; });
+
+	// Sort links so larger connections drawn on top
+	var links = d3.selectAll('line.link')
+		.sort(function(a, b) {
+			return order[a.stroke-width] > order[b.stroke-width] ? -1 : order[b.stroke-width] > order[a.stroke-width] ? 1 : 0;
+		});
+
+	// Highlight around selected node
+	nodeSel = svg.append("circle")
+		.attr("r", "100")
+		.style("fill", "#ffbb00")
+		.attr("cx", "0")
+		.attr("cy", "0")
+		.attr("opacity", 0);
+
+	node = svg.append("g")
+		.attr("class", "nodes")
+		.selectAll("foo")
+		.data(graph.nodes)
+		.enter().append("g")
+
+	var circles = node.append("circle")
+		.attr("r", function(d) { return groupRadius(d.group); })
+		.style("fill", function(d) { return color(d.group); })
+		.style("stroke", function(d) { return (d.type == 1) ? "#ffff00" : "#dddddd"; })
+		.style("stroke-width", "2.0px");
+
+	var labels = node.append("text")
+		.text(function(d) { return d.id; })
+		.attr("class", "node-labels")
+		.attr("text-anchor", "middle")
+
+	node.append("title")
+		.text(function(d) { return d.id; });
+			
+
+	// Set up drag and drop
+	node.call(d3.drag()
+			.on("start", dragstarted)
+			.on("drag", dragged)
+			.on("end", dragended));
+
+	simulation
+		.nodes(graph.nodes)
+		.on("tick", ticked);
+
+	simulation.force("link")
+		.links(graph.links);
+
+	// Add panel showing selected mode
+	createD3Panel(svg, width, height);
+	// Add icons to left
+	createD3SideIcons(svg, width, height);
+
+
+
+	// Validate positions
+	// Upper corner rect = 300x300
+	var cornerWi = 250;
+	var cornerHei = 250;
+	var validPointX = (d) => {
+		const rad = groupRadius(d.group) + 2;
+		if (d.x < cornerWi + rad && d.y < cornerHei + rad && d.x > d.y) {
+			return cornerWi + rad;
+		} else {
+			return Math.max(rad, Math.min(width - rad, d.x));
+		}
+	}
+
+	var validPointY = (d) => {
+		const rad = groupRadius(d.group) + 2;
+		if (d.x < cornerWi + rad && d.y < cornerHei + rad && d.y > d.x) {
+			return cornerHei + rad;
+		} else {
+			return Math.max(rad, Math.min(height - rad, d.y));
+		}
+	}
+
+	function ticked() {
+
+		node
+			.attr("cx", function(d) { return validPointX(d); })
+			.attr("cy", function(d) { return validPointY(d); })
+			.attr("transform", function(d) { return "translate(" +
+				validPointX(d) + "," +
+				validPointY(d) + ")"; })
+
+		if (nodeSel.source != null) {
+			nodeSel
+				.attr("cx", nodeSel.source.cx)
+				.attr("cy", nodeSel.source.cy)
+				.attr("transform", "translate(" +
+					validPointX(nodeSel.source) + "," +
+					validPointY(nodeSel.source) + ")")
+				.attr("opacity", 0.67);
+		}
+
+		link
+			.attr("x1", function(d) { return validPointX(d.source); })
+			.attr("y1", function(d) { return validPointY(d.source); })
+			.attr("x2", function(d) { return validPointX(d.target); })
+			.attr("y2", function(d) { return validPointY(d.target); });
+
+	}
+
+	function dragstarted(d) {
+		if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+		d.fx = validPointX(d);
+		d.fy = validPointY(d);
+
+		// Display on panel
+		if (d.id in modeDict) {
+			// Calculate analysis, if haven't yet
+			// This is info like chord names
+			if (modeDict[d.id].analysis == null) {
+				modeDict[d.id].analysis = analyzeModeForPanel(modeDict[d.id]);
+			}
+
+			setPanelMode(modeDict[d.id]);
+			nodeSel.source = d;
+			nodeSel.attr("r", groupRadius(d.group) + 5);
+		}
+
+	}
+
+	function dragged(d) {
+		d.fx += d3.event.dx;
+		d.fy += d3.event.dy;
+	}
+
+	function dragended(d) {
+		if (!d3.event.active) simulation.alphaTarget(0);
+		if (!allowD3Sticky) {
+			d.fx = null;
+			d.fy = null;
+		}
+	}
+}
 
 var resetD3Graph = (svg) => {
     svg.empty();
