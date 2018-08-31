@@ -87,6 +87,7 @@ var getTempString = () => {
 	"3,Elektra (Chord)			[##  #  # #  ]" + /* usually in E */
 	"3,Dream (Chord)		    [#    #  #   ]" + /* usually in G */
 	"3,Tristan (Chord)			[#  #  #   # ]" + /* very spread out */
+	"2,Mixolydian Flat 6		[# # ## ## # ]" +
 	"";
 }
 

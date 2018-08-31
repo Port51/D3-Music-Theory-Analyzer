@@ -4,6 +4,14 @@
 		"selected_items":
 		[
 			[
+				"rootSe",
+				"setRootSelectColors"
+			],
+			[
+				"allow",
+				"allowD3Sticky"
+			],
+			[
 				"inline",
 				"inline-block\tdisplay"
 			],
@@ -71,19 +79,71 @@
 			"file": "modevis.html",
 			"settings":
 			{
-				"buffer_size": 25948,
+				"buffer_size": 2649,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"contents": "\"use strict\";\n\nconst SCALE = 12;\n\n// Convert notes in mode into string that's easy to compare with other modes\n// Each character represents a note\n// KEY:\n// '@'  =  Root note, included in mode\n// '.'  =  Root note, absent from mode\n// '#'  =  Regular note, included in mode\n// ' '  =  Regular note, absent from mode\nvar repNotesAsString = (key, arr) => {\n\tlet display = \"\";\n\tfor (let i = 0; i < arr.length; ++i) {\n\t\tif (arr[i]) {\n\t\t\tdisplay += (i == key) ? \"@\" : \"#\";\n\t\t}\n\t\telse {\n\t\t\tdisplay += (i == key) ? \".\" : \" \";\n\t\t}\n\t}\n\treturn display;\n}\n\nvar makeModePrintable = (mode) => {\n\treturn '[' + repNotesAsString(mode.key, mode.n) + ']  ' + mode.name;\n}\n\nvar GetNoteName = (id) => {\n\tid = id % 12;\n\tif (id == 0) return 'C';\n\telse if (id == 1) return 'C#';\n\telse if (id == 2) return 'D';\n\telse if (id == 3) return 'Eb';\n\telse if (id == 4) return 'E';\n\telse if (id == 5) return 'F';\n\telse if (id == 6) return 'F#';\n\telse if (id == 7) return 'G';\n\telse if (id == 8) return 'Ab';\n\telse if (id == 9) return 'A';\n\telse if (id == 10) return 'Bb';\n\telse if (id == 11) return 'B';\n}\n\n// Util function for creating built-in modes\nvar createMode = (name, type, arr) => {\n\tlet mode = {};\n\tmode.label = name;\n\tmode.isUser = false;\n\tmode.key = 0;\n\tmode.name = GetNoteName(mode.key) + ' ' + mode.label;\n\tmode.type = type;\n\tmode.n = [];\n\tfor (let i = 0; i < arr.length; ++i) {\n\t\tmode.n.push (arr.charAt(i) !== ' ');\n\t}\n\tmode.c = mode.n;\n\tmode.aliases = [];\n\n\treturn mode;\n}\n\nvar randomMode = () => {\n\tlet mode = {};\n\tmode.label = Math.random().toString(26).substr(2, 5);\n\tmode.isUser = false;\n\tmode.type = 2;\n\tmode.key = 0;\n\tmode.name = GetNoteName(mode.key) + ' ' + mode.label;\n\tmode.n = [];\n\tfor (let i = 0; i < SCALE; ++i)\n\t\tmode.n.push(false);\n\n\tconst key = Math.floor(Math.random() * SCALE) + 12;\n\tlet i = 0;\n\twhile (i < SCALE) {\n\t\tmode.n[(key + i) % SCALE] = true;\n\n\t\t// Random interval\n\t\tconst rr = Math.random() * 1000;\n\t\tif (rr < 100)\n\t\t\ti++;\n\t\telse if (rr < 170)\n\t\t\ti += 3;\n\t\telse if (rr < 220)\n\t\t\ti += 4;\n\t\telse\n\t\t\ti += 2;\n\t}\n\tmode.c = mode.n;\n\tmode.aliases = [];\n\n\treturn mode;\n}\n\nvar avg = (arr) => {\n\tlet total = 0.0;\n\tfor (let i = 0; i < arr.length; ++i) {\n\t\ttotal += Math.abs(arr[i]);\n\t}\n\treturn total / arr.length;\n}\n\nvar variance = (arr) => {\n\tlet total = 0.0;\n\tfor (let i = 0; i < arr.length; ++i) {\n\t\ttotal += arr[i] * arr[i];\n\t}\n\treturn total / arr.length;\n}\n\n\n// Filters out identical modes\n// Stores them as aliases within other modes so they can be displayed later\nvar filterIdenticalModes = (modes) => {\n\tlet used = {}; // key = notes, val = id of parent\n\tlet uniqueModes = []; // list of filtered modes\n\tfor (let i = 0; i < modes.length; ++i) {\n\t\tif (modes[i].isUser) {\n\t\t\t// User modes are always kept separate\n\t\t\tuniqueModes.push(modes[i]);\n\t\t} else {\n\t\t\tconst key = repNotesAsString(-1, modes[i].c);\n\t\t\tif (!(key in used)) {\n\t\t\t\t// I am the first mode discovered with this scale\n\t\t\t\t// Save this ID\n\t\t\t\tused[key] = uniqueModes.length;\n\n\t\t\t\t// Use in final dataset\n\t\t\t\tuniqueModes.push(modes[i]);\n\t\t\t} else {\n\t\t\t\t// There's already an identical key\n\t\t\t\t// So add myself to that mode's aliases\n\t\t\t\tconst parent = parseInt(used[key]);\n\t\t\t\tconsole.log(parent);\n\t\t\t\tuniqueModes[parent].aliases.push(modes[i].label);\n\t\t\t}\n\t\t}\n\t}\n\tconsole.log(\"Filtered for unique modes, reducing dataset from size \" + modes.length.toString() + \" to \" + uniqueModes.length.toString());\n\n\treturn uniqueModes;\n}\n\n// Expands list of modes to include each mode in all possible keys\n// Transposes the notes in each mode accordingly\nvar expandModesToAllKeys = (modes) => {\n\tlet newList = [];\n\tfor (let i = 0; i < modes.length; ++i)\n\t{\n\t\t// Factor in special cases where scales don't emphasize one root\n\t\tlet useKeys = 12;\n\t\tlet rootIndependent = false;\n\t\tif (modes[i].isUser) {\n\t\t\tuseKeys = 1;\n\t\t}\n\t\telse if (modes[i].label === \"Whole Tone Scale\") {\n\t\t\tuseKeys = 2;\n\t\t\trootIndependent = true;\n\t\t}\n\t\telse if (modes[i].label === \"Chromatic\") {\n\t\t\tuseKeys = 1;\n\t\t\trootIndependent = true;\n\t\t}\n\n\t\tfor (let key = 0; key < useKeys; ++key) {\n\t\t\tlet newMode = {};\n\t\t\tnewMode.isUser = modes[i].isUser;\n\t\t\tnewMode.key = key;\n\t\t\tnewMode.type = modes[i].type;\n\n\t\t\tnewMode.label = modes[i].label;\n\t\t\tnewMode.name = GetNoteName(newMode.key) + ' ' + newMode.label;\n\n\t\t\t// Copy untransposed notes directly for analysis\n\t\t\t// that does not have key as a factor\n\t\t\t// (mood detection, interval statistics, etc.)\n\t\t\tnewMode.c = modes[i].c;\n\n\t\t\t// Store transposed version of each note\n\t\t\tnewMode.n = [];\n\t\t\tfor (let j = 0; j < SCALE; ++j) {\n\t\t\t\tnewMode.n.push( modes[i].n[ (j - key + 24) % SCALE ] );\n\t\t\t}\n\n\t\t\tnewList.push(newMode);\n\n\t\t}\n\t}\n\treturn newList;\n}\n\nvar getAllSimilarityPairs = (modes, settings, numTop) => {\n\tconst M = modes.length;\n\n\t// Compare all possible pairs of notes\n\tlet pairs = [];\n\tlet scores = [];\n\tlet numZeroScores = 0;\n\tfor (let i = 0; i < M - 1; ++i) {\n\t\tfor (let j = i + 1; j < M; ++j) {\n\t\t\t// Determine similarity score\n\t\t\tlet s = 0.0;\n\n\t\t\t// XOR isUser property\n\t\t\tif (modes[i].isUser != modes[j].isUser) {\n\t\t\t\t// Calculate a directional score\n\t\t\t\t// Where the source is the user mode and the target is the non-user mode\n\t\t\t\tif (modes[i].isUser) {\n\t\t\t\t\ts = score(modes[i], modes[j], settings);\n\t\t\t\t} else {\n\t\t\t\t\ts = score(modes[j], modes[i], settings);\n\t\t\t\t}\n\t\t\t} else {\n\t\t\t\t// Calculate both scores and average them\n\t\t\t\t// To get an undirected score\n\t\t\t\ts = (score(modes[i], modes[j], settings) +\n\t\t\t\t\tscore(modes[j], modes[i], settings)) * 0.5;\n\t\t\t}\n\n\t\t\t// Save score for statistics\n\t\t\tscores.push(s);\n\n\t\t\tif (s <= 0.0) {\n\t\t\t\t// Don't save interactions at or below zero\n\t\t\t\tnumZeroScores++;\n\t\t\t} else {\n\t\t\t\t// Save interaction if score > 0.0\n\t\t\t\tpairs.push( { a: modes[i], b: modes[j], score: s } );\n\t\t\t}\n\n\t\t}\n\t}\n\n\tconsole.log(\"COMPLETED! Calulated \" + pairs.length.toString() + \" scores\");\n\n\tconst zeroScorePercentage = (pairs.length > 0) ? 100 * numZeroScores / pairs.length : 0;\n\tconsole.log(\"   Avg = \" + (Math.round(avg(scores) * 100) / 100).toString() + \", zero scores: \" + Math.round(zeroScorePercentage).toString() + \"%\");\n\n\t// Sort interactions by score\n\tpairs = pairs.sort((a, b) => { return a.score < b.score; } );\n\tconst filterDiv = 1.0 / numTop;\n\n\treturn pairs;\n\n}\n\n// Classical modes and a few common variations for quick testing\nvar getDebugModes = () => {\n\treturn [\n\t\tcreateMode(\"Vader Theme\", 3,\t\t\t\t\"#  #   ##  #\"),\n\t];\n}\n\n// Classical modes and a few common variations for quick testing\nvar getMedievalModes = () => {\n\treturn [\n\t\tcreateMode(\"Ionian\", 1,\t\t\t\t\t\"# # ## # # #\"),\n\t\tcreateMode(\"Lydian\", 1, \t\t\t\t\"# # # ## # #\"),\n\t\tcreateMode(\"Mixolydian\", 1,\t\t\t\t\"# # ## # ## \"),\n\t\tcreateMode(\"Aeolian\", 1,\t\t\t\t\"# ## # ## # \"),\n\t\tcreateMode(\"Dorian\", 1,\t\t\t\t\t\"# ## # # ## \"),\n\t\tcreateMode(\"Phrygian\", 1,\t\t\t\t\"## # # ## # \"),\n\t\tcreateMode(\"Locrian\", 1,\t\t\t\t\"## # ##  # #\"),\n\t\tcreateMode(\"Harmonic Minor\", 1,\t\t\t\"# ## # ##  #\"),\n\t\tcreateMode(\"Melodic Minor\", 1,\t\t\t\"# ## # # # #\"),\n\t\tcreateMode(\"Harmonic Major\", 1,\t\t\t\"# # ## ##  #\"),\n\t];\n}\n\nvar runAnalysis = (edgeCutoff, settings, exa) => {\n\t// Construct list of modes\n\tlet modes = [];\n\tconst datasetID = parseInt(settings.datasetID);\n\tif (datasetID === 0)\n\t\tmodes = getMedievalModes();\n\telse if (datasetID === 1)\n\t\tmodes = getTempData();\n\telse if (datasetID === 2) {\n\t\tconst M = 30;\n\t\tfor (let i = 0; i < M; ++i) {\n\t\t\tmodes.push(randomMode());\n\t\t}\n\t} else if (datasetID === 3) {\n\t\tmodes = getDebugModes();\n\t}\n\n\tmodes = filterIdenticalModes(modes);\n\tmodes = expandModesToAllKeys(modes);\n\n\t// Add input scale as a mode\n\tmodes.push(exa);\n\n\t// Run the algorithm\n\tlet pairs = getAllSimilarityPairs(modes, settings, 10);\n\t// Filter by score\n\tpairs = pairs.filter(pair => pair.score >= edgeCutoff);\n\n\t// Return results\n\treturn { 'pairs': pairs, 'modes': modes };\n}\n\n// Types: 0 = user, 1 = classical/medieval mode, 2 = other mode, 3 = chord(s)\nvar createGraphNode = (name, group, type, svgWidth, svgHeight) => {\n\treturn {\n\t\t\"id\": name,\n\t\t\"group\": group,\n\t\t\"type\": type,\n\t\t\"fixed\": \"TRUE\",\n\t\t\"x\": Math.random() * svgWidth,\n\t\t\"y\": Math.random() * svgHeight,\n\t};\n}\n\n// Returns JSON of graph info (nodes and edges)\nvar convertAnalysisToGraph = (modes, pairs, depth, svgWidth, svgHeight, settings) => {\n\tlet g = {};\n\tg.nodes = [];\n\tg.links = [];\n\tg.modeDict = {};\n\n\tconst layer = [\n\t\t{maxNodes:                  Math.ceil(0.65 * settings.filterResultMax),\n\t\tcutoffToAdd:                0.0,\n\t\tedgeAlpha:                  1.0,\n\t\tinterconnectionCutoff:      0.25,\n\t\tinterconnectionAlpha:       0.6},\n\n\t\t{maxNodes:                  Math.ceil(0.35 * settings.filterResultMax),\n\t\tcutoffToAdd:                0.25,\n\t\tedgeAlpha:                  0.45,\n\t\tinterconnectionCutoff:      0.30,\n\t\tinterconnectionAlpha:       0.35}\n\t];\n\n\t// Count connections to user modes\n\tlet haveNum = 1;\n\tfor (let i = 0; i < pairs.length; ++i) {\n\t\tif (pairs[i].a.isUser || pairs[i].b.isUser) {\n\t\t\tif (pairs[i].score >= layer[0].cutoffToAdd) {\n\t\t\t\thaveNum++;\n\t\t\t}\n\t\t}\n\t}\n\n\t// Determine steps needed for filtering\n\tlet buckets = 1;\n\tlet useThisLayer = layer[0].maxNodes;\n\n\t// Define buckets\n\tlet bucketData = [];\n\tbuckets = (haveNum > useThisLayer) ? 10 : 1;\n\n\t// Create buckets\n\tfor (let i = 0; i < 10; ++i) {\n\t\tbucketData.push([]);\n\t}\n\n\t// Fill buckets\n\tfor (let i = 0; i < pairs.length; ++i) {\n\t\tif (pairs[i].a.isUser || pairs[i].b.isUser) {\n\t\t\tif (pairs[i].score >= layer[0].cutoffToAdd) {\n\t\t\t\tconst bucket = parseInt(Math.max(0, 10 - Math.ceil(pairs[i].score * 10)));\n\t\t\t\tbucketData[bucket].push(pairs[i]);\n\t\t\t}\n\t\t}\n\t}\n\n\tlet usedNodes = new Set();\n\tlet connectors = new Set();\n\tlet connectorsNext = new Set();\n\n\t// Add user modes\n\tfor (let i = 0; i < modes.length; ++i) {\n\t\tif (modes[i].isUser) {\n\t\t\tg.nodes.push(createGraphNode(modes[i].name, 0, 0, svgWidth, svgHeight));\n\t\t\tg.modeDict[modes[i].name] = modes[i];\n\n\t\t\tusedNodes.add(modes[i].name);\n\t\t\tconnectors.add(modes[i].name);\n\t\t}\n\t}\n\n\t// Add level 1\n\n\t// Buckets:\n\t// 1st run = 1 of each\n\t// 2nd\n\tlet b = 0;\n\tfor (let i = 0; i < useThisLayer; ++i) {\n\t\tconsole.log(i + \" out of \" + useThisLayer);\n\t\tlet b1 = b;\n\n\t\t// Prioritize better buckets\n\t\tlet useB = 0;\n\t\tif (b1 < 5)\n\t\t\tuseB = 0;\n\t\telse if (b1 < 9)\n\t\t\tuseB = 1;\n\t\telse if (b1 < 13)\n\t\t\tuseB = 2;\n\t\telse if (b1 < 16)\n\t\t\tuseB = 3;\n\t\telse if (b1 < 18)\n\t\t\tuseB = 4;\n\t\telse if (b1 < 20)\n\t\t\tuseB = 5;\n\t\telse\n\t\t\tuseB = (b1 - 20) + 6;\n\t\tif (useB >= 10)\n\t\t\tuseB = 0;\n\n\t\tlet iter = 0;\n\t\twhile (bucketData[useB].length == 0 && iter < 100) {\n\t\t\t// Choose random bucket\n\t\t\tuseB = parseInt(Math.floor(Math.random() * 10));\n\t\t\titer++;\n\t\t}\n\t\tif (iter >= 100) {\n\t\t\tconsole.log(\"ERROR: Bucket overflow\");\n\t\t\tbreak;\n\t\t}\n\n\t\tlet bucketItem = 0;\n\t\tif (i == 0) {\n\t\t\t// First choice is always top...\n\t\t\tbucketItem = 0;\n\t\t} else {\n\t\t\tbucketItem = parseInt(Math.floor(Math.random() * bucketData[useB].length));\n\t\t}\n\n\t\t// Get item\n\t\tconst nameA = bucketData[useB][bucketItem].a.name;\n\t\tconst typeA = bucketData[useB][bucketItem].a.type;\n\t\tconst nameB = bucketData[useB][bucketItem].b.name;\n\t\tconst typeB = bucketData[useB][bucketItem].b.type;\n\t\tconst score = bucketData[useB][bucketItem].score;\n\n\t\tif (!usedNodes.has(nameA)) {\n\t\t\tg.nodes.push(createGraphNode(nameA, 1, typeA, svgWidth, svgHeight));\n\t\t\tg.modeDict[nameA] = bucketData[useB][bucketItem].a;\n\n\t\t\tusedNodes.add(nameA);\n\t\t\tconnectorsNext.add(nameA);\n\t\t}\n\t\tif (!usedNodes.has(nameB)) {\n\t\t\tg.nodes.push(createGraphNode(nameB, 1, typeB, svgWidth, svgHeight));\n\t\t\tg.modeDict[nameB] = bucketData[useB][bucketItem].b;\n\n\t\t\tusedNodes.add(nameB);\n\t\t\tconnectorsNext.add(nameB);\n\t\t}\n\n\t\t// EDGES\n\t\t// {\"source\": \"Napoleon\", \"target\": \"Myriel\", \"value\": 1}\n\n\t\tg.links.push({source: nameA, target: nameB, value: score, weight: score, 'alpha': layer[0].edgeAlpha});\n\n\t\t// Remove from bucket\n\t\tbucketData[useB].splice(bucketItem, 1);\n\n\t\tb = (b + 1) % 23;\n\t}\n\n\t// Add level 1 edges\n\tfor (let i = 0; i < pairs.length; ++i) {\n\t\tconst nameA = pairs[i].a.name;\n\t\tconst nameB = pairs[i].b.name;\n\t\tif (connectorsNext.has(nameA) && connectorsNext.has(nameB))\n\t\t{\n\t\t\tconst score = pairs[i].score;\n\t\t\tif (score >= layer[0].interconnectionCutoff) {\n\t\t\t\tg.links.push({source: nameA, target: nameB, value: score, weight: score, 'alpha': layer[0].interconnectionAlpha});\n\t\t\t}\n\t\t}\n\t}\n\n\t// Add level 2\n\tconnectors = new Set();\n\tlet bucket = [];\n\tfor (let i = 0; i < pairs.length; ++i) {\n\t\tconst nameA = pairs[i].a.name;\n\t\tconst nameB = pairs[i].b.name;\n\t\t// Ensure at least one node is new, and one node is in previous level\n\t\tif (usedNodes.has(nameA) != usedNodes.has(nameB) && (connectorsNext.has(nameA) || connectorsNext.has(nameB)))\n\t\t{\n\t\t\tconst score = pairs[i].score;\n\t\t\tif (score >= layer[1].cutoffToAdd) {\n\t\t\t\tbucket.push(pairs[i]);\n\t\t\t}\n\t\t}\n\t}\n\n\t// Empty bucket\n\tfor (let i = 0; i < layer[1].maxNodes; ++i) {\n\t\tif (bucket.length <= 0)\n\t\t\tbreak;\n\t\t// Choose randomly from bucket\n\t\tlet bucketItem = Math.floor(Math.random() * bucket.length);\n\n\t\tconst nameA = bucket[bucketItem].a.name;\n\t\tconst typeA = bucket[bucketItem].a.type;\n\t\tconst nameB = bucket[bucketItem].b.name;\n\t\tconst typeB = bucket[bucketItem].b.type;\n\t\tconst score = bucket[bucketItem].score;\n\n\t\tif (!usedNodes.has(nameA)) {\n\t\t\tg.nodes.push(createGraphNode(nameA, 2, typeA, svgWidth, svgHeight));\n\t\t\tg.modeDict[nameA] = bucket[bucketItem].a;\n\n\t\t\tusedNodes.add(nameA);\n\t\t\tconnectors.add(nameA);\n\t\t}\n\t\tif (!usedNodes.has(nameB)) {\n\t\t\tg.nodes.push(createGraphNode(nameB, 2, typeB, svgWidth, svgHeight));\n\t\t\tg.modeDict[nameB] = bucket[bucketItem].b;\n\n\t\t\tusedNodes.add(nameB);\n\t\t\tconnectors.add(nameB);\n\t\t}\n\t\tg.links.push({source: nameA, target: nameB, value: score, weight: score, 'alpha': layer[1].edgeAlpha});\n\n\t\t// Remove from bucket\n\t\tbucket.splice(bucketItem, 1);\n\t}\n\n\t// Add level 2 edges\n\tfor (let i = 0; i < pairs.length; ++i) {\n\t\tconst nameA = pairs[i].a.name;\n\t\tconst nameB = pairs[i].b.name;\n\t\tif (connectors.has(nameA) && connectors.has(nameB))\n\t\t{\n\t\t\tconst score = pairs[i].score;\n\t\t\tif (score >= layer[1].interconnectionCutoff) {\n\t\t\t\tg.links.push({source: nameA, target: nameB, value: score, weight: score, 'alpha': layer[1].interconnectionAlpha});\n\t\t\t}\n\t\t}\n\t}\n\n\t// Sort links\n\tg.links.sort(function(a, b) {\n\t\treturn a.value > b.value;\n\t});\n\n\treturn g;\n}\n\n\n\n\n",
+			"file": "scripts/tempData.js",
+			"settings":
+			{
+				"buffer_size": 16102,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "scripts/controls.js",
+			"settings":
+			{
+				"buffer_size": 7673,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "scripts/d3graph.js",
+			"settings":
+			{
+				"buffer_size": 22603,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "scripts/loadTemplates.js",
+			"settings":
+			{
+				"buffer_size": 631,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "templates/inputSimilarity.html",
+			"settings":
+			{
+				"buffer_size": 7530,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "templates/instructions.html",
+			"settings":
+			{
+				"buffer_size": 1071,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
 			"file": "scripts/modevis.js",
-			"file_size": 15115,
-			"file_write_time": 131798422723347075,
 			"settings":
 			{
 				"buffer_size": 14065,
+				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
 		},
@@ -91,7 +151,7 @@
 			"file": "styles/styles.css",
 			"settings":
 			{
-				"buffer_size": 8370,
+				"buffer_size": 8827,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -100,7 +160,7 @@
 			"file": "templates/largePiano.html",
 			"settings":
 			{
-				"buffer_size": 4755,
+				"buffer_size": 5636,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -213,6 +273,20 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"reset",
+			"setPanelMode",
+			"setCheckboxes",
+			"createSVGPiano",
+			"iconList",
+			"setModalActive",
+			"iconLinks",
+			"icons",
+			"start",
+			"keySel",
+			"panel",
+			"updateD3Panel",
+			"analyzeModeForPanel",
+			"createSVGPiano",
 			"cell",
 			"createD3Graph"
 		],
@@ -222,6 +296,8 @@
 		"regex": false,
 		"replace_history":
 		[
+			"iconBorderList",
+			"icons"
 		],
 		"reverse": false,
 		"show_context": true,
@@ -241,15 +317,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 25948,
+						"buffer_size": 2649,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1989,
-								1989
+								0,
+								0
 							]
 						],
 						"settings":
@@ -259,7 +335,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 486.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
@@ -267,6 +343,184 @@
 				},
 				{
 					"buffer": 1,
+					"file": "scripts/tempData.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 16102,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								4153,
+								4153
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1429.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "scripts/controls.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 7673,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "scripts/d3graph.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 22603,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3181,
+								3181
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 997.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "scripts/loadTemplates.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 631,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								491,
+								491
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "templates/inputSimilarity.html",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 7530,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								162,
+								162
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 8,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "templates/instructions.html",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1071,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								892,
+								892
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 7,
 					"file": "scripts/modevis.js",
 					"semi_transient": false,
 					"settings":
@@ -291,24 +545,24 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 9,
 					"type": "text"
 				},
 				{
-					"buffer": 2,
+					"buffer": 8,
 					"file": "styles/styles.css",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 8370,
+						"buffer_size": 8827,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								6056,
-								6056
+								1027,
+								1027
 							]
 						],
 						"settings":
@@ -318,27 +572,27 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 4403.0,
+						"translation.y": 302.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 7,
 					"type": "text"
 				},
 				{
-					"buffer": 3,
+					"buffer": 9,
 					"file": "templates/largePiano.html",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 4755,
+						"buffer_size": 5636,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1805,
-								1805
+								5562,
+								5437
 							]
 						],
 						"settings":
@@ -347,10 +601,10 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 806.0,
+						"translation.y": 1151.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 6,
 					"type": "text"
 				}
 			]
