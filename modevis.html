@@ -30,6 +30,7 @@
 
 		<!-- Load graph display scripts -->
 		<script src="scripts/d3graph.js"></script>
+		<script src="scripts/adaptiveSVG.js"></script>
 		<script src="scripts/determineChords.js"></script>
 
 		<!-- Load UI scripts -->
@@ -70,22 +71,6 @@
 		//$("#modal-2").css('display', 'block');
 	</script>
 
-	<script>
-		$(document).ready(() => {
-			waitForSVGSize();
-		});
-
-		var waitForSVGSize = () => {
-			const svg = d3.select("svg");
-			//alert (+svg.property("viewBox").baseVal.width);
-			if (+svg.property("viewBox").baseVal.width > 0 && +svg.property("viewBox").baseVal.height > 0) {
-				runStartingGraph();
-			} else {
-				window.setTimeout(waitForSVGSize, 100);
-			}
-		}
-
-	</script>
 
 	</body>
 </html>
