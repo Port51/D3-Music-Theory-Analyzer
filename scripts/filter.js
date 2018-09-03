@@ -5,7 +5,6 @@
 var addFilteredPairs = (pairs, buckets, numToUse) => {
 	// Add imaginary bucket at end for easier calculations
 	buckets.push(pairs.length);
-	console.log(buckets);
 	let filteredPairs = [];
 
 	let bucketID = 0;
@@ -53,8 +52,7 @@ var addFilteredPairs = (pairs, buckets, numToUse) => {
 			// Remove from pairs
 			pairs.splice(itemID, 1);
 		} else {
-			console.log(buckets);
-			console.log("NOT FOUND: ID = " + useBucketID + " , size = " + bucketSize + "   " + buckets[useBucketID + 1] + " - " + buckets[useBucketID] + " + " + localSample + " for " + itemID + " out of " + pairs.length);
+			console.log("ERROR: Bucket overflow");
 		}
 
 		// Shift all bucket indices

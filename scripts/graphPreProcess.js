@@ -44,9 +44,7 @@ var convertAnalysisToGraph = (modes, pairs, depth, svgWidth, svgHeight, settings
 	newLayer = addGraphLayer( g, pairs, usedNodes, usedNodes, layer[1], 2, svgWidth, svgHeight );
 	g = newLayer.g;
 	usedNodes = newLayer.usedNodes;
-
 	
-
 	// Sort links
 	g.links.sort(function(a, b) {
 		return a.value > b.value;

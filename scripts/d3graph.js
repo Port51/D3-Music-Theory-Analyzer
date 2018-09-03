@@ -19,8 +19,7 @@ var createD3Graph = (graph) => {
 	var svg = d3.select("svg");
 	var width = +svg.property("viewBox").baseVal.width;
 	var height = +svg.property("viewBox").baseVal.height;
-	//alert(width + " " + height);
-
+	
 	// Graph settings (TODO: move these elsewhere)
 	const edgeWiMin = 0.5;
 	const edgeWiMax = 25.0;
@@ -35,7 +34,7 @@ var createD3Graph = (graph) => {
 	var colScale = d3.scaleLinear()
 		.domain(d3.ticks(0, 100, 1))
 		.range(["#3310ef", "#10fcfc"]);
-	//var color = d3.scaleOrdinal(d3.schemeCategory20); //["#ffff00", "#0000ff", "#00aaaa"]
+	
 	// 0 = user, 1 = classical, 2 = other, 3 = chords
 	var color = d3.scaleOrdinal()
 		.range(["#10dcdc", "#1090fc", "#306c8c", "#c6c618"]);
