@@ -41,7 +41,7 @@ var determineChordsForNote = (i, n) => {
         "(M3)", [4, -6, -7],
     ];
 
-    const noteName = GetNoteName(i);
+    const noteName = getNoteName(i);
     let chords = [];
 
     for (let c = 0; c < req.length / 2; ++c) {

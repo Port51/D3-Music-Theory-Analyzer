@@ -207,7 +207,7 @@ var createUserMode = () => {
 	mode.isUser = true;
 	mode.type = 0;
 	mode.key = rootSel;
-	mode.name = GetNoteName(mode.key) + ' ' + mode.label;
+	mode.name = getNoteName(mode.key) + ' ' + mode.label;
 
 	mode.n = [];
 	for (let i = 0; i < 12; ++i) {
