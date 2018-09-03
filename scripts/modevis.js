@@ -26,7 +26,7 @@ var runAnalysis = (edgeCutoff, settings, exa) => {
 	modes.push(exa);
 
 	// Run the algorithm
-	let pairs = getAllSimilarityPairs(modes, settings, 10);
+	let pairs = getAllSimilarityPairs(modes, settings);
 	// Filter by score
 	pairs = pairs.filter(pair => pair.score >= edgeCutoff);
 
@@ -34,7 +34,7 @@ var runAnalysis = (edgeCutoff, settings, exa) => {
 	return { 'pairs': pairs, 'modes': modes };
 }
 
-var getAllSimilarityPairs = (modes, settings, numTop) => {
+var getAllSimilarityPairs = (modes, settings) => {
 	const M = modes.length;
 
 	// Compare all possible pairs of notes
@@ -80,10 +80,6 @@ var getAllSimilarityPairs = (modes, settings, numTop) => {
 
 	const zeroScorePercentage = (pairs.length > 0) ? 100 * numZeroScores / pairs.length : 0;
 	console.log("   Avg = " + (Math.round(avg(scores) * 100) / 100).toString() + ", zero scores: " + Math.round(zeroScorePercentage).toString() + "%");
-
-	// Sort interactions by score
-	pairs = pairs.sort((a, b) => { return a.score < b.score; } );
-	const filterDiv = 1.0 / numTop;
 
 	return pairs;
 

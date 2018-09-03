@@ -220,9 +220,6 @@ var createUserMode = () => {
 		mode.c.push(mode.n[(i + mode.key) % 12]);
 	}
 
-	console.log("USER SCALE BELOW: (transposed, then static)");
-	console.log(mode.n);
-	console.log(mode.c);
 	mode.aliases = [];
 
 	return mode;

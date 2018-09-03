@@ -4,7 +4,7 @@
 	Calculates score from 0.0 to 1.0 based on how similar two modes are
 */
 var score = (a, b, settings) => {
-    const debugPrintAll = true;
+    const debugPrintAll = false;
 
 	const comps = getCompromiseScore(a, b, settings);
 	const noteSimScore = comps.noteSim;
