@@ -228,10 +228,10 @@ input[type=range]:focus::-ms-fill-upper {
 .cool-button:hover {
 	/*transform: rotate(45deg);*/
 	color: #ffffff;
-	background: #4081c9;
-	box-shadow: 0 0 1px 3px rgba(64, 129, 201, 0.15),
-		0 0 1px 6px rgba(64, 129, 201, 0.1),
-		0 0 1px 9px rgba(64, 129, 201, 0.05);
+	background: #dd4; /*#4081c9*/
+	box-shadow: 0 0 1px 3px rgba(240, 240, 30, 0.15), /*rgba(64, 129, 201, 0.15)*/
+		0 0 1px 6px rgba(240, 240, 30, 0.1),
+		0 0 1px 9px rgba(240, 240, 30, 0.05);
 }
 
 .rootCircle {
@@ -247,16 +247,16 @@ input[type=range]:focus::-ms-fill-upper {
 .rootCircle[value=true] {
 	background: #cccc15;
 	border: 1.75px solid #707035;
-	box-shadow: 0 0 1px 3px rgba(255, 255, 40, 0.15),
-		0 0 1px 5px rgba(255, 255, 40, 0.1),
-		0 0 1px 8px rgba(255, 255, 40, 0.05);
+	box-shadow: 0 0 1px 4px rgba(255, 255, 40, 0.15),
+		0 0 1px 6px rgba(255, 255, 40, 0.1),
+		0 0 1px 10px rgba(255, 255, 40, 0.05);
 }
 .rootCircle[value=false]:hover {
 	background: #bbbb22;
 	border: 1.75px solid #707035;
-	box-shadow: 0 0 1px 2px rgba(255, 255, 40, 0.1),
-		0 0 1px 4px rgba(255, 255, 40, 0.067),
-		0 0 1px 7px rgba(255, 255, 40, 0.033);
+	box-shadow: 0 0 1px 3px rgba(255, 255, 40, 0.1),
+		0 0 1px 5px rgba(255, 255, 40, 0.067),
+		0 0 1px 9px rgba(255, 255, 40, 0.033);
 }
 
 
@@ -264,9 +264,11 @@ input[type=range]:focus::-ms-fill-upper {
 
 
 
-.small-white-text {
-	color: #dddddd;
-	font-size: 8pt;
+.piano-etched-text {
+	color: #211;
+	font-size: 12pt;
+	font-weight: bold;
+	font-style: italic;
 }
 
 /* Style the button that is used to open and close the collapsible content */
@@ -299,24 +301,28 @@ input[type=range]:focus::-ms-fill-upper {
 .pianoContainer {
 	width: 500px;
 	height: 450px;
-	background: #203720;
+	/*background: #72330e;*/
+	background-image: url(../img/textures/TexturesCom_WoodFine0072_3_S.jpg);
+	background-size: 100%;
 	align-content: center;
-	border-right: 3px solid #405740;
-	border-bottom: 3px solid #405740;
+	/*border-right: 3px solid #92532e;
+	border-bottom: 3px solid #92532e;*/
 	border-radius: 0px 0px 4px 4px;
 }
 
 .pianoContainerTop {
 	width: 100%;
 	height: 100px;
-	background: #304f30;
-	border-right: 3px solid #506f50;
-	border-bottom: 3px solid #506f50;
+	/*background: #994a1d;*/
+	background-image: url(../img/textures/TexturesCom_WoodFine0065_6_S.jpg);
+	background-size: 100%;
+	/*border-right: 3px solid #b96a3d;
+	border-bottom: 3px solid #b96a3d;*/
 	border-radius: 0px 0px 4px 4px;
 }
 
 .pianoTable {
-	background: #102710; /* darkness between keys */
+	background: #361e13; /* darkness between keys */
 	border-spacing: 2px 0px;
 	border-collapse: separate;
 }
@@ -327,7 +333,7 @@ input[type=range]:focus::-ms-fill-upper {
 }
 
 .pianoWhite[mouseover=true] {
-	background: #3355ee !important;
+	background: #dd4 !important; /* 3355ee */
 }
 .pianoWhite[highlight=true][mouseover=false] {
 	background: #3071a9;
@@ -339,8 +345,8 @@ input[type=range]:focus::-ms-fill-upper {
 	border-radius: 0px 0px 5px 5px;
 }
 .pianoWhite.pianoBot[mouseover=true] {
-	border-right: 3px solid #5375ff !important;
-	border-bottom: 3px solid #5375ff !important;
+	border-right: 3px solid #ff6 !important; /* 5375ff */
+	border-bottom: 3px solid #ff6 !important;
 }
 .pianoWhite.pianoBot[highlight=true][mouseover=false] {
 	border-right: 3px solid #4081b9;
@@ -354,7 +360,7 @@ input[type=range]:focus::-ms-fill-upper {
 }
 .pianoWhite.pianoTopSmall[mouseover=true],
 .pianoWhite.pianoTopExtraSmall[mouseover=true] {
-	border-right: 3px solid #5375ff !important;
+	border-right: 3px solid #ff6 !important;
 }
 .pianoWhite.pianoTopSmall[highlight=true][mouseover=false],
 .pianoWhite.pianoTopExtraSmall[highlight=true][mouseover=false] {
@@ -368,9 +374,9 @@ input[type=range]:focus::-ms-fill-upper {
 	border-radius: 3px 3px 5px 5px;
 }
 .pianoBlack[mouseover=true] {
-	background: #3355ee !important;
-	border-right: 3px solid #5375ff !important;
-	border-bottom: 3px solid #5375ff !important;
+	background: #dd4 !important; /* 3355ee */
+	border-right: 3px solid #ff6 !important;
+	border-bottom: 3px solid #ff6 !important;
 }
 .pianoBlack[highlight=true][mouseover=false] {
 	background: #3071a9;
