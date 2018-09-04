@@ -239,8 +239,8 @@ var buttonRunFromSettings = () => {
 }
 
 var buttonRunFromPiano = () => {
-	console.log("buttonRunFromPiano");
-	
+	console.log("Button click: buttonRunFromPiano");
+
 	// Check for any notes selected
 	let numNotes = 0;
 	for (let i = 0; i < 12; ++i) {
@@ -249,11 +249,24 @@ var buttonRunFromPiano = () => {
 		}
 	}
 
-	// Close modal window
-	setModalActive(0, false);
+	// Check if root is in scale
+	const rootIncluded = keySel[rootSel];
 
-	// Run analysis
-	runSimulation();
+	// Check with user to see if weird inputs are intended
+	let validInput = true;
+	if (numNotes == 0) {
+		validInput = confirm("You haven't selected any notes. Are you sure you want to continue?");
+	} else if (!rootIncluded) {
+		validInput = confirm("Your root (yellow circle) is not included in the scale. Are you sure you want to continue?");
+	}
+
+	if (validInput) {
+		// Close modal window
+		setModalActive(0, false);
+
+		// Run analysis
+		runSimulation();
+	}
 
 }
 
