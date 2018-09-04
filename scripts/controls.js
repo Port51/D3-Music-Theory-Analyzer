@@ -30,9 +30,11 @@ var runSimulation = () => {
 
 		const results = runAnalysis(0.025, settings, exa);
 		const graph = convertAnalysisToGraph(results.modes, results.pairs, 2, width, height, settings);
-		console.log(JSON.stringify(graph));
+		
+		// DEBUG: This is for saving default graphs as JSON objects
+		//console.log(JSON.stringify(graph));
 
-		createD3Graph(graph);
+		createD3Graph(graph, exa.name);
 
 
 	} // end useGraph

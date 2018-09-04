@@ -41,6 +41,7 @@ var getAllSimilarityPairs = (modes, settings) => {
 	let pairs = [];
 	let scores = [];
 	let numZeroScores = 0;
+	let comparisonsRun = 0;
 	for (let i = 0; i < M - 1; ++i) {
 		for (let j = i + 1; j < M; ++j) {
 			// Determine similarity score
@@ -72,14 +73,16 @@ var getAllSimilarityPairs = (modes, settings) => {
 				// Save interaction if score > 0.0
 				pairs.push( { a: modes[i], b: modes[j], score: s } );
 			}
+			comparisonsRun++;
 
 		}
 	}
 
-	console.log("COMPLETED! Calulated " + pairs.length.toString() + " scores");
+	console.log("COMPLETED! Calculated " + comparisonsRun.toString() + " comparisons total");
+	console.log("The algorithm found " + pairs.length.toString() + " scores above zero");
 
-	const zeroScorePercentage = (pairs.length > 0) ? 100 * numZeroScores / pairs.length : 0;
-	console.log("   Avg = " + (Math.round(avg(scores) * 100) / 100).toString() + ", zero scores: " + Math.round(zeroScorePercentage).toString() + "%");
+	const positiveScorePercentage = (pairs.length > 0) ? 100 * (1.0 - pairs.length / comparisonsRun) : 0;
+	console.log("   Avg = " + (Math.round(avg(scores) * 100) / 100).toString() + ", positive scores: " + Math.round(positiveScorePercentage).toString() + "%");
 
 	return pairs;
 

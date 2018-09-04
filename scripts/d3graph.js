@@ -15,7 +15,14 @@ var hoverIconID = -1;
 var checkboxPhysics = null;
 var checkboxSticky = null;
 
-var createD3Graph = (graph) => {
+// On page load, add listener to resize
+window.addEventListener('resize', resize);
+
+var resize = () => {
+	console.log(window.innerWidth);
+}
+
+var createD3Graph = (graph, defaultSelection) => {
 	var svg = d3.select("svg");
 	var width = +svg.property("viewBox").baseVal.width;
 	var height = +svg.property("viewBox").baseVal.height;
@@ -122,6 +129,16 @@ var createD3Graph = (graph) => {
 	// Add icons to left
 	createD3SideIcons(svg, width, height);
 
+	// Set default mode
+	if (defaultSelection != null) {
+		if (modeDict[defaultSelection].analysis == null) {
+			modeDict[defaultSelection].analysis = analyzeModeForPanel(modeDict[defaultSelection]);
+		}
+		setPanelMode(graph.modeDict[defaultSelection]);
+		nodeSel.source = null;
+		nodeSel.attr("r", groupRadius(0) + 5);
+	}
+
 
 
 	// Validate positions
@@ -186,7 +203,7 @@ var createD3Graph = (graph) => {
 				modeDict[d.id].analysis = analyzeModeForPanel(modeDict[d.id]);
 			}
 
-			setPanelMode(modeDict[d.id]);
+			modeDict[d.id] = setPanelMode(modeDict[d.id]);
 			nodeSel.source = d;
 			nodeSel.attr("r", groupRadius(d.group) + 5);
 		}
@@ -367,8 +384,9 @@ var createSVGPiano = (svg, panelRect, rectBorderCol, startY, internalPadding, pi
 var createD3Panel = (svg, width, height) => {
     // Settings
     const padding = 10;
-    let panelRect = {
-        wi: 220, hei: 400,
+    const panelRect = {
+        wi: 220 * 1.2,
+        hei: height * 0.75,
         };
     panelRect.x0 = width - panelRect.wi - padding;
     panelRect.y0 = padding;
@@ -485,12 +503,14 @@ var mouseOutIconTrigger = function(d,i) {
 // TODO: Move styles to CSS
 var createD3SideIcons = (svg, width, height) => {
 	// Settings
+	const scaleAll = 0.9;
 	const padding = 6;
-	const spacingBetweenIcons = 65*0.7;
-	const iconWi = 60*0.7;
+	const spacingBetweenIcons = 65 * scaleAll;
+	const iconWi = 60 * scaleAll;
 
-	let sideRect = {
-		wi: 100, hei: 400,
+	const sideRect = {
+		wi: 100 * scaleAll,
+		hei: 400 * scaleAll,
 	};
 	sideRect.x0 = padding;
 	sideRect.y0 = padding;
@@ -535,9 +555,9 @@ var createD3SideIcons = (svg, width, height) => {
 	}
 
 	// USER PIANO
-	const pianoHei = 90;
+	const pianoHei = 80;
 	// ARGS:      (svg, panelRect, startY, pianoHei, scale)
-	icons.piano = createSVGPiano(svg, sideRect, "#667", 0, 5, pianoHei - 10, 6, 0.75*0.7);
+	icons.piano = createSVGPiano(svg, sideRect, "#667", 0, 5, pianoHei - 10, 6, 0.7725);
 
 
 	// PIANO ICON LABEL
@@ -545,7 +565,7 @@ var createD3SideIcons = (svg, width, height) => {
 		.attr("x", sideRect.x0 + iconWi + 20)
 		.attr("y", sideRect.y0 + spacingBetweenIcons * 0 + 20)
 		.attr("text-anchor", "start")
-		.style("font-size", "14px")
+		.style("font-size", "17px")
 		.style("font-weight", "normal")
 		.style("fill", "#fff")
 		.style("pointer-events", "none")
@@ -571,7 +591,7 @@ var createD3SideIcons = (svg, width, height) => {
 		.attr("x", sideRect.x0 + iconWi + 20)
 		.attr("y", sideRect.y0 + spacingBetweenIcons * 1 + 20)
 		.attr("text-anchor", "start")
-		.style("font-size", "14px")
+		.style("font-size", "17px")
 		.style("font-weight", "normal")
 		.style("fill", "#fff")
 		.style("pointer-events", "none")
@@ -597,7 +617,7 @@ var createD3SideIcons = (svg, width, height) => {
 		.attr("x", sideRect.x0 + iconWi + 20)
 		.attr("y", sideRect.y0 + spacingBetweenIcons * 2 + 20)
 		.attr("text-anchor", "start")
-		.style("font-size", "14px")
+		.style("font-size", "17px")
 		.style("font-weight", "normal")
 		.style("fill", "#fff")
 		.style("pointer-events", "none")
@@ -618,10 +638,10 @@ var createD3SideIcons = (svg, width, height) => {
 
 	// PHYSICS TOGGLE - CHECK MARK
 	checkboxPhysics = svg.append("text")
-		.attr("x", sideRect.x0 + iconWi * 0.5)
+		.attr("x", sideRect.x0 + iconWi * 0.45)
 		.attr("y", sideRect.y0 + spacingBetweenIcons * 3 + iconWi * 0.35)
 		.attr("text-anchor", "middle")
-		.style("font-size", "14px")
+		.style("font-size", "17px")
 		.style("font-weight", "normal")
 		.style("fill", "#fff")
 		.style("pointer-events", "none")
@@ -633,7 +653,7 @@ var createD3SideIcons = (svg, width, height) => {
 		.attr("x", sideRect.x0 + iconWi + 5)
 		.attr("y", sideRect.y0 + spacingBetweenIcons * 3 + 14)
 		.attr("text-anchor", "start")
-		.style("font-size", "14px")
+		.style("font-size", "17px")
 		.style("font-weight", "normal")
 		.style("fill", "#fff")
 		.style("pointer-events", "none")
@@ -654,10 +674,10 @@ var createD3SideIcons = (svg, width, height) => {
 
 	// STICKY TOGGLE - CHECK MARK
 	checkboxSticky = svg.append("text")
-		.attr("x", sideRect.x0 + iconWi * 0.5)
+		.attr("x", sideRect.x0 + iconWi * 0.45)
 		.attr("y", sideRect.y0 + spacingBetweenIcons * 3.5 + iconWi * 0.35 + 2)
 		.attr("text-anchor", "middle")
-		.style("font-size", "14px")
+		.style("font-size", "17px")
 		.style("font-weight", "normal")
 		.style("fill", "#fff")
 		.style("pointer-events", "none")
@@ -669,7 +689,7 @@ var createD3SideIcons = (svg, width, height) => {
 		.attr("x", sideRect.x0 + iconWi + 5)
 		.attr("y", sideRect.y0 + spacingBetweenIcons * 3.5 + 14 + 2)
 		.attr("text-anchor", "start")
-		.style("font-size", "14px")
+		.style("font-size", "17px")
 		.style("font-weight", "normal")
 		.style("fill", "#fff")
 		.style("pointer-events", "none")

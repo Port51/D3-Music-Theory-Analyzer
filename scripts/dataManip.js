@@ -32,8 +32,8 @@ var createMode = (name, type, arr) => {
 
 // Expands list of modes to include each mode in all possible keys
 // Transposes the notes in each mode accordingly
-var expandModesToAllKeys = (modes) => {
-	let newList = [];
+var expandModesToAllKeys = (modes, forceRoot, root) => {
+	let expandedModes = [];
 	for (let i = 0; i < modes.length; ++i)
 	{
 		// Factor in special cases where NOTES_IN_SCALEs don't emphasize one root
@@ -71,10 +71,13 @@ var expandModesToAllKeys = (modes) => {
 				newMode.n.push( modes[i].n[ (j - key + 24) % NOTES_IN_SCALE ] );
 			}
 
-			newList.push(newMode);
+			expandedModes.push(newMode);
 
 		}
 	}
-	return newList;
+	
+	console.log("Expanded dataset to different keys, expanding from size " + modes.length.toString() + " to " + expandedModes.length.toString());
+
+	return expandedModes;
 }
 
