@@ -77,6 +77,9 @@ var addGraphLayer = (g, pairs, connectors, usedNodes, layerInfo, layerID, svgWid
 		if (!usedNodes.has(nameA)) {
 			g.nodes.push(createGraphNode(nameA, layerID, typeA, svgWidth, svgHeight));
 			g.modeDict[nameA] = filteredPairs[i].a;
+			if (filteredPairs[i].a == null) {
+				console.log("ERROR: Could not add " + nameA + " to mode dictionary!");
+			}
 			
 			usedNodes.add(nameA);
 			newestLayer.add(nameA);
@@ -84,6 +87,9 @@ var addGraphLayer = (g, pairs, connectors, usedNodes, layerInfo, layerID, svgWid
 		if (!usedNodes.has(nameB)) {
 			g.nodes.push(createGraphNode(nameB, layerID, typeB, svgWidth, svgHeight));
 			g.modeDict[nameB] = filteredPairs[i].b;
+			if (filteredPairs[i].b == null) {
+				console.log("ERROR: Could not add " + nameA + " to mode dictionary!");
+			}
 
 			usedNodes.add(nameB);
 			newestLayer.add(nameB);

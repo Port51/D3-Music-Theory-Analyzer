@@ -199,11 +199,12 @@ var createD3Graph = (graph, defaultSelection) => {
 		if (d.id in modeDict) {
 			// Calculate analysis, if haven't yet
 			// This is info like chord names
+			console.log("Selected " + d.id);
 			if (modeDict[d.id].analysis == null) {
 				modeDict[d.id].analysis = analyzeModeForPanel(modeDict[d.id]);
 			}
 
-			modeDict[d.id] = setPanelMode(modeDict[d.id]);
+			setPanelMode(modeDict[d.id]);
 			nodeSel.source = d;
 			nodeSel.attr("r", groupRadius(d.group) + 5);
 		}

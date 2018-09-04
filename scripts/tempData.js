@@ -63,7 +63,7 @@ var getTempString = () => {
 	"2,Gypsy (Byzantine)		[##  ## ##  #]" +
 	"2,Spanish (8 tone)			[## #### # # ]" +
 	"2,Hungarian Gypsy			[# ##  ### # ]" +
-	"2,Native American			[# # # #  # #]" +
+	"2,Native American Scale	[# # # #  # #]" +
 	"2,Hungarian Folk			[##  #  ##  #]" +
 	"2,Leading Tone				[# # # # # ##]" +
 	"2,Overtone					[# # # ### # ]" +
