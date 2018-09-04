@@ -227,8 +227,8 @@ input[type=range]:focus::-ms-fill-upper {
 }
 .cool-button:hover {
 	/*transform: rotate(45deg);*/
-	color: #ffffff;
-	background: #dd4; /*#4081c9*/
+	color: #111;
+	background: #ee2; /*#4081c9*/
 	box-shadow: 0 0 1px 3px rgba(240, 240, 30, 0.15), /*rgba(64, 129, 201, 0.15)*/
 		0 0 1px 6px rgba(240, 240, 30, 0.1),
 		0 0 1px 9px rgba(240, 240, 30, 0.05);
@@ -245,15 +245,15 @@ input[type=range]:focus::-ms-fill-upper {
 	transition: box-shadow 125ms cubic-bezier(.2,0,.7,1), transform 80ms cubic-bezier(.2,0,.7,1);
 }
 .rootCircle[value=true] {
-	background: #cccc15;
-	border: 1.75px solid #707035;
+	background: #ee2;
+	border: 1.75px solid #992;
 	box-shadow: 0 0 1px 4px rgba(255, 255, 40, 0.15),
 		0 0 1px 6px rgba(255, 255, 40, 0.1),
 		0 0 1px 10px rgba(255, 255, 40, 0.05);
 }
 .rootCircle[value=false]:hover {
-	background: #bbbb22;
-	border: 1.75px solid #707035;
+	background: #dd1;
+	border: 1.75px solid #881;
 	box-shadow: 0 0 1px 3px rgba(255, 255, 40, 0.1),
 		0 0 1px 5px rgba(255, 255, 40, 0.067),
 		0 0 1px 9px rgba(255, 255, 40, 0.033);
@@ -347,7 +347,7 @@ input[type=range]:focus::-ms-fill-upper {
 }
 
 .pianoWhite[mouseover=true] {
-	background: #dd4 !important; /* 3355ee */
+	background: #ee2 !important; /* 3355ee */
 }
 .pianoWhite[highlight=true][mouseover=false] {
 	background: #3071a9;
@@ -359,8 +359,8 @@ input[type=range]:focus::-ms-fill-upper {
 	border-radius: 0px 0px 5px 5px;
 }
 .pianoWhite.pianoBot[mouseover=true] {
-	border-right: 3px solid #ff6 !important; /* 5375ff */
-	border-bottom: 3px solid #ff6 !important;
+	border-right: 3px solid #ff4 !important; /* 5375ff */
+	border-bottom: 3px solid #ff4 !important;
 }
 .pianoWhite.pianoBot[highlight=true][mouseover=false] {
 	border-right: 3px solid #4081b9;
@@ -374,7 +374,7 @@ input[type=range]:focus::-ms-fill-upper {
 }
 .pianoWhite.pianoTopSmall[mouseover=true],
 .pianoWhite.pianoTopExtraSmall[mouseover=true] {
-	border-right: 3px solid #ff6 !important;
+	border-right: 3px solid #ff4 !important;
 }
 .pianoWhite.pianoTopSmall[highlight=true][mouseover=false],
 .pianoWhite.pianoTopExtraSmall[highlight=true][mouseover=false] {
@@ -388,9 +388,9 @@ input[type=range]:focus::-ms-fill-upper {
 	border-radius: 3px 3px 5px 5px;
 }
 .pianoBlack[mouseover=true] {
-	background: #dd4 !important; /* 3355ee */
-	border-right: 3px solid #ff6 !important;
-	border-bottom: 3px solid #ff6 !important;
+	background: #ee2 !important; /* 3355ee */
+	border-right: 3px solid #ff4 !important;
+	border-bottom: 3px solid #ff4 !important;
 }
 .pianoBlack[highlight=true][mouseover=false] {
 	background: #3071a9;
