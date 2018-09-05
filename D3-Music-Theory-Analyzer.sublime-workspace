@@ -4,6 +4,14 @@
 		"selected_items":
 		[
 			[
+				"select",
+				"selectNodeByID"
+			],
+			[
+				"defa",
+				"defaultSelection"
+			],
+			[
 				"filtered",
 				"filteredPairs"
 			],
@@ -92,29 +100,28 @@
 	"buffers":
 	[
 		{
-			"file": "scripts/controls.js",
+			"file": "scripts/d3graph.js",
 			"settings":
 			{
-				"buffer_size": 7566,
+				"buffer_size": 23090,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "scripts/tempData.js",
+			"file": "styles/styles.css",
 			"settings":
 			{
-				"buffer_size": 18044,
+				"buffer_size": 9620,
 				"encoding": "UTF-8",
-				"line_ending": "Unix"
+				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "templates/inputSimilarity.html",
+			"file": "scripts/determineChords.js",
 			"settings":
 			{
-				"buffer_size": 7830,
-				"encoding": "UTF-8",
+				"buffer_size": 1927,
 				"line_ending": "Windows"
 			}
 		}
@@ -159,24 +166,24 @@
 	],
 	"file_history":
 	[
-		"/G/_PROJECTS/D3-Music-Theory-Analyzer/modevis.html",
-		"/G/_PROJECTS/D3-Music-Theory-Analyzer/scripts/modevis.js",
-		"/G/_PROJECTS/D3-Music-Theory-Analyzer/scripts/filter.js",
-		"/G/_PROJECTS/D3-Music-Theory-Analyzer/scripts/graphPreProcess.js",
-		"/G/_PROJECTS/D3-Music-Theory-Analyzer/scripts/d3graph.js",
+		"/G/_PROJECTS/D3-Music-Theory-Analyzer/templates/largePiano.html",
+		"/G/_PROJECTS/D3-Music-Theory-Analyzer/templates/instructions.html",
+		"/G/_PROJECTS/D3-Music-Theory-Analyzer/templates/inputSimilarity.html",
 		"/G/_PROJECTS/D3-Music-Theory-Analyzer/styles/styles.css",
-		"/G/_PROJECTS/D3-Music-Theory-Analyzer/scripts/scores.js",
+		"/G/_PROJECTS/D3-Music-Theory-Analyzer/scripts/graphPreProcess.js",
 		"/G/_PROJECTS/D3-Music-Theory-Analyzer/scripts/tempData.js",
-		"/G/_PROJECTS/D3-Music-Theory-Analyzer/scripts/textManip.js",
+		"/G/_PROJECTS/D3-Music-Theory-Analyzer/scripts/d3graph.js",
+		"/G/_PROJECTS/D3-Music-Theory-Analyzer/scripts/modevis.js",
+		"/G/_PROJECTS/D3-Music-Theory-Analyzer/scripts/controls.js",
+		"/G/_PROJECTS/D3-Music-Theory-Analyzer/scripts/filter.js",
 		"/G/_PROJECTS/D3-Music-Theory-Analyzer/scripts/dataManip.js",
+		"/G/_PROJECTS/D3-Music-Theory-Analyzer/modevis.html",
+		"/G/_PROJECTS/D3-Music-Theory-Analyzer/scripts/scores.js",
+		"/G/_PROJECTS/D3-Music-Theory-Analyzer/scripts/textManip.js",
 		"/G/_PROJECTS/D3-Music-Theory-Analyzer/scripts/determineChords.js",
 		"/G/_PROJECTS/D3-Music-Theory-Analyzer/scripts/stats.js",
 		"/G/_PROJECTS/D3-Music-Theory-Analyzer/scripts/adaptiveSVG.js",
-		"/G/_PROJECTS/D3-Music-Theory-Analyzer/scripts/controls.js",
 		"/G/_PROJECTS/D3-Music-Theory-Analyzer/scripts/loadTemplates.js",
-		"/G/_PROJECTS/D3-Music-Theory-Analyzer/templates/inputSimilarity.html",
-		"/G/_PROJECTS/D3-Music-Theory-Analyzer/templates/instructions.html",
-		"/G/_PROJECTS/D3-Music-Theory-Analyzer/templates/largePiano.html",
 		"/G/_PROJECTS/D3-Music-Theory-Analyzer/D3-Music-Theory-Analyzer.sublime-project",
 		"/G/Prog1/modevis/modevis.html",
 		"/G/Prog1/tensor/simplerun/1_sess/ex5.py",
@@ -245,6 +252,11 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"setPanelMode",
+			"hover",
+			"setIconHover",
+			"mouseOverIconTrigger",
+			"small-white",
 			"GetNoteName",
 			"12",
 			"SCALE",
@@ -286,87 +298,85 @@
 	"groups":
 	[
 		{
-			"selected": 2,
+			"selected": 1,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "scripts/controls.js",
+					"file": "scripts/d3graph.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 7566,
+						"buffer_size": 23090,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1079,
-								1079
+								5813,
+								5813
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
-							"translate_tabs_to_spaces": false
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax"
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "scripts/tempData.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 18044,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								4998,
-								4998
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 2308.0,
+						"translation.y": 2909.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
 					"type": "text"
 				},
 				{
-					"buffer": 2,
-					"file": "templates/inputSimilarity.html",
+					"buffer": 1,
+					"file": "styles/styles.css",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 7830,
+						"buffer_size": 9620,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								164,
-								164
+								5247,
+								5247
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/HTML/HTML.sublime-syntax",
+							"syntax": "Packages/CSS/CSS.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 3598.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "scripts/determineChords.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1927,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
 							"tab_size": 4,
 							"translate_tabs_to_spaces": true
 						},
@@ -374,7 +384,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 2,
 					"type": "text"
 				}
 			]
@@ -419,7 +429,7 @@
 	"project": "D3-Music-Theory-Analyzer.sublime-project",
 	"replace":
 	{
-		"height": 72.0
+		"height": 46.0
 	},
 	"save_all_on_build": true,
 	"select_file":

@@ -228,10 +228,10 @@ input[type=range]:focus::-ms-fill-upper {
 .cool-button:hover {
 	/*transform: rotate(45deg);*/
 	color: #111;
-	background: #ee2; /*#4081c9*/
-	box-shadow: 0 0 1px 3px rgba(240, 240, 30, 0.15), /*rgba(64, 129, 201, 0.15)*/
-		0 0 1px 6px rgba(240, 240, 30, 0.1),
-		0 0 1px 9px rgba(240, 240, 30, 0.05);
+	background: #eee; /*#4081c9*/
+	box-shadow: 0 0 1px 3px rgba(240, 240, 240, 0.15), /*rgba(64, 129, 201, 0.15)*/
+		0 0 1px 6px rgba(240, 240, 240, 0.1),
+		0 0 1px 9px rgba(240, 240, 240, 0.05);
 }
 
 .rootCircle {
