@@ -514,10 +514,13 @@ var setIconHover = (id) => {
 		// Update display
 		for (let i = 0; i < activeSVG.buttons.length; ++i) {
 			const label = activeSVG.buttons[i].label;
+			const border = activeSVG.buttons[i].border;
 			if (i == hoverIconID) {
 				label.style("opacity", "1.0");
+				border.style("opacity", "1.0");
 			} else {
 				label.style("opacity", "0.5");
+				border.style("opacity", "0.5");
 			}
 
 		}
@@ -556,14 +559,27 @@ var createButton = (svg, sideRect, id, label) => {
 	const padding = 15;
 	const buttonWi = 180 * scaleAll;
 	const buttonHei = 31 * scaleAll;
+	const paddingVertical = 1;
 
 	let newButton = {};
+
+	// Border
+	newButton.border = svg.append("rect")
+		.attr("x", sideRect.x0)
+		.attr("y", sideRect.y0 + (buttonHei + paddingVertical) * id - buttonHei * 0.65)
+		.attr("width", buttonWi)
+		.attr("height", buttonHei * 0.9)
+		.style("stroke", "#fff")
+		.style("stroke-width", "2")
+		.attr("rx", "5")
+		.attr("ry", "5")
+		.attr("opacity", 0.5);
 
 	// Capture mouse events
 	newButton.trigger = svg.append("rect")
 		.attr("id", "svgButtonTrigger" + id.toString())
 		.attr("x", sideRect.x0)
-		.attr("y", sideRect.y0 + buttonHei * id - buttonHei * 0.65)
+		.attr("y", sideRect.y0 + (buttonHei + paddingVertical) * id - buttonHei * 0.65)
 		.attr("width", buttonWi)
 		.attr("height", buttonHei * 0.9)
 		.attr("fill", "#fff")
@@ -576,15 +592,17 @@ var createButton = (svg, sideRect, id, label) => {
 	// Text object
 	newButton.label = svg.append("text")
 		.attr("id", "svgButtonLabel" + id.toString())
-		.attr("x", sideRect.x0)
-		.attr("y", sideRect.y0 + buttonHei * id)
+		.attr("x", sideRect.x0 + 4)
+		.attr("y", sideRect.y0 + (buttonHei + paddingVertical) * id)
 		.attr("text-anchor", "start")
 		.style("font-size", "20px")
 		.style("font-weight", "normal")
 		.style("fill", "#fff")
 		.style("pointer-events", "none")
 		.style("opacity", 0.5)
-		.text(label);
+		.text(label)
+
+
 
 	
 
