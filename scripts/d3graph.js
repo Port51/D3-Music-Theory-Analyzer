@@ -8,10 +8,10 @@ var palette_NodeGroups_Faded = ["rgba(85, 211, 57, 0.3)", "rgba(48, 140, 193, 0.
 	// 0 = user
 	// 1 = medieval
 	// 2 = modified medieval / composer
-	// 3 = blues / experimental
-	// 4 = world
+	// 3 = blues / experimental (prev: #994c20)
+	// 4 = world (prev: #7c22a3)
 	// 5 = chord / film / invented
-var palette_ModeTypes = ["#55d339", "#308cc1", "#2856d6", "#994c20", "#7c22a3", "#cecb4b"];
+var palette_ModeTypes = ["#51d633", "#2191d1", "#2856d6", "#9b30d1", "#ce3227", "#cecb4b"];
 // ["#3310ef", "#10fcfc"];
 // ["#10dcdc", "#1090fc", "#306c8c", "#c6c618"];
 
