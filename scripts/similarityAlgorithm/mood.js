@@ -1,27 +1,11 @@
 "use strict";
 
-var getIntervals = (a) => {
-	// Create list of intervals
-	let intervals = new Array(a.c.length).fill(0);
+// Namespace pattern
+var SCORES = SCORES || {};
 
-	let lastNote = -1;
-	for (let i = 0; i < a.c.length; ++i) {
-		if (a.c[i]) {
-			if (lastNote > 0) {
-				// Log interval
-				const iSize = i - lastNote;
-				intervals[iSize]++;
-			}
-			// Track last note for next interval
-			lastNote = i;
-		}
-	}
-
-	return intervals;
-}
 
 // How happy is the song
-var getMoodTone = (a) => {
+SCORES.getMoodTone = (a) => {
 	let sadHappy = 0.5;
 	let bittersweet = 0.0;
 
@@ -80,9 +64,9 @@ var getMoodTone = (a) => {
 	return {'sadHappy': sadHappy, 'bittersweet': bittersweet};
 }
 
-var getMoodSimilarity_Tone = (a, b) => {
-	const msA = getMoodTone(a);
-	const msB = getMoodTone(b);
+SCORES.getMoodSimilarity_Tone = (a, b) => {
+	const msA = SCORES.getMoodTone(a);
+	const msB = SCORES.getMoodTone(b);
 
 	let simSadHappy = 1.0 - Math.abs(msB.sadHappy - msA.sadHappy) / 0.6;
 	if (simSadHappy < 0.0) simSadHappy = 0.0;
@@ -100,41 +84,4 @@ var getMoodSimilarity_Tone = (a, b) => {
 
 	return {'simHappy': simSadHappy, 'simBittersweet': simBittersweet};
 }
-
-var varianceI = (arr) => {
-	let total = 0.0;
-	for (let i = 0; i < arr.length; ++i) {
-		total += arr[i] * i * i; // value is squared
-	}
-	if (arr.length > 0)
-		return total / arr.length;
-	else
-		return 0.0;
-}
-
-var getMoodSimilarity_Intervals = (a, b) => {
-	const msA = getIntervals(a);
-	const msB = getIntervals(b);
-
-	const varDiff = Math.abs(varianceI(msA) - varianceI(msB));
-
-	// Count similarities
-	let numSame = 0,
-		numDiff = 0;
-	for (let i = 0; i < a.c.length; ++i) {
-		const countA = msA[i];
-		const countB = msB[i];
-		const same = countA < countB ? countA : countB; // min
-		const diff = Math.abs(countB - countA);
-		numSame += same;
-		numDiff += diff;
-	}
-
-	return {same: numSame, different: numDiff, varianceDiff: varDiff};
-
-}
-
-
-
-
 

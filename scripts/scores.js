@@ -36,7 +36,7 @@ SCORES.getScore = (a, b, weightFactors) => {
 		//const settings3 = [1.333 - 0.333 * openness, 0.5 - 0.25 * openness, 0.225 + 0.175 * openness];
 		const settings3 = [1.333, 0.5, 0.225];
 
-		const moodScore = getMoodSimilarity_Tone(a, b);
+		const moodScore = SCORES.getMoodSimilarity_Tone(a, b);
 
 		const moduleScores = [
 			// SETTINGS: [tierI, tierII, tierIII, scoreIfHasAll, scoreIfHasNone]
