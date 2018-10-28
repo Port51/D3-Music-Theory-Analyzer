@@ -93,7 +93,7 @@ var setAllowD3Sticky = (v) => {
 
 var setModalActive = (id, active) => {
 	console.log("Show modal #" + id);
-	var modal = $("#modal-" + id);
+	const modal = document.getElementById("modal-" + id.toString());
 
 	if (id == 0) {
 		// Ensure correct key highlights
@@ -101,9 +101,9 @@ var setModalActive = (id, active) => {
 	}
 
 	if (active) {
-		modal.css('display', 'block');
+		modal.style['display'] = 'block';
 	} else {
-		modal.css('display', 'none');
+		modal.style['display'] = 'none';
 	}
 }
 
