@@ -17,7 +17,7 @@ var palette_ModeTypes = ["#55d339", "#308cc1", "#2856d6", "#994c20", "#7c22a3", 
 
 var cornerWi = 180;
 var cornerHei = 100;
-var userModeExtraRadius = 7;
+var userModeExtraRadius = 9;
 
 // D3 objects
 var simulation = null;
@@ -71,13 +71,14 @@ var createD3Graph = (graph, defaultSelection) => {
 	var colorFaded = d3.scaleOrdinal()
 		.range(palette_NodeGroups_Faded);
 
-	var impactRadius = (impact) => {
+	var impactRadius = (impact, type) => {
+		const addToRadius = (type === 0) ? userModeExtraRadius : 0;
 		if (impact != null) {
 			if (impact < 0.0) impact = 0.0;
 			if (impact > 1.0) impact = 1.0;
-			return 4 + 38 * impact;
+			return 4 + 36 * impact + addToRadius;
 		} else {
-			return 38;
+			return 36 + addToRadius;
 		}
 	}
 	var impactFontSize = (impact) => {
@@ -167,7 +168,7 @@ var createD3Graph = (graph, defaultSelection) => {
 	// Circle colors and sizes are determined by node groups
 	node.append("circle")
 		.attr("class", "node-circles")
-		.attr("r", (d) => { return impactRadius(d.impact); })
+		.attr("r", (d) => { return impactRadius(d.impact, d.type); })
 		.style("fill", (d) => { return getFillColor(d.group, d.type); })
 		.style("stroke", "#dddddd")
 		.style("-webkit-filter", (d) => { return "drop-shadow(0px 0px " + (4 + 4 * d.impact).toString() + "px " + colorFaded(d.group); } ) // Set subtle glow
@@ -363,7 +364,7 @@ var createSVGPiano = (svg, panelRect, rectBorderCol, startY, internalPadding, pi
         .attr("ry", 3 * scale)
         .attr("width", wi)
         .attr("height", pianoHei * scale)
-        .style("fill", "#113388")
+        .style("fill", "rgba(17, 51, 136, 0.3)")
         .style("stroke", rectBorderCol)
         .style("pointer-events", "none");
 
@@ -464,7 +465,7 @@ var createD3Panel = (svg, width, height) => {
         .attr("width", panelRect.wi)
         .attr("height", panelRect.hei)
         .style("stroke", "#fff")
-        .style("fill", "#5577cc");
+        .style("fill", "rgba(85, 119, 204, 0.11)");
 
     // MODE NAME
     panelLinks.title = svg.append("text")
@@ -519,8 +520,8 @@ var setIconHover = (id) => {
 				label.style("opacity", "1.0");
 				border.style("opacity", "1.0");
 			} else {
-				label.style("opacity", "0.5");
-				border.style("opacity", "0.5");
+				label.style("opacity", "0.7");
+				border.style("opacity", "0.7");
 			}
 
 		}
@@ -573,7 +574,7 @@ var createButton = (svg, sideRect, id, label) => {
 		.style("stroke-width", "2")
 		.attr("rx", "5")
 		.attr("ry", "5")
-		.attr("opacity", 0.5);
+		.attr("opacity", 0.7);
 
 	// Capture mouse events
 	newButton.trigger = svg.append("rect")
@@ -599,7 +600,7 @@ var createButton = (svg, sideRect, id, label) => {
 		.style("font-weight", "normal")
 		.style("fill", "#fff")
 		.style("pointer-events", "none")
-		.style("opacity", 0.5)
+		.style("opacity", 0.7)
 		.text(label)
 
 
