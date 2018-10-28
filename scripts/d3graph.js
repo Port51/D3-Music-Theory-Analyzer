@@ -1,5 +1,24 @@
 "use strict";
 
+// Settings,,
+var palette_Edges = ["#91340d", "#91340d", "#23c5fc", "#23c5fc"];
+var palette_NodeGroups = ["#55d339", "#308cc1", "#994c20"];
+var palette_NodeGroups_Faded = ["rgba(85, 211, 57, 0.3)", "rgba(48, 140, 193, 0.3)", "rgba(153, 76, 32, 0.3)"];
+
+	// 0 = user
+	// 1 = medieval
+	// 2 = modified medieval / composer
+	// 3 = blues / experimental
+	// 4 = world
+	// 5 = chord / film / invented
+var palette_ModeTypes = ["#55d339", "#308cc1", "#2856d6", "#994c20", "#7c22a3", "#cecb4b"];
+// ["#3310ef", "#10fcfc"];
+// ["#10dcdc", "#1090fc", "#306c8c", "#c6c618"];
+
+var cornerWi = 180;
+var cornerHei = 100;
+var userModeExtraRadius = 7;
+
 // D3 objects
 var simulation = null;
 var node = null;
@@ -10,7 +29,7 @@ var panel = {};
 var panelLinks = {};
 
 /* User piano selection and other buttons */
-var icons = {};
+var activeSVG = {};
 var hoverIconID = -1;
 var checkboxPhysics = null;
 var checkboxSticky = null;
@@ -32,21 +51,62 @@ var createD3Graph = (graph, defaultSelection) => {
 	const edgeWiMax = 25.0;
 	const edgeWiPow = 1.0;
 	const d3forces = {
-		edgeStr: 0.20,
+		edgeStr: 0.50,
 		edgeWeightExtraPull: 0.75,
-		sepStr: 3000,
+		sepStr: 1500,
 		driftToCenter: 0.05,
 	}
 	var weightScale = d3.scaleLinear().domain(d3.extent(graph.links, function(d) { return Math.pow(d.weight, d3forces.edgePow) * d3forces.edgeStr })).range([.1, 1]);
 	var colScale = d3.scaleLinear()
-		.domain(d3.ticks(0, 100, 1))
-		.range(["#3310ef", "#10fcfc"]);
+		.domain(d3.ticks(0, 100, 4))
+		.range(palette_Edges);
 	
 	// 0 = user, 1 = classical, 2 = other, 3 = chords
 	var color = d3.scaleOrdinal()
-		.range(["#10dcdc", "#1090fc", "#306c8c", "#c6c618"]);
-	var groupRadius = (groupID) => {
-		return 38 - groupID * 8;
+		.range(palette_NodeGroups);
+
+	var colorType = d3.scaleOrdinal()
+		.range(palette_ModeTypes);
+
+	var colorFaded = d3.scaleOrdinal()
+		.range(palette_NodeGroups_Faded);
+
+	var impactRadius = (impact) => {
+		if (impact != null) {
+			if (impact < 0.0) impact = 0.0;
+			if (impact > 1.0) impact = 1.0;
+			return 4 + 38 * impact;
+		} else {
+			return 38;
+		}
+	}
+	var impactFontSize = (impact) => {
+		if (impact != null) {
+			if (impact < 0.0) impact = 0.0;
+			if (impact > 1.0) impact = 1.0;
+			return (4 + 17 * impact).toString() + "px";
+		} else {
+			return "15px";
+		}
+	}
+	var borderColor = (type) => {
+		switch (type) {
+			case 0:
+			case 2:
+				return "#dddddd";
+			case 1:
+				return "#ffff00";
+			case 3:
+			default:
+				return "#dddddd";
+		}
+	}
+	var getFillColor = (group, type) => {
+		if (group === 0) {
+			return palette_ModeTypes[0];
+		} else {
+			return palette_ModeTypes[type + 1];
+		}
 	}
 
 
@@ -56,12 +116,12 @@ var createD3Graph = (graph, defaultSelection) => {
 	// Save mode info
 	modeDict = graph.modeDict;
 
-
 	simulation = d3.forceSimulation()
-		.force("link", d3.forceLink().strength(function(d){ return d3forces.edgeStr * (1.0 + d3forces.edgeWeightExtraPull * Math.pow(d.weight, 2.0)); }).id(function(d) {
-			return d.id;
-		}))
-		/*.force("link", d3.forceLink().id(function(d) { return d.id; }))*/
+		//.force("link", d3.forceLink().strength(function(d){ return d3forces.edgeStr * (1.0 + d3forces.edgeWeightExtraPull * Math.pow(d.weight, 2.0)); }).id((d) => { return d.id; }))
+		.force("link", d3.forceLink()
+			.id((d) => { return d.id; })
+			.strength((d) => { return d3forces.edgeStr * (d.edgeStrMult || 1.0); })
+			.distance((d) => { return 200 * (d.edgeDistMult || 1.0); } ))
 		.force("charge", d3.forceManyBody().strength(-d3forces.sepStr))
 		.force('x', d3.forceX(width * 0.5).strength(d3forces.driftToCenter))
 		.force('y', d3.forceY(height * 0.5).strength(d3forces.driftToCenter));
@@ -71,10 +131,10 @@ var createD3Graph = (graph, defaultSelection) => {
 		.selectAll("line")
 		.data(graph.links)
 		.enter().append("line")
-		.attr("stroke-width", function(d) { return d.alpha * Math.pow(d.value, edgeWiPow) * (edgeWiMax - edgeWiMin) + edgeWiMin; })
-		.style("stroke", function(d) { return colScale(d.value * 100.0); })
-		.style("pointer-events", "none")
-		.style("stroke-opacity", function(d) { return d.alpha; });
+			.attr("stroke-width", function(d) { return d.alpha * Math.pow(d.value, edgeWiPow) * (edgeWiMax - edgeWiMin) + edgeWiMin; })
+			.style("stroke", function(d) { return colScale(d.value * 100.0); })
+			.style("pointer-events", "none")
+			.style("stroke-opacity", function(d) { return d.alpha; });
 
 	// Sort links so larger connections drawn on top
 	var links = d3.selectAll('line.link')
@@ -84,38 +144,40 @@ var createD3Graph = (graph, defaultSelection) => {
 
 	// Highlight around selected node
 	nodeSel = svg.append("circle")
+		.attr("class", "nodeSelection")
 		.attr("r", "100")
-		.style("fill", "#ffbb00")
 		.attr("cx", "0")
 		.attr("cy", "0")
 		.attr("opacity", 0);
 
+	// Add nodes to SVG
 	node = svg.append("g")
 		.attr("class", "nodes")
-		.selectAll("foo")
+		.selectAll("nodelist")
 		.data(graph.nodes)
-		.enter().append("g")
+		.enter().append("g");
 
-	var circles = node.append("circle")
-		.attr("r", function(d) { return groupRadius(d.group); })
-		.style("fill", function(d) { return color(d.group); })
-		.style("stroke", function(d) { return (d.type == 1) ? "#ffff00" : "#dddddd"; })
-		.style("stroke-width", "2.0px");
-
-	var labels = node.append("text")
-		.text(function(d) { return d.id; })
-		.attr("class", "node-labels")
-		.attr("text-anchor", "middle")
-
-	node.append("title")
-		.text(function(d) { return d.id; });
-			
-
-	// Set up drag and drop
+	// Bind drag and drop functions
 	node.call(d3.drag()
 			.on("start", dragstarted)
 			.on("drag", dragged)
 			.on("end", dragended));
+
+	// Attach circles to nodes to make them visible
+	// Circle colors and sizes are determined by node groups
+	node.append("circle")
+		.attr("class", "node-circles")
+		.attr("r", (d) => { return impactRadius(d.impact); })
+		.style("fill", (d) => { return getFillColor(d.group, d.type); })
+		.style("stroke", "#dddddd")
+		.style("-webkit-filter", (d) => { return "drop-shadow(0px 0px " + (4 + 4 * d.impact).toString() + "px " + colorFaded(d.group); } ) // Set subtle glow
+		.style("-filter", (d) => { return "drop-shadow(0px 0px " + (4 + 4 * d.impact).toString() + "px " + colorFaded(d.group); } );
+
+	// Add labels to nodes
+	node.append("text")
+		.attr("class", "node-labels")
+		.style("font-size", (d) => { return impactFontSize(d.impact); })
+		.text((d) => { return d.id; });
 
 	simulation
 		.nodes(graph.nodes)
@@ -136,17 +198,15 @@ var createD3Graph = (graph, defaultSelection) => {
 		}
 		setPanelMode(graph.modeDict[defaultSelection]);
 		nodeSel.source = null;
-		nodeSel.attr("r", groupRadius(0) + 5);
+		nodeSel.attr("r", impactRadius(1.0) + userModeExtraRadius);
 	}
 
 
 
 	// Validate positions
 	// Upper corner rect = 300x300
-	var cornerWi = 250;
-	var cornerHei = 250;
-	var validPointX = (d) => {
-		const rad = groupRadius(d.group) + 2;
+	var validatePointX = (d) => {
+		const rad = impactRadius(d.impact) + 2;
 		if (d.x < cornerWi + rad && d.y < cornerHei + rad && d.x > d.y) {
 			return cornerWi + rad;
 		} else {
@@ -154,8 +214,8 @@ var createD3Graph = (graph, defaultSelection) => {
 		}
 	}
 
-	var validPointY = (d) => {
-		const rad = groupRadius(d.group) + 2;
+	var validatePointY = (d) => {
+		const rad = impactRadius(d.impact) + 2;
 		if (d.x < cornerWi + rad && d.y < cornerHei + rad && d.y > d.x) {
 			return cornerHei + rad;
 		} else {
@@ -166,47 +226,48 @@ var createD3Graph = (graph, defaultSelection) => {
 	function ticked() {
 
 		node
-			.attr("cx", function(d) { return validPointX(d); })
-			.attr("cy", function(d) { return validPointY(d); })
+			.attr("cx", function(d) { return validatePointX(d); })
+			.attr("cy", function(d) { return validatePointY(d); })
 			.attr("transform", function(d) { return "translate(" +
-				validPointX(d) + "," +
-				validPointY(d) + ")"; })
+				validatePointX(d) + "," +
+				validatePointY(d) + ")"; })
 
 		if (nodeSel.source != null) {
 			nodeSel
 				.attr("cx", nodeSel.source.cx)
 				.attr("cy", nodeSel.source.cy)
 				.attr("transform", "translate(" +
-					validPointX(nodeSel.source) + "," +
-					validPointY(nodeSel.source) + ")")
-				.attr("opacity", 0.67);
+					validatePointX(nodeSel.source) + "," +
+					validatePointY(nodeSel.source) + ")")
+				.attr("opacity", 1.0);
 		}
 
 		link
-			.attr("x1", function(d) { return validPointX(d.source); })
-			.attr("y1", function(d) { return validPointY(d.source); })
-			.attr("x2", function(d) { return validPointX(d.target); })
-			.attr("y2", function(d) { return validPointY(d.target); });
+			.attr("x1", function(d) { return validatePointX(d.source); })
+			.attr("y1", function(d) { return validatePointY(d.source); })
+			.attr("x2", function(d) { return validatePointX(d.target); })
+			.attr("y2", function(d) { return validatePointY(d.target); });
 
 	}
 
 	function dragstarted(d) {
 		if (!d3.event.active) simulation.alphaTarget(0.3).restart();
-		d.fx = validPointX(d);
-		d.fy = validPointY(d);
+		d.fx = validatePointX(d);
+		d.fy = validatePointY(d);
 
 		// Display on panel
 		if (d.id in modeDict) {
 			// Calculate analysis, if haven't yet
 			// This is info like chord names
-			console.log("Selected " + d.id);
+
+			//console.log("Selected " + d.id);
 			if (modeDict[d.id].analysis == null) {
 				modeDict[d.id].analysis = analyzeModeForPanel(modeDict[d.id]);
 			}
 
 			setPanelMode(modeDict[d.id]);
 			nodeSel.source = d;
-			nodeSel.attr("r", groupRadius(d.group) + 5);
+			nodeSel.attr("r", impactRadius(d.impact));
 		}
 
 	}
@@ -233,7 +294,7 @@ var resetD3Graph = (svg) => {
 
 var updateD3UserPianoIcon = () => {
 	// Display notes correctly
-	updateD3Piano(icons.piano, parseInt(rootSel), keySel);
+	//updateD3Piano(activeSVG.piano, parseInt(rootSel), keySel);
 }
 
 var updateD3Panel = () => {
@@ -446,45 +507,34 @@ var createD3Panel = (svg, width, height) => {
 
 }
 
-var setCheckboxes = () => {
-	if (checkboxPhysics != null) {
-		checkboxPhysics.text(allowD3Physics ? "X" : "");
-	}
-	if (checkboxSticky != null) {
-		checkboxSticky.text(allowD3Sticky ? "X" : "");
-	}
-}
-
 var setIconHover = (id) => {
 	if (hoverIconID != id) {
 		hoverIconID = id;
 
 		// Update display
-		for (let i = 0; i < 5; ++i) {
-			const icon = icons.buttons[i].icon;
-			const label = icons.buttons[i].label;
-			const iconBorder = icons.buttons[i].iconBorder;
+		for (let i = 0; i < activeSVG.buttons.length; ++i) {
+			const label = activeSVG.buttons[i].label;
 			if (i == hoverIconID) {
-				iconBorder.style("opacity", "0.7");
 				label.style("opacity", "1.0");
 			} else {
-				iconBorder.style("opacity", "0.0");
 				label.style("opacity", "0.5");
 			}
+
 		}
 	}
 }
 
+/*
+	Button action!
+*/
 var clickIconTrigger = function(d,i) {
 	const id = d3.select(this).attr("value");
-	if (id < 3) {
+	if (id == 0) {
 		setModalActive(id, true);
-	} else if (id == 3) {
-		setAllowD3Physics(!allowD3Physics);
-		setCheckboxes();
-	} else if (id == 4) {
+	} else if (id == 1) {
 		setAllowD3Sticky(!allowD3Sticky);
-		setCheckboxes();
+		// Change label
+		d3.select("#svgButtonLabel" + id).text("Pose Graph: " + ((allowD3Sticky) ? "ON" : "OFF"));
 	}
 }
 
@@ -500,284 +550,68 @@ var mouseOutIconTrigger = function(d,i) {
 	}
 }
 
+var createButton = (svg, sideRect, id, label) => {
+	// Settings
+	const scaleAll = 0.9;
+	const padding = 15;
+	const buttonWi = 180 * scaleAll;
+	const buttonHei = 31 * scaleAll;
+
+	let newButton = {};
+
+	// Capture mouse events
+	newButton.trigger = svg.append("rect")
+		.attr("id", "svgButtonTrigger" + id.toString())
+		.attr("x", sideRect.x0)
+		.attr("y", sideRect.y0 + buttonHei * id - buttonHei * 0.65)
+		.attr("width", buttonWi)
+		.attr("height", buttonHei * 0.9)
+		.attr("fill", "#fff")
+		.attr("value", id)
+		.attr("opacity", 0.0) // set to 0.5 whenever change labels
+			.on("click", clickIconTrigger)
+			.on("mouseover", mouseOverIconTrigger)
+			.on("mouseout", mouseOutIconTrigger);
+
+	// Text object
+	newButton.label = svg.append("text")
+		.attr("id", "svgButtonLabel" + id.toString())
+		.attr("x", sideRect.x0)
+		.attr("y", sideRect.y0 + buttonHei * id)
+		.attr("text-anchor", "start")
+		.style("font-size", "20px")
+		.style("font-weight", "normal")
+		.style("fill", "#fff")
+		.style("pointer-events", "none")
+		.style("opacity", 0.5)
+		.text(label);
+
+	
+
+	return newButton;
+}
+
 // Add panel showing selected mode
 // TODO: Move styles to CSS
 var createD3SideIcons = (svg, width, height) => {
 	// Settings
 	const scaleAll = 0.9;
-	const padding = 6;
-	const spacingBetweenIcons = 65 * scaleAll;
-	const iconWi = 60 * scaleAll;
+	const padding = 15;
 
 	const sideRect = {
 		wi: 100 * scaleAll,
 		hei: 400 * scaleAll,
 	};
 	sideRect.x0 = padding;
-	sideRect.y0 = padding;
+	sideRect.y0 = padding * 1.5;
 	sideRect.x1 = sideRect.x0 + sideRect.wi;
 	sideRect.y1 = sideRect.y0 + sideRect.hei;
 
 	// Reset buttons
-	icons.buttons = [];
-	let labelList = [];
-	let iconBorderList = [];
-
-	// Create borders first (they are behind everything else)
-	for (let i = 0; i < 3; ++i) {
-		// Border for icon
-		const borderWi = 2;
-		const iconBorder = svg.append("rect")
-			.attr("x", sideRect.x0 + 10 - borderWi)
-			.attr("y", sideRect.y0 + spacingBetweenIcons * i - borderWi)
-			.attr("rx", 3)
-			.attr("ry", 3)
-			.attr("width", iconWi + borderWi * 2)
-			.attr("height", iconWi + borderWi * 2)
-			.style("fill", "#fff")
-			.style("pointer-events", "none")
-			.attr("opacity", 0.0);
-		iconBorderList.push(iconBorder);
-	}
-	for (let i = 3; i < 5; ++i) {
-		// Border for icon
-		const borderWi = 2;
-		const iconBorder = svg.append("rect")
-			.attr("x", sideRect.x0 + 10 - borderWi)
-			.attr("y", sideRect.y0 + spacingBetweenIcons * (3 + (i - 3) * 0.5) + (i - 3) * 2 - borderWi)
-			.attr("rx", 3)
-			.attr("ry", 3)
-			.attr("width", iconWi * 0.5 + borderWi * 2)
-			.attr("height", iconWi * 0.5 + borderWi * 2)
-			.style("fill", "#fff")
-			.style("pointer-events", "none")
-			.attr("opacity", 0.0);
-		iconBorderList.push(iconBorder);
-	}
-
-	// USER PIANO
-	const pianoHei = 80;
-	// ARGS:      (svg, panelRect, startY, pianoHei, scale)
-	icons.piano = createSVGPiano(svg, sideRect, "#667", 0, 5, pianoHei - 10, 6, 0.7725);
-
-
-	// PIANO ICON LABEL
-	let iconLabel = svg.append("text")
-		.attr("x", sideRect.x0 + iconWi + 20)
-		.attr("y", sideRect.y0 + spacingBetweenIcons * 0 + 20)
-		.attr("text-anchor", "start")
-		.style("font-size", "17px")
-		.style("font-weight", "normal")
-		.style("fill", "#fff")
-		.style("pointer-events", "none")
-		.style("opacity", 0.5)
-		.text("Change input notes");
-	labelList.push(iconLabel);
-
-	
-
-	// SETTINGS ICON (placeholder)
-	svg.append("rect")
-		.attr("x", sideRect.x0 + 10)
-		.attr("y", sideRect.y0 + spacingBetweenIcons * 1)
-		.attr("rx", 2)
-		.attr("ry", 2)
-		.attr("width", iconWi)
-		.attr("height", iconWi)
-		.attr("fill", "#113388")
-		.attr("stroke", "#667");
-
-	// SETTINGS ICON LABEL
-	iconLabel = svg.append("text")
-		.attr("x", sideRect.x0 + iconWi + 20)
-		.attr("y", sideRect.y0 + spacingBetweenIcons * 1 + 20)
-		.attr("text-anchor", "start")
-		.style("font-size", "17px")
-		.style("font-weight", "normal")
-		.style("fill", "#fff")
-		.style("pointer-events", "none")
-		.style("opacity", 0.5)
-		.text("Change algorithm settings");
-	labelList.push(iconLabel);
-
-
-
-	// INSTRUCTIONS ICON (placeholder)
-	svg.append("rect")
-		.attr("x", sideRect.x0 + 10)
-		.attr("y", sideRect.y0 + spacingBetweenIcons * 2)
-		.attr("rx", 2)
-		.attr("ry", 2)
-		.attr("width", iconWi)
-		.attr("height", iconWi)
-		.attr("fill", "#113388")
-		.attr("stroke", "#667");
-
-	// INSTRUCTIONS ICON LABEL
-	iconLabel = svg.append("text")
-		.attr("x", sideRect.x0 + iconWi + 20)
-		.attr("y", sideRect.y0 + spacingBetweenIcons * 2 + 20)
-		.attr("text-anchor", "start")
-		.style("font-size", "17px")
-		.style("font-weight", "normal")
-		.style("fill", "#fff")
-		.style("pointer-events", "none")
-		.style("opacity", 0.5)
-		.text("Instructions");
-	labelList.push(iconLabel);
-
-	// PHYSICS TOGGLE - BUTTON
-	svg.append("rect")
-		.attr("x", sideRect.x0 + 10)
-		.attr("y", sideRect.y0 + spacingBetweenIcons * 3)
-		.attr("rx", 2)
-		.attr("ry", 2)
-		.attr("width", iconWi * 0.5)
-		.attr("height", iconWi * 0.5)
-		.attr("fill", "#113388")
-		.attr("stroke", "#667");
-
-	// PHYSICS TOGGLE - CHECK MARK
-	checkboxPhysics = svg.append("text")
-		.attr("x", sideRect.x0 + iconWi * 0.45)
-		.attr("y", sideRect.y0 + spacingBetweenIcons * 3 + iconWi * 0.35)
-		.attr("text-anchor", "middle")
-		.style("font-size", "17px")
-		.style("font-weight", "normal")
-		.style("fill", "#fff")
-		.style("pointer-events", "none")
-		.style("opacity", 0.5)
-		.text("X");
-
-	// PHYSICS TOGGLE - LABEL
-	iconLabel = svg.append("text")
-		.attr("x", sideRect.x0 + iconWi + 5)
-		.attr("y", sideRect.y0 + spacingBetweenIcons * 3 + 14)
-		.attr("text-anchor", "start")
-		.style("font-size", "17px")
-		.style("font-weight", "normal")
-		.style("fill", "#fff")
-		.style("pointer-events", "none")
-		.style("opacity", 0.5)
-		.text("(Placeholder)");
-	labelList.push(iconLabel);
-
-	// STICKY TOGGLE - BUTTON
-	svg.append("rect")
-		.attr("x", sideRect.x0 + 10)
-		.attr("y", sideRect.y0 + spacingBetweenIcons * 3.5 + 2)
-		.attr("rx", 2)
-		.attr("ry", 2)
-		.attr("width", iconWi * 0.5)
-		.attr("height", iconWi * 0.5)
-		.attr("fill", "#113388")
-		.attr("stroke", "#667");
-
-	// STICKY TOGGLE - CHECK MARK
-	checkboxSticky = svg.append("text")
-		.attr("x", sideRect.x0 + iconWi * 0.45)
-		.attr("y", sideRect.y0 + spacingBetweenIcons * 3.5 + iconWi * 0.35 + 2)
-		.attr("text-anchor", "middle")
-		.style("font-size", "17px")
-		.style("font-weight", "normal")
-		.style("fill", "#fff")
-		.style("pointer-events", "none")
-		.style("opacity", 0.5)
-		.text("X");
-
-	// STICKY TOGGLE - LABEL
-	iconLabel = svg.append("text")
-		.attr("x", sideRect.x0 + iconWi + 5)
-		.attr("y", sideRect.y0 + spacingBetweenIcons * 3.5 + 14 + 2)
-		.attr("text-anchor", "start")
-		.style("font-size", "17px")
-		.style("font-weight", "normal")
-		.style("fill", "#fff")
-		.style("pointer-events", "none")
-		.style("opacity", 0.5)
-		.text("Sticky Nodes");
-	labelList.push(iconLabel);
-
-	
-
-	// Store as list of buttons
-	// and attach actions
-	for (let i = 0; i < 3; ++i) {
-		let textWi = 130;
-		if (i == 0) {
-			textWi = 130;
-		} else if (i == 1) {
-			textWi = 170;
-		} else if (i == 2) {
-			textWi = 90;
-		}
-		
-		// Create rectangle to trigger mouseovers and clicks
-		const iconRect = svg.append("rect")
-			.attr("x", sideRect.x0 + 10)
-			.attr("y", sideRect.y0 + spacingBetweenIcons * i)
-			.attr("width", iconWi)
-			.attr("height", iconWi)
-			.attr("fill", "#fff")
-			.attr("value", i)
-			.attr("opacity", 0)
-				.on("click", clickIconTrigger)
-				.on("mouseover", mouseOverIconTrigger)
-				.on("mouseout", mouseOutIconTrigger);
-
-		const labelRect = svg.append("rect")
-			.attr("x", sideRect.x0 + iconWi + 10)
-			.attr("y", sideRect.y0 + spacingBetweenIcons * i)
-			.attr("width", textWi)
-			.attr("height", 30)
-			.attr("fill", "#fff")
-			.attr("value", i)
-			.attr("opacity", 0.0) // set to 0.5 whenever change labels
-				.on("click", clickIconTrigger)
-				.on("mouseover", mouseOverIconTrigger)
-				.on("mouseout", mouseOutIconTrigger);
-
-		icons.buttons.push({ 'iconBorder': iconBorderList[i], 'trigger0': iconRect, 'trigger1': labelRect, 'label': labelList[i] })
-	}
-
-	// Store toggles
-	for (let i = 3; i < 5; ++i) {
-		let textWi = 130;
-		if (i == 3) {
-			textWi = 110;
-		} else if (i == 4) {
-			textWi = 145;
-		}
-
-		// Create rectangle to trigger mouseovers and clicks
-		const iconRect = svg.append("rect")
-			.attr("x", sideRect.x0 + 10)
-			.attr("y", sideRect.y0 + spacingBetweenIcons * (3 + (i - 3) * 0.5) + (i - 3) * 2)
-			.attr("width", iconWi * 0.5)
-			.attr("height", iconWi * 0.5)
-			.attr("fill", "#fff")
-			.attr("value", i)
-			.attr("opacity", 0)
-				.on("click", clickIconTrigger)
-				.on("mouseover", mouseOverIconTrigger)
-				.on("mouseout", mouseOutIconTrigger);
-
-		const labelRect = svg.append("rect")
-			.attr("x", sideRect.x0 + iconWi * 0.5 + 10)
-			.attr("y", sideRect.y0 + spacingBetweenIcons * (3 + (i - 3) * 0.5) + (i - 3) * 2)
-			.attr("width", textWi)
-			.attr("height", 20)
-			.attr("fill", "#fff")
-			.attr("value", i)
-			.attr("opacity", 0.0) // set to 0.5 whenever change labels
-				.on("click", clickIconTrigger)
-				.on("mouseover", mouseOverIconTrigger)
-				.on("mouseout", mouseOutIconTrigger);
-		icons.buttons.push({ 'iconBorder': iconBorderList[i], 'trigger0': iconRect, 'trigger1': labelRect, 'label': labelList[i] })
-	}
-
-	updateD3UserPianoIcon();
-	setCheckboxes();
+	activeSVG.buttons = [
+		createButton(svg, sideRect, 0, "Select Notes"),
+		createButton(svg, sideRect, 1, "Pose Graph: ON"),
+	];
 
 }
 

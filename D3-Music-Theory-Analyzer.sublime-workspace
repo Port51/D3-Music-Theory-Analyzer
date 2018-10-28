@@ -4,6 +4,106 @@
 		"selected_items":
 		[
 			[
+				"type",
+				"typeAndName"
+			],
+			[
+				"layer2",
+				"maxLayer2"
+			],
+			[
+				"maxla",
+				"maxLayer2"
+			],
+			[
+				"max",
+				"maxLayer1"
+			],
+			[
+				"filt",
+				"filteredLayer2"
+			],
+			[
+				"source",
+				"sourceIDSet"
+			],
+			[
+				"outlier",
+				"outlierNodes"
+			],
+			[
+				"fonts",
+				"impactFontSize"
+			],
+			[
+				"impact",
+				"impactRadius"
+			],
+			[
+				"palete",
+				"palette_NodeGroups"
+			],
+			[
+				"but",
+				"buttonHei"
+			],
+			[
+				"spac",
+				"spacingBetweenButtons"
+			],
+			[
+				"displ",
+				"displayNumResults"
+			],
+			[
+				"allow",
+				"allowDifferentNotes"
+			],
+			[
+				"tst",
+				"testType"
+			],
+			[
+				"mult",
+				"multForEachUnder7"
+			],
+			[
+				"getTo",
+				"getTopoIntervalCounts"
+			],
+			[
+				"weigh",
+				"weightByFactor"
+			],
+			[
+				"score",
+				"scoreIfHasAll"
+			],
+			[
+				"graph",
+				"graphInfo"
+			],
+			[
+				"valid",
+				"validateInput"
+			],
+			[
+				"getData_Wor",
+				"getData_World2"
+			],
+			[
+				"getData_Me",
+				"getData_ModifiedMedievalModes"
+			],
+			[
+				"col",
+				"colgroup\tTag"
+			],
+			[
+				"getD",
+				"getData_World1"
+			],
+			[
 				"select",
 				"selectNodeByID"
 			],
@@ -30,10 +130,6 @@
 			[
 				"rootSe",
 				"setRootSelectColors"
-			],
-			[
-				"allow",
-				"allowD3Sticky"
 			],
 			[
 				"inline",
@@ -100,28 +196,100 @@
 	"buffers":
 	[
 		{
+			"file": "notes.txt",
+			"settings":
+			{
+				"buffer_size": 3071,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "scripts/modevis.js",
+			"settings":
+			{
+				"buffer_size": 9538,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "scripts/graphPreProcess.js",
+			"settings":
+			{
+				"buffer_size": 11646,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "scripts/scores.js",
+			"settings":
+			{
+				"buffer_size": 10057,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "scripts/tempData.js",
+			"settings":
+			{
+				"buffer_size": 20303,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
 			"file": "scripts/d3graph.js",
 			"settings":
 			{
-				"buffer_size": 23090,
+				"buffer_size": 18262,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "scripts/similarityAlgorithm/mood.js",
+			"settings":
+			{
+				"buffer_size": 3208,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "templates/largePiano.html",
+			"settings":
+			{
+				"buffer_size": 10749,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "scripts/controls.js",
+			"settings":
+			{
+				"buffer_size": 7885,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "modevis.html",
+			"settings":
+			{
+				"buffer_size": 2355,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
 			}
 		},
 		{
 			"file": "styles/styles.css",
 			"settings":
 			{
-				"buffer_size": 9620,
+				"buffer_size": 10993,
 				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "scripts/determineChords.js",
-			"settings":
-			{
-				"buffer_size": 1927,
 				"line_ending": "Windows"
 			}
 		}
@@ -158,32 +326,51 @@
 	},
 	"expanded_folders":
 	[
-		"/G/_PROJECTS/D3-Music-Theory-Analyzer",
-		"/G/_PROJECTS/D3-Music-Theory-Analyzer/scripts",
-		"/G/_PROJECTS/D3-Music-Theory-Analyzer/scripts/similarityAlgorithm",
-		"/G/_PROJECTS/D3-Music-Theory-Analyzer/styles",
-		"/G/_PROJECTS/D3-Music-Theory-Analyzer/templates"
+		"/G/App Development/D3-Music-Theory-Analyzer",
+		"/G/App Development/D3-Music-Theory-Analyzer/scripts",
+		"/G/App Development/D3-Music-Theory-Analyzer/scripts/similarityAlgorithm",
+		"/G/App Development/D3-Music-Theory-Analyzer/styles",
+		"/G/App Development/D3-Music-Theory-Analyzer/templates"
 	],
 	"file_history":
 	[
+		"/G/App Development/D3-Music-Theory-Analyzer/scripts/dataManip.js",
+		"/G/App Development/D3-Music-Theory-Analyzer/modevis.html",
+		"/G/App Development/D3-Music-Theory-Analyzer/scripts/similarityAlgorithm/roots.js",
+		"/G/App Development/D3-Music-Theory-Analyzer/scripts/similarityAlgorithm/noteOverlap.js",
+		"/G/App Development/D3-Music-Theory-Analyzer/scripts/controls.js",
+		"/G/App Development/D3-Music-Theory-Analyzer/templates/largePiano.html",
+		"/G/App Development/D3-Music-Theory-Analyzer/scripts/tempData.js",
+		"/G/App Development/D3-Music-Theory-Analyzer/templates/inputSimilarity.html",
+		"/G/App Development/D3-Music-Theory-Analyzer/scripts/filter.js",
+		"/G/App Development/D3-Music-Theory-Analyzer/scripts/graphPreProcess.js",
+		"/G/App Development/D3-Music-Theory-Analyzer/styles/styles.css",
+		"/G/App Development/D3-Music-Theory-Analyzer/scripts/d3graph.js",
+		"/G/Game Development/2018 - Enchanted Apples/Enchanted Apples/Assets/Modules/ActionEssentials/ActionSFX/ActorSFX.cs",
+		"/G/App Development/D3-Music-Theory-Analyzer/scripts/modevis.js",
+		"/G/App Development/D3-Music-Theory-Analyzer/scripts/adaptiveSVG.js",
+		"/G/App Development/D3-Music-Theory-Analyzer/templates/instructions.html",
+		"/G/_PROJECTS/D3-Music-Theory-Analyzer/scripts/d3graph.js",
+		"/G/_PROJECTS/D3-Music-Theory-Analyzer/scripts/similarityAlgorithm/mood.js",
+		"/G/_PROJECTS/D3-Music-Theory-Analyzer/scripts/similarityAlgorithm/noteOverlap.js",
+		"/G/_PROJECTS/D3-Music-Theory-Analyzer/scripts/similarityAlgorithm/roots.js",
+		"/G/_PROJECTS/D3-Music-Theory-Analyzer/scripts/adaptiveSVG.js",
+		"/G/_PROJECTS/D3-Music-Theory-Analyzer/scripts/controls.js",
+		"/G/_PROJECTS/D3-Music-Theory-Analyzer/scripts/tempData.js",
+		"/G/_PROJECTS/D3-Music-Theory-Analyzer/scripts/textManip.js",
+		"/G/_PROJECTS/D3-Music-Theory-Analyzer/styles/styles.css",
+		"/G/_PROJECTS/D3-Music-Theory-Analyzer/scripts/determineChords.js",
+		"/G/_PROJECTS/D3-Music-Theory-Analyzer/scripts/filter.js",
+		"/G/_PROJECTS/D3-Music-Theory-Analyzer/scripts/graphPreProcess.js",
+		"/G/_PROJECTS/D3-Music-Theory-Analyzer/scripts/loadTemplates.js",
+		"/G/_PROJECTS/D3-Music-Theory-Analyzer/scripts/modevis.js",
+		"/G/_PROJECTS/D3-Music-Theory-Analyzer/scripts/scores.js",
+		"/G/_PROJECTS/D3-Music-Theory-Analyzer/scripts/stats.js",
+		"/G/_PROJECTS/D3-Music-Theory-Analyzer/scripts/dataManip.js",
 		"/G/_PROJECTS/D3-Music-Theory-Analyzer/templates/largePiano.html",
 		"/G/_PROJECTS/D3-Music-Theory-Analyzer/templates/instructions.html",
 		"/G/_PROJECTS/D3-Music-Theory-Analyzer/templates/inputSimilarity.html",
-		"/G/_PROJECTS/D3-Music-Theory-Analyzer/styles/styles.css",
-		"/G/_PROJECTS/D3-Music-Theory-Analyzer/scripts/graphPreProcess.js",
-		"/G/_PROJECTS/D3-Music-Theory-Analyzer/scripts/tempData.js",
-		"/G/_PROJECTS/D3-Music-Theory-Analyzer/scripts/d3graph.js",
-		"/G/_PROJECTS/D3-Music-Theory-Analyzer/scripts/modevis.js",
-		"/G/_PROJECTS/D3-Music-Theory-Analyzer/scripts/controls.js",
-		"/G/_PROJECTS/D3-Music-Theory-Analyzer/scripts/filter.js",
-		"/G/_PROJECTS/D3-Music-Theory-Analyzer/scripts/dataManip.js",
 		"/G/_PROJECTS/D3-Music-Theory-Analyzer/modevis.html",
-		"/G/_PROJECTS/D3-Music-Theory-Analyzer/scripts/scores.js",
-		"/G/_PROJECTS/D3-Music-Theory-Analyzer/scripts/textManip.js",
-		"/G/_PROJECTS/D3-Music-Theory-Analyzer/scripts/determineChords.js",
-		"/G/_PROJECTS/D3-Music-Theory-Analyzer/scripts/stats.js",
-		"/G/_PROJECTS/D3-Music-Theory-Analyzer/scripts/adaptiveSVG.js",
-		"/G/_PROJECTS/D3-Music-Theory-Analyzer/scripts/loadTemplates.js",
 		"/G/_PROJECTS/D3-Music-Theory-Analyzer/D3-Music-Theory-Analyzer.sublime-project",
 		"/G/Prog1/modevis/modevis.html",
 		"/G/Prog1/tensor/simplerun/1_sess/ex5.py",
@@ -238,13 +425,14 @@
 	],
 	"find":
 	{
-		"height": 40.0
+		"height": 41.0
 	},
 	"find_in_files":
 	{
-		"height": 0.0,
+		"height": 105.0,
 		"where_history":
 		[
+			""
 		]
 	},
 	"find_state":
@@ -252,6 +440,50 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"Hexatonic",
+			"#    #   #  ",
+			"#  # # ## # ",
+			"#  # # # #  ",
+			"Northern",
+			"sourceIDSet",
+			"addEdgesInBatch",
+			"rootSel",
+			"colorFaded",
+			"nodeSel",
+			"createUserMode",
+			"createGraphNode",
+			"groupRadius",
+			"createGraphNode =",
+			"icons",
+			"icons.",
+			"iconBorder",
+			"labelList",
+			"spacingBetweenIcons",
+			"icons.piano",
+			"edgeStrMult",
+			"createGraphNode",
+			"getTopoMelodyScore",
+			"scoreIfEmpty",
+			"Selected",
+			"runSimulation",
+			"runAnalysis",
+			"score(",
+			"validInput",
+			"getTempData",
+			"moda",
+			"Change",
+			"Byzantine",
+			"[## ## # # # ]",
+			"Super Locrian",
+			"pianoKey",
+			"foo",
+			"[## ## # ##  ]",
+			"hungarian minor",
+			"[## # # # ## ]",
+			"[# # # ## ## ]",
+			"[# ##  ## # #]",
+			"validPointY",
+			"validPointX",
 			"setPanelMode",
 			"hover",
 			"setIconHover",
@@ -284,6 +516,14 @@
 		"regex": false,
 		"replace_history":
 		[
+			"set_DetectedLayer1",
+			"activeSVG.",
+			"buttons",
+			"spacingBetweenButtons",
+			"scoreIfHasNone",
+			"SCORES.getScore(",
+			"validatePointY",
+			"validatePointX",
 			"getNoteName",
 			"NOTES_IN_SCALE",
 			"iconBorderList",
@@ -298,24 +538,168 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 9,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "scripts/d3graph.js",
+					"file": "notes.txt",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 23090,
+						"buffer_size": 3071,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								5813,
-								5813
+								454,
+								454
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 8,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "scripts/modevis.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 9538,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1343,
+								1343
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 480.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 7,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "scripts/graphPreProcess.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 11646,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								623,
+								623
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 144.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 9,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "scripts/scores.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 10057,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								7042,
+								7042
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 2592.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "scripts/tempData.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 20303,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								6333,
+								6333
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 2802.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "scripts/d3graph.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 18262,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3560,
+								3560
 							]
 						],
 						"settings":
@@ -323,27 +707,143 @@
 							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax"
 						},
 						"translation.x": 0.0,
-						"translation.y": 2909.0,
+						"translation.y": 1872.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 6,
 					"type": "text"
 				},
 				{
-					"buffer": 1,
-					"file": "styles/styles.css",
+					"buffer": 6,
+					"file": "scripts/similarityAlgorithm/mood.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 9620,
+						"buffer_size": 3208,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								5247,
-								5247
+								1760,
+								1760
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1152.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "templates/largePiano.html",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 10749,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								6642,
+								6642
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 2112.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "scripts/controls.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 7885,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1306,
+								1306
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 219.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "modevis.html",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2355,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2049,
+								2049
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 10,
+					"file": "styles/styles.css",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 10993,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2311,
+								2311
 							]
 						],
 						"settings":
@@ -351,40 +851,10 @@
 							"syntax": "Packages/CSS/CSS.sublime-syntax"
 						},
 						"translation.x": 0.0,
-						"translation.y": 3598.0,
+						"translation.y": 1923.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "scripts/determineChords.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1927,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
+					"stack_index": 10,
 					"type": "text"
 				}
 			]
@@ -429,7 +899,7 @@
 	"project": "D3-Music-Theory-Analyzer.sublime-project",
 	"replace":
 	{
-		"height": 46.0
+		"height": 73.0
 	},
 	"save_all_on_build": true,
 	"select_file":

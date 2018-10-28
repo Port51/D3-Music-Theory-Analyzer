@@ -2,7 +2,8 @@
 	<div class="pianoContainer">
 		<div class="centered">
 			<div class="pianoContainerTop">
-				<div class="centered piano-etched-text" style="padding-left: 20px; padding-top: 40px">Select root by clicking the yellow lights</div>
+				<div class="centered piano-etched-text" style="padding-left: 20px; padding-top: 20px">Select root by clicking the yellow lights</div>
+				<div class="centered piano-etched-text" style="padding-left: 20px; height: 20px">Try to only select important notes</div>
 
 				<!-- Button: Cancel -->
 				<div class="rightAlignContents" style="margin-top: -50px">
@@ -86,33 +87,139 @@
 				</tr>
 			</table>
 
-			<div class="rightAlignContents" style="margin-top: 15px;">
-				<table>
-					<tr>
-						<!-- Name the scale! -->
-						<td>
-							<div class="centerContents" style="padding-bottom: 15%">
-								<div class="centered piano-etched-text">Name your scale:</div>
-								<input id="scaleName" name="scaleName" type="text" value="Unknown Scale" />
-							</div>
-						</td>
-
-						<!-- Buttons! -->
-						<td>
-							<div class="centerContents">
-								<button id="resetScale" class="cool-button large">Reset</button>
-							</div>
-						</td>
-						<td>
-							<div class="centerContents">
-								<button id="runFromPiano" class="cool-button large">Run analysis!</button>
-							</div>
-						</td>
-					</tr>
-
-				</table>
-			</div>
-
 		</div>
 	</div>
+
+	<div style="margin-top: 15px;">
+		<table class="full">
+			<!--<tr class="full centerContents">
+				<td class="centerContents">
+					<div class="centered subheader">Algorithm goal:</div>
+					<select id="algorithmGoal" value="Look for similar notes and tone">
+						<option value="notes">Look for similar notes</option>
+						<option value="tone">Look for similar tone</option>
+						<option value="notestone">Look for similar notes and tone</option>
+						<option value="finish">Finish an incomplete scale</option>
+						<option value="random">Just make a pretty graph</option>
+						<option value="custom">(Custom settings)</option>
+					</select>
+				</td>
+				<td class="centerContents">
+					<div class="centered subheader">Name your scale:</div>
+					<input id="scaleName" name="scaleName" type="text" value="Unknown Scale" />
+				</td>
+				
+			</tr>-->
+			<tr class="full centerContents">
+				<td class="centerContents">
+					<table class="full" style="font-size: 0.85em;">
+						<tr class="inputHoverRow">
+							<td><div class="full">How complete is your scale?</div></td>
+							<td><input id="allowMoreNotes" type="range" min="0" max="100" value="67" def="67" class="slider" /></td>
+						</tr>
+						<tr class="inputHoverRow">
+							<td><div class="full">Allow different roots?</div></td>
+							<td><input id="allowDifferentRoots" type="range" min="0" max="100" value="51" def="51" class="slider" /></td>
+						</tr>
+						<tr class="inputHoverRow">
+							<td><div class="full">Use mood approximation? (algorithm)</div></td>
+							<td><input id="estimateMood" type="range" min="0" max="100" value="40" def="40" class="slider" /></td>
+						</tr>
+						<tr class="inputHoverRow">
+							<td><div class="full">Display # of results</div></td>
+							<td><input id="displayNumResults" type="range" min="0" max="100" value="33" def="33" class="slider" /></td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+
+		<!-- Dataset -->
+		<div class="full" colspan="3" style="-webkit-column-span: all; column-span: all;">
+			<div class="centered subheader">Search these datasets:</div>
+			<table class="full" style="font-size: 0.85em;">
+				<tr class="inputHoverRow">
+					<td><input id="chk_incl_0" type="checkbox" checked/></td>
+					<td><label for="chk_incl_0"><div class="bold full">Medieval Modes</div></label></td>
+				</tr>
+				<tr class="inputHoverRow">
+					<td><input id="chk_incl_1" type="checkbox" checked/></td>
+					<td>
+						<label for="chk_incl_1"><div class="bold">Modified Medieval Modes</div><div class="indented italic fadedText"> (Harmonic minor, Lydian #9, Super Locrian...)</div></label>
+					</td>
+				</tr>
+				<tr class="inputHoverRow">
+					<td><input id="chk_incl_2" type="checkbox" checked/></td>
+					<td>
+						<label for="chk_incl_2"><div class="bold">Composer-ish... needs new term</div><div class="indented italic fadedText">(Double Harmonic Major, Prometheus Scale, Phrygian Dominant...)</div></label>
+					</td>
+				</tr>
+				<tr class="inputHoverRow">
+					<td><input id="chk_incl_3" type="checkbox" checked/></td>
+					<td>
+						<label for="chk_incl_3"><div class="bold">Blues and bebop</div><div class="indented italic fadedText">(Minor Pentatonic, Major Bebop, Bebop Dorian...)</div></label>
+					</td>
+				</tr>
+				<tr class="inputHoverRow">
+					<td><input id="chk_incl_4" type="checkbox" checked/></td>
+					<td>
+						<label for="chk_incl_4"><div class="bold">Experimental</div><div class="indented italic fadedText">(Chromatic, Whole Tone...)</div></label>
+					</td>
+				</tr>
+				<tr class="inputHoverRow">
+					<td><input id="chk_incl_5" type="checkbox" checked/></td>
+					<td>
+						<label for="chk_incl_5"><div class="bold">World Traveller #1</div><div class="indented italic fadedText">(Hungarian Minor, Byzantine, Gypsy Minor...)</div></label>
+					</td>
+				</tr>
+				<tr class="inputHoverRow">
+					<td><input id="chk_incl_6" type="checkbox" checked/></td>
+					<td>
+						<label for="chk_incl_6"><div class="bold">World Traveller #2</div><div class="indented italic fadedText">(Hirajoshi, Pelog, Insen...)</div></label>
+					</td>
+				</tr>
+				<tr class="inputHoverRow">
+					<td><input id="chk_incl_7" type="checkbox" checked /></td>
+					<td>
+						<label for="chk_incl_7"><div class="bold">Two Chord Combos</div><div class="indented italic fadedText">(i - bvi, I - II7... common in film)</div></label>
+					</td>
+				</tr>
+				<tr class="inputHoverRow">
+					<td><input id="chk_incl_8" type="checkbox" checked /></td>
+					<td>
+						<label for="chk_incl_8"><div class="bold">Famous Chords</div><div class="indented italic fadedText">(Elektra, Tristan, Scriabin...)</div></label>
+					</td>
+				</tr>
+				<tr class="inputHoverRow">
+					<td><input id="chk_incl_9" type="checkbox" checked /></td>
+					<td>
+						<label for="chk_incl_9"><div class="bold">Film Themes</div><div class="indented italic fadedText"></div></label>
+					</td>
+				</tr>
+				<tr class="inputHoverRow">
+					<td><input id="chk_incl_10" type="checkbox" checked /></td>
+					<td>
+						<label for="chk_incl_10"><div class="bold">Personal List</div><div class="indented italic fadedText"></div></label>
+					</td>
+				</tr>
+			</table>
+		</div>
+
+		<!-- Buttons! -->
+		<table class="full" style="table-layout: fixed;">
+			<tbody style="width: 100%; display: table">
+				<tr class="full rightAlignContents">
+					<td class="centerContents">
+						<button id="resetScale" class="cool-button large">Reset Piano</button>
+					</td>
+					<td class="centerContents">
+						<button id="runFromPiano" class="cool-button large">Run analysis!</button>
+					</td>
+					
+				</tr>
+			</tbody>
+		</table>
+	
+	</div>
+
 </html>

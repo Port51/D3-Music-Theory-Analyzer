@@ -1,7 +1,168 @@
 "use strict";
 
-// Temporary script for loading modes
-var getTempString = () => {
+// MODE TYPES
+// 0 = medieval
+// 1 = modified medieval / composer
+// 2 = blues / experimental
+// 3 = world
+// 4 = chord / film / invented
+
+var getData_MedievalModes = () => {
+	return "0,Ionian		    [# # ## # # #]" +
+	"0,Dorian					[# ## # # ## ]" +
+	"0,Phrygian					[## # # ## # ]" +
+	"0,Lydian					[# # # ## # #]" +
+	"0,Mixolydian				[# # ## # ## ]" +
+	"0,Aeolian					[# ## # ## # ]" +
+	"0,Locrian					[## # ## # # ]" +
+	"";
+}
+
+var getData_ModifiedMedievalModes = () => {
+	return "1,Harmonic Minor	[# ## # ##  #]" +
+	"1,Melodic Minor			[# ## # # # #]" +
+	"1,Harmonic Major			[# # ## ##  #]" +
+	"1,Dorian #4				[# ##  ## ## ]" +
+	"1,Lydian #9				[#  ## ## # #]" +
+	"1,Super Locrian			[## ## # # # ]" +
+	"1,Lydian Augmented			[# # # # ## #]" +
+	"1,Phrygian Dominant		[##  ## ## # ]" +
+	"1,Major Locrian 			[# # ### # # ]" +
+	"1,Double Harmonic Major	[##  ## ##  #]" +
+	"1,Harmonic Minor Dom 7th	[#  #   #   #]" +
+	"1,Melodic Minor Dom 7th	[#  # #   #  ]" +
+	"1,Mixolydian Flat 6		[# # ## ## # ]" +
+	"1,Lydian Diminished Scale	[# ##  ## # #]" +
+	"1,Mixolydian #11			[# # # ## ## ]" +
+	"1,Lydian b7				[# # # ## ## ]" +
+	"1,Dorian b2				[## # # # ## ]" +
+	"1,Super Locrian bb7		[## ## # ##  ]" +
+	"";
+}
+
+var getData_Composer = () => {
+	return "1,Prometheus Scale	[# # # #  ## ]" +
+	"1,Lydian #9				[#  ## ## # #]" +
+	"1,Tritone Scale			[##  # ##  # ]" +
+	"1,Augmented				[#  ##  ##  #]" +
+	"1,Diminished				[# ## ## ## #]" +
+	"1,Leading Tone				[# # # # # ##]" +
+	"1,Overtone					[# # # ### # ]" +
+	"1,Neapolitan Major			[## # # # # #]" +
+	"1,Neapolitan Minor			[## # # ##  #]" +
+	"1,Half Diminished			[# ##  # # # ]" +
+	"1,Enigmatic				[##  # # # ##]" +
+	"1,Double Harmonic Major	[##  ## ##  #]" +
+	"1,Istrian					[## ## #   # ]" +
+	"2,Whole Tone Scale			[# # # # # # ]" +
+	"2,Chromatic Scale			[############]" +
+	"";
+}
+
+var getData_Blues = () => {
+	return "2,Blues Scale		[# ## ###  # ]" +
+	"2,Major Bebop				[# # ## ### #]" +
+	"2,Major Pentatonic			[# # #  # #  ]" +
+	"2,Minor Pentatonic			[#  # # #  # ]" +
+	"2,Bebop Dominant			[# # ## # ###]" +
+	"2,Bebop Dorian				[# ## # # ###]" +
+	"";
+}
+
+var getData_Experimental = () => {
+	return "2,Whole Tone Scale	[# # # # # # ]" +
+	"2,Chromatic Scale			[############]" +
+	"2,Altered Scale			[## ## # # # ]" +
+	"2,Hemitonic Pentatonic 3	[# ##   #   #]" +
+	"2,Esoteric 6th				[  #  #   # #]" +
+	"2,New Pentatonic			[# # # #  #  ]" +
+	"2,Pentatonic Variation		[#   #  # ## ]" +
+	"";
+}
+
+var getData_World1 = () => {
+	return "3,Hungarian Minor	[# ##  ###  #]" +
+	"3,Flamenco					[##  ## ##  #]" +
+	"3,Gypsy Minor				[# ##  ### # ]" +
+	"3,Gypsy Scale 2			[##  ## ##  #]" +
+	"3,Hungarian Gypsy Scale	[# ##  ### # ]" +
+	"3,Spanish Gypsy Scale		[##  ## ## # ]" +
+	"3,Arabian					[# # ### # # ]" +
+	"3,Chinese Scale			[# # #  # #  ]" +
+	"3,Persian Scale			[##  ### #  #]" +
+	"3,Urkainian Dorian			[# ##  ## ## ]" +
+	"3,Acoustic Scale			[# # # ## ## ]" +
+	"3,Byzantine				[##  ## ##  #]" +
+	"3,Spanish (8 tone)			[## #### # # ]" +
+	"3,Native American Scale	[# # # #  # #]" +
+	"3,Hungarian Folk			[##  #  ##  #]" +
+	"3,Hindu Scale				[# # ## ## # ]" +
+	"3,Arabian Scale			[# # ### # # ]" +
+	"3,Oriental Scale			[##  ###  ## ]" +
+	"3,Scottish Scale			[# #  # # #  ]" +
+	"3,Egyptian Scale			[# #  # #  # ]" +
+	"3,Northern Scale 			[#  # # # #  ]" +
+	"3,Hexatonic Minor 			[#  # # ## # ]" +
+	"3,Bugle Scale				[#    #   #  ]" +
+	"";
+}
+
+var getData_World2 = () => {
+	return "3,Hirajoshi			[#   # ##   #]" +
+	"3,In Scale					[##   # ##  #]" +
+	"3,Insen Scale				[##   # #  # ]" +
+	"3,Iwato					[##   ##   # ]" +
+	"3,Pelog (approx)			[## #  ### # ]" +
+	"3,Pfluke Scale				[# ##  ## # #]" +
+	"3,Yo Scale					[#  # # #  # ]" +
+	"3,Japanese Pentatonic		[##   # ##   ]" +
+	"3,Balinese Pentatonic		[##   ## #   ]" +
+	"3,Pelog Pentatonic			[## #   #  # ]" +
+	"3,Javanese Scale			[## # # # ## ]" +
+	"3,Yo Scale					[#  # # #  # ]" +
+	"3,Hirojoshi Scale			[# ##   ##   ]" +
+	"3,Balinese Scale			[## #   ##   ]" +
+	"3,Mongolian Scale			[# # #  # #  ]" +
+	"3,Ryo Scale				[# # #  # #  ]" +
+	"3,Kumoi Scale				[##   # ##   ]" +
+	"";
+}
+
+var getData_TwoChord = () => {
+	return "4,'Antagonism' (i - bv)	[## #  ## #  ]" +
+	"4,'Antagonist' (i - bvi)	[#  #   ##  #]" +
+	"4,'Outer Space' (I - bV)	[##  # ##  # ]" +
+	"4,'Fantastic' (I - bVI)	[#  ##  ##   ]" +
+	"4,'Romantic' (I - iv)		[#   ## ##   ]" +
+	"4,'Wonder' (i - IV)		[#  # # # #  ]" +
+	"4,'Transcendence' (I - v)	[# # #  #  # ]" +
+	"4,'Dark Comedy' (i - II)	[# ##  ## #  ]" +
+	"4,'Dramatic' (i - VII)		[#  #  ##   #]" +
+	"4,'Heroic'	 (I - II7)		[# # # ## #  ]" +
+	"";
+}
+
+var getData_FamousChords = () => {
+	return "4,Scriabin			[# # # #  ## ]" +
+	"4,Mystic Minor				[## # # # ## ]" +
+	"4,Mystic Scale				[# # # #  ## ]" +
+	"4,Elektra					[##  #  # #  ]" + /* usually in E */
+	"4,Dream				    [#    #  #   ]" + /* usually in G */
+	"4,Tristan					[#  #  #   # ]" + /* very spread out */
+	"";
+}
+
+var getData_FilmThemes = () => {
+	return "4,'She Never Sleeps'	[ ###  ### ##]" +
+	"";
+}
+
+var getData_Invented = () => {
+	return "4,Samara Scale		[## #  ## # #]" +
+	"";
+}
+
+var getData_ForTesting = () => {
 	return "1,Ionian		    [# # ## # # #]" +
 	"1,Dorian					[# ## # # ## ]" +
 	"1,Phrygian					[## # # ## # ]" +
@@ -9,141 +170,79 @@ var getTempString = () => {
 	"1,Mixolydian				[# # ## # ## ]" +
 	"1,Aeolian					[# ## # ## # ]" +
 	"1,Locrian					[## # ## # # ]" +
-	"1,Harmonic Minor			[# ## # ##  #]" +
-	"1,Melodic Minor			[# ## # # # #]" +
-	"1,Harmonic Major			[# # ## ##  #]" +
-	"2,Dorian #4				[# ##  ## ## ]" +
+
+	"2,Lydian #9				[#  ## ## # #]" +
+	"2,Diminished				[# ## ## ## #]" +
+	"2,Urkainian Dorian			[# ##  ## ## ]" +
+	"3,Samara Scale				[## #  ## # #]" +
 	"2,Whole Tone Scale			[# # # # # # ]" +
 	"2,Chromatic Scale			[############]" +
-	"2,Lydian #9				[#  ## ## # #]" +
-	"2,Double Harmonic Major	[##  ## ##  #]" +
-	"3,Scriabin					[# # # #  ## ]" +
-	"3,Mystic Minor				[## # # # ## ]" +
-	"2,Altered Scale			[## ## # # # ]" +
-	"2,Blues Scale				[# ## ###  # ]" +
-	"2,Enigmatic				[##  # # # ##]" +
-	"2,Flamenco					[##  ## ##  #]" +
-	"2,Gypsy Scale				[# ##  ### # ]" +
-	"2,Half Diminished			[# ##  # # # ]" +
-	"2,Hirajoshi				[#   # ##   #]" +
-	"2,Hungarian Minor			[# ##  ###  #]" +
-	"2,In Scale					[##   # ##  #]" +
-	"2,Insen Scale				[##   # #  # ]" +
-	"2,Istrian					[## ## #   # ]" +
-	"2,Iwato					[##   ##   # ]" +
-	"2,Lydian Augmented			[# # # # ## #]" +
-	"2,Major Bebop				[# # ## ### #]" +
-	"2,Major Locrian (Arabian)	[# # ### # # ]" +
-	"2,Major Pentatonic			[# # #  # #  ]" +
-	"2,Chinese Scale			[# # #  # #  ]" +
-	"2,Minor Pentatonic			[#  # # #  # ]" +
-	"2,Neapolitan Major			[## # # # # #]" +
-	"2,Neapolitan Minor			[## # # ##  #]" +
-	"2,Pelog (approx)			[## #  ### # ]" +
-	"2,Persian Scale			[##  ### #  #]" +
-	"2,Pfluke Scale				[# ##  ## # #]" +
-	"2,Phrygian Dominant		[##  ## ## # ]" +
-	"2,Prometheus Scale			[# # # #  ## ]" +
-	"2,Tritone Scale			[##  # ##  # ]" +
-	"2,Urkainian Dorian			[# ##  ## ## ]" +
-	"2,Yo Scale					[#  # # #  # ]" +
-	"2,Acoustic Scale			[# # # ## ## ]" +
-	"2,Bebop Dominant			[# # ## # ###]" +
-	"2,New Pentatonic			[# # # #  #  ]" +
-	"2,Pentatonic (Japan)		[##   # ##   ]" +
-	"2,Pentatonic (Balinese)	[##   ## #   ]" +
-	"2,Pentatonic (Pelog)		[## #   #  # ]" +
-	"2,Hemitonic Pentatonic 3	[# ##   #   #]" +
-	"2,Pentatonic Variation		[#   #  # ## ]" +
-	"2,Harmonic Minor Dom 7th	[#  #   #   #]" +
-	"2,Melodic Minor Dom 7th	[#  # #   #  ]" +
-	"2,Esoteric 6th				[  #  #   # #]" +
-	"2,Augmented				[#  ##  ##  #]" +
-	"2,Diminished				[# ## ## ## #]" +
-	"2,Gypsy (Byzantine)		[##  ## ##  #]" +
-	"2,Spanish (8 tone)			[## #### # # ]" +
-	"2,Hungarian Gypsy			[# ##  ### # ]" +
-	"2,Native American Scale	[# # # #  # #]" +
-	"2,Hungarian Folk			[##  #  ##  #]" +
-	"2,Leading Tone				[# # # # # ##]" +
-	"2,Overtone					[# # # ### # ]" +
-	"2,Hindu Scale				[# # ## ## # ]" +
-	"2,Spanish Gypsy			[##  ## ## # ]" +
-	"2,Arabian Scale			[# # ### # # ]" +
-	"2,Oriental Scale			[##  ###  ## ]" +
-	"2,Gypsy Minor				[# ##  ### # ]" +
-	"2,Javanese Scale			[## # # # ## ]" +
-	"2,Scottish Scale			[# #  # # #  ]" +
-	"2,Kumoi Scale				[##   # ##   ]" +
-	"2,Egyptian Scale			[# #  # #  # ]" +
-	"2,Yo Scale					[#  # # #  # ]" +
-	"2,Hirojoshi Scale			[# ##   ##   ]" +
-	"2,Balinese Scale			[## #   ##   ]" +
-	"2,Mongolian Scale			[# # #  # #  ]" +
-	"2,Ryo Scale				[# # #  # #  ]" +
-	"2,Mystic Scale				[# # # #  ## ]" +
-	"2,Bebop Dorian				[# ## # # ###]" +
-	"3,Antagonism (Chords)		[## #  ## #  ]" +
-	"3,Vader Theme (Chords)		[#  #   ##  #]" +
-	"3,Elektra (Chord)			[##  #  # #  ]" + /* usually in E */
-	"3,Dream (Chord)		    [#    #  #   ]" + /* usually in G */
-	"3,Tristan (Chord)			[#  #  #   # ]" + /* very spread out */
-	"2,Mixolydian Flat 6		[# # ## ## # ]" +
+	"3,'She Never Sleeps'		[ ###  ### ##]" +
 	"";
 }
 
 // Get modes from test data
-var getTempData = () => {
-	const str = getTempString();
+var getTempData = (datasets) => {
+	let str = "";
+
+	const testType = 1;
+	if (testType == 0) {
+		str = getData_ForTesting();
+	} else {
+		if (datasets[0]) str += getData_MedievalModes();
+		if (datasets[1]) str += getData_ModifiedMedievalModes();
+		if (datasets[2]) str += getData_Composer();
+		if (datasets[3]) str += getData_Blues();
+		if (datasets[4]) str += getData_Experimental();
+		if (datasets[5]) str += getData_World1();
+		if (datasets[6]) str += getData_World2();
+		if (datasets[7]) str += getData_TwoChord();
+		if (datasets[8]) str += getData_FamousChords();
+		if (datasets[9]) str += getData_FilmThemes();
+		if (datasets[10]) str += getData_Invented();
+	}
+
 	const spl = str.split(/\[|\]/);
 
 	let i = 0;
 	let modes = [];
+	let usedNames = new Set();
 	while (i * 2 + 1 < spl.length) {
 		let mode = {};
 		const typeAndName = spl[i * 2 + 0].trim().split(',');
-		mode.label = typeAndName[1];
-		mode.type = parseInt(typeAndName[0]);
-        mode.isUser = false;
-		mode.key = 0;
-		mode.name = getNoteName(mode.key) + ' ' + mode.label;
+		const newName = typeAndName[1];
 
-		mode.n = [];
-		const notes = spl[i * 2 + 1].toString();
-		for (let j = 0; j < notes.length; ++j) {
-			if (notes.charAt(j) == ' ') {
-				mode.n.push(false);
+		if (!usedNames.has(newName)) {
+			usedNames.add(newName);
+			
+			mode.label = typeAndName[1];
+			mode.type = parseInt(typeAndName[0]);
+			mode.isUser = false;
+			mode.key = 0;
+			mode.name = getNoteName(mode.key) + ' ' + mode.label;
+
+			mode.n = [];
+			const notes = spl[i * 2 + 1].toString();
+			for (let j = 0; j < notes.length; ++j) {
+				if (notes.charAt(j) == ' ') {
+					mode.n.push(false);
+				}
+				else {
+					mode.n.push(true);
+				}
 			}
-			else {
-				mode.n.push(true);
-			}
+			mode.c = mode.n;
+			mode.aliases = [];
+
+			modes.push(mode);
 		}
-		mode.c = mode.n;
-		mode.aliases = [];
 
-		modes.push(mode);
 		++i;
 	}
 
 	//console.log(modes);
 
 	return modes;
-}
-
-// Classical modes and a few common variations for quick testing
-var getMedievalModes = () => {
-	return [
-		createMode("Ionian", 1,					"# # ## # # #"),
-		createMode("Lydian", 1, 				"# # # ## # #"),
-		createMode("Mixolydian", 1,				"# # ## # ## "),
-		createMode("Aeolian", 1,				"# ## # ## # "),
-		createMode("Dorian", 1,					"# ## # # ## "),
-		createMode("Phrygian", 1,				"## # # ## # "),
-		createMode("Locrian", 1,				"## # ##  # #"),
-		createMode("Harmonic Minor", 1,			"# ## # ##  #"),
-		createMode("Melodic Minor", 1,			"# ## # # # #"),
-		createMode("Harmonic Major", 1,			"# # ## ##  #"),
-	];
 }
 
 // Just a few modes for quick testing

@@ -24,3 +24,42 @@ var getRootCloseness = (a, b) => {
 	
 	return close;
 }
+
+var getRootEqualScore = (key1, key2) => {
+	if (key1 == null || key2 == null) return 1.0;
+	else if (key1 === key2) return 1.0;
+	else return 0.0;
+}
+
+// Check if modes include each others' roots
+var getRootsIncludedScore = (a, b) => {
+	let ret = 0.0;
+	const searchForNum = ((a.key != null) ? 1 : 0) + ((b.key != null) ? 1 : 0);
+
+	if (searchForNum == 0)
+		return 1.0;
+	else {
+		let foundRoots = 0;
+		if (a.key != null) {
+			if (b.n[a.key]) {
+				foundRoots++;
+			}
+		}
+		if (b.key != null) {
+			if (a.n[a.key]) {
+				foundRoots++;
+			}
+		}
+
+		if (foundRoots == searchForNum)
+			return 1.0;
+		else if (foundRoots == 0)
+			return 0.0;
+		else {
+			return 0.15; // 50% hit rate gives low score
+		}
+
+	}
+	return 0.0;
+
+}

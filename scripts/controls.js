@@ -1,7 +1,8 @@
 
 // Shared data
-var rootSel = 7; // default to key of G
-var keySel =		    [false, false, true, false, false, false, false, true, false, false, true, false];
+// Set defaults here
+var rootSel = 7; // default to key of G minor (no 2nd)
+var keySel =		    [true, false, true, true, false, true, false, true, false, false, true, false];
 var keySelVis =		    [false, false, false, false, false, false, false, false, false, false, false, false];
 var mouseOverKey = -1;
 var keyMouseOverVis =	[false, false, false, false, false, false, false, false, false, false, false, false];
@@ -10,54 +11,68 @@ var allowD3Physics = true;
 var allowD3Sticky = true;
 
 
-var runSimulation = () => {
-	// Trigger collapse settings
-	$('#settings-collapse').trigger('click');
-
-	settings = createSettings();
-	exa = createUserMode();
-
-	useGraph = true;
-	if (!useGraph) {
-		// DEBUG: Just print results to console
-		runAnalysis(0.0, settings, exa);
-	}
-	else {
-		// DEBUG: Handle D3 graph
-		const svg = d3.select("svg");
-		const width = +svg.property("viewBox").baseVal.width;
-		const height = +svg.property("viewBox").baseVal.height;
-
-		const results = runAnalysis(0.025, settings, exa);
-		const graph = convertAnalysisToGraph(results.modes, results.pairs, 2, width, height, settings);
-		
-		// DEBUG: This is for saving default graphs as JSON objects
-		//console.log(JSON.stringify(graph));
-
-		createD3Graph(graph, exa.name);
-
-
-	} // end useGraph
-} // end runSim
+var validateInput = (v) => {
+	v = parseFloat(v);
+	if (v == null) return 0.0;
+	else if (v < 0) return 0.0;
+	else if (v > 100) return 1.0;
+	else return (v / 100.0);
+}
 
 // Create settings
 var createSettings = () => {
-	// Get inputs
-	let noteSim = 0.75;
+	// Get input datasets
+	const datasets = [
+		document.getElementById("chk_incl_0").checked,
+		document.getElementById("chk_incl_1").checked,
+		document.getElementById("chk_incl_2").checked,
+		document.getElementById("chk_incl_3").checked,
+		document.getElementById("chk_incl_4").checked,
+		document.getElementById("chk_incl_5").checked,
+		document.getElementById("chk_incl_6").checked,
+		document.getElementById("chk_incl_7").checked,
+		document.getElementById("chk_incl_8").checked,
+		document.getElementById("chk_incl_9").checked,
+		document.getElementById("chk_incl_10").checked,
+	];
+	
+	const weightFactors = {
+		"allowMoreNotes": 1.0 - validateInput(document.getElementById("allowMoreNotes").value),
+		"allowDifferentRoots": validateInput(document.getElementById("allowDifferentRoots").value),
+		"moodEstimation": validateInput(document.getElementById("estimateMood").value),
+	};
 
 	return {
-		datasetID:  				parseInt($("#datasetID").find(":selected").val()),
-		wFactorRootMissing: 		parseFloat($("#rootMissing").val() / 100),
-		wFactorNoteSimilarity: 		parseFloat($("#noteSim").val() / 100),
-		wFactorAdd: 				parseFloat($("#noteAdd").val() / 100),
-		wFactorRemove: 				parseFloat($("#noteRem").val() / 100),
-		wFactorRootOffset: 			parseFloat($("#rootOff").val() / 25),
-		wFactorMoodHappy:   		parseFloat($("#moodEstimHappy").val() / 100),
-		wFactorMoodBittersweet:   	parseFloat($("#moodEstimBittersweet").val() / 100),
-		wFactorIntervalCount: 		parseFloat($("#iCount").val() / 100),
-		wFactorIntervalOpenness: 	parseFloat($("#iOpen").val() / 100),
-		filterResultMax: 			parseInt($("#filterResultMax").val()),
-	};
+		"datasets":  			datasets,
+		"weightFactors": 		weightFactors,
+		"displayNumResults": 		Math.ceil(3 + 20 * validateInput(document.getElementById("displayNumResults").value)),
+	}
+
+}
+
+// Create mode based on notes selected by user
+var createUserMode = () => {
+	let mode = {};
+	mode.label = "New Scale";
+	mode.isUser = true;
+	mode.type = 0;
+	mode.key = rootSel;
+	mode.name = getNoteName(mode.key) + ' ' + mode.label;
+
+	mode.n = [];
+	for (let i = 0; i < 12; ++i) {
+		mode.n.push(keySel[i]);
+	}
+
+	// Un-transpose to static version
+	mode.c = [];
+	for (let i = 0; i < 12; ++i) {
+		mode.c.push(mode.n[(i + mode.key) % 12]);
+	}
+
+	mode.aliases = [];
+
+	return mode;
 }
 
 var setAllowD3Physics = (v) => {
@@ -120,7 +135,13 @@ var buttonCloseInstructions = () => {
 
 var clickRootSelect = (event) => {
 	const note = event.data.note;
-	rootSel = note;
+	if (rootSel === note) {
+		// Turn off!
+		//rootSel = null;
+	} else {
+		// Turn on!
+		rootSel = note;
+	}
 
 	setRootSelectColors();
 }
@@ -160,7 +181,7 @@ var resetAnimation = (elem, animName) => {
 // Update colors for root selection
 var setRootSelectColors = () => {
 	for (let i = 0; i < 12; ++i) {
-		$('.rootSelect[value="' + i + '"]').find("span").attr('value', (rootSel == i));
+		$('.rootSelect[value="' + i + '"]').find("span").attr('value', (rootSel === i));
 	}
 }
 
@@ -202,31 +223,6 @@ var setKeyColors = () => {
 	}
 }
 
-// Create mode based on notes selected by user
-var createUserMode = () => {
-	let mode = {};
-	mode.label = $('#scaleName[name="scaleName"]').val();
-	mode.isUser = true;
-	mode.type = 0;
-	mode.key = rootSel;
-	mode.name = getNoteName(mode.key) + ' ' + mode.label;
-
-	mode.n = [];
-	for (let i = 0; i < 12; ++i) {
-		mode.n.push(keySel[i]);
-	}
-
-	// Un-transpose to static version
-	mode.c = [];
-	for (let i = 0; i < 12; ++i) {
-		mode.c.push(mode.n[(i + mode.key) % 12]);
-	}
-
-	mode.aliases = [];
-
-	return mode;
-}
-
 var buttonRunFromSettings = () => {
 	console.log("buttonRunFromSettings");
 
@@ -234,7 +230,7 @@ var buttonRunFromSettings = () => {
 	setModalActive(1, false);
 
 	// Run analysis
-	runSimulation();
+	ALGO.runSimulation();
 
 }
 
@@ -265,7 +261,7 @@ var buttonRunFromPiano = () => {
 		setModalActive(0, false);
 
 		// Run analysis
-		runSimulation();
+		ALGO.runSimulation();
 	}
 
 }

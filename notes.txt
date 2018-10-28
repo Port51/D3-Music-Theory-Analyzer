@@ -1,5 +1,41 @@
 NOTES
 
+
+
+IMPROVING ALGORITHM COMPLEXITY:
+
+Starting with 438,516 comparisons across all 12 keys, for all datasets
+Doing 2-step method: 70,863 comparisons (cut 83.8%)
+
+Scoring algorithm:
+-	Stricter for note-wise analysis
+-	First comparison: only score modes that contain the user mode root
+
+2nd iteration:
+	START:										[Comparisons: 434,650]
+	Cutoffs occur during algorithm:				[Comparisons: 145,015]
+	Filter layer 1 early:						[Comparisons: 27,982]
+	Filter layer 2 early:						[Comparisons: 10,317]
+
+
+CONTROLS:
+*	How set are you on these notes? (penalty for removing each = [none, 50%, 100%, multiplicative] )
+	>	Adding notes = minor scaling penalty, not big deal
+*	Do you want to stick to this key? [no factor, 50%, instant disqualification]
+*	
+*	Graph max size		||		Filter style [only the best, 80/20 split of best, even distribution, only worst scores]
+
+*	
+*	Topology Features
+*	Interval Topology (melodic options)
+
+SLIDERS:
+	Gas engine thingie with labels
+	List of lights
+
+
+
+
 Methods:
 
 	COMPARE! (let M = # of modes stored)

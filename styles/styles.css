@@ -1,3 +1,67 @@
+* {
+	color: #eedede;
+	cursor: default;
+}
+
+*:not(.canSelect) {
+	-webkit-touch-callout: none; /* iOS Safari */
+	-webkit-user-select: none; /* Safari */
+	-khtml-user-select: none; /* Konqueror HTML */
+	-moz-user-select: none; /* Firefox */
+	-ms-user-select: none; /* Internet Explorer/Edge */
+	user-select: none; /* Non-prefixed version, currently
+					  supported by Chrome and Opera */
+}
+
+tr {
+	padding: 0;
+	margin: 0;
+}
+
+td {
+	padding: 0;
+	margin: 0;
+}
+
+.full {
+	width: 100%;
+}
+
+.bold {
+	font-weight: bold;
+}
+
+.italic {
+	font-style: italic;
+}
+
+.fadedText {
+	color: #9b7777;
+	font-size: 0.75em;
+}
+
+.indented {
+	margin-left: 30px;
+}
+
+.subheader {
+	font-size: 1.15em;
+	font-weight: bold;
+	font-style: italic;
+}
+
+tr.inputHoverRow {
+	background: #000000;
+	-webkit-transition: background: 1.25s;
+	transition: background: 1.25s;
+}
+
+tr.inputHoverRow:hover {
+	background: #101018;
+	-webkit-transition: background: 0.25s;
+	transition: background: 0.25s;
+}
+
 .svg-container {
 	display: inline-block;
 	position: relative;
@@ -38,18 +102,19 @@
 	border: 2px solid #888;
 	border-radius: 10px;
 }
+/* Piano */
 .modal-content.modal-0 {
-	margin: 15% auto; /* center it */
+	margin: 2% auto; /* center it, and position Y */
 	width: auto;
 	width: 500px !important; /* piano container is 500px wide */
 }
 .modal-content.modal-1 {
-	margin: 4% auto; /* center it */
+	margin: 4% auto; /* center it, and position Y */
 	width: auto;
 	width: 850px !important; /* piano container is 500px wide */
 }
 .modal-content.modal-2 {
-	margin: 4% auto; /* center it */
+	margin: 4% auto; /* center it, and position Y */
 	width: auto;
 	width: 700px !important; /* piano container is 500px wide */
 }
@@ -74,9 +139,18 @@
 .nodes circle {
 	stroke: #fff;
 	stroke-width: 1.5px;
+	/*-webkit-filter: drop-shadow(0px 0px 10px #fffbd8);
+	-filter: drop-shadow(0px 0px 10px #fffbd8);*/
+}
+
+.nodeSelection {
+	fill: #fffbd8;
+	-webkit-filter: drop-shadow(0px 0px 20px #fffbd8);
+	-filter: drop-shadow(0px 0px 20px #fffbd8);
 }
 
 .node-labels {
+	text-anchor: middle;
 	font-size: 15px;
 	font-weight: bold;
 	pointer-events: "none";
@@ -88,6 +162,10 @@
 	user-select: none;
 }
 
+.node-circles {
+	stroke-width: 2px;
+}
+
 .centered {
 	margin: auto;
 }
@@ -95,7 +173,11 @@
 
 
 
-
+select,
+input[type=select],
+input[type=text] {
+	background: #000000;
+}
 input[type=range] {
   -webkit-appearance: none;
   margin: 5px 0;
@@ -198,13 +280,15 @@ input[type=range]:focus::-ms-fill-upper {
 @import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:300);
 .cool-button {
 	position: relative;
-	z-index: 1;
-	color: #dddddd;
-	background: #3071a9;
-	border-radius: 7%;
-	border: 1.75px solid #010101;
+	border-radius: 7px;
+	color: #111;
+	background: #eee; /*#4081c9*/
+	/*border: 1.75px solid #010101;*/
 	/* Set transition for box shadow */
-	transition: box-shadow 150ms cubic-bezier(.2,0,.7,1), transform 120ms cubic-bezier(.2,0,.7,1);
+	-webkit-transition: border-radius 1.0s,
+		box-shadow 0.5s;
+	transition: border-radius 1.0s,
+		box-shadow 0.5s;
 }
 .cool-button.small-x {
 	width: 35px;
@@ -227,11 +311,16 @@ input[type=range]:focus::-ms-fill-upper {
 }
 .cool-button:hover {
 	/*transform: rotate(45deg);*/
-	color: #111;
-	background: #eee; /*#4081c9*/
-	box-shadow: 0 0 1px 3px rgba(240, 240, 240, 0.15), /*rgba(64, 129, 201, 0.15)*/
-		0 0 1px 6px rgba(240, 240, 240, 0.1),
-		0 0 1px 9px rgba(240, 240, 240, 0.05);
+	color: #dddddd;
+	background: #3071a9;
+	border-radius: 12px;
+	-webkit-transition: border-radius 0.25s,
+		box-shadow 0.2s;
+	transition: border-radius 0.25s,
+		box-shadow 0.2s;
+	box-shadow: 0 0 1px 2px rgba(240, 240, 240, 0.10), /*rgba(64, 129, 201, 0.15)*/
+		0 0 1px 4px rgba(240, 240, 240, 0.05),
+		0 0 1px 6px rgba(240, 240, 240, 0.025);
 }
 
 .rootCircle {
@@ -300,7 +389,7 @@ input[type=range]:focus::-ms-fill-upper {
 
 .pianoContainer {
 	width: 500px;
-	height: 450px;
+	height: 400px;
 	/*background: #72330e;*/
 	background-image: url(../img/textures/PianoBottom.jpg);
 	-webkit-background-repeat: no-repeat;
@@ -341,30 +430,51 @@ input[type=range]:focus::-ms-fill-upper {
 	border-collapse: separate;
 }
 
-/* White keys are divided into upper and lower sections */
-.pianoWhite[highlight=false][mouseover=false] {
+.pianoKey {
+	-webkit-transition: background 0.65s;
+	-moz-transition: background 0.65s;
+	-o-transition: background 0.65s;
+	transition: background 0.65s;
+	outline: none;
+}
+
+/* Natural colors */
+.pianoWhite {
 	background: #cccccc;
 }
 
-.pianoWhite[mouseover=true] {
-	background: #ee2 !important; /* 3355ee */
-}
-.pianoWhite[highlight=true][mouseover=false] {
-	background: #3071a9;
+.pianoBlack {
+	background: #202020;
 }
 
+/* Highlighted */
+.pianoKey[mouseover=true] {
+	background: #fff46d !important;
+	border-color: #fcf058 !important;
+	-webkit-transition: background 0.18s;
+	-moz-transition: background 0.18s;
+	-o-transition: background 0.18s;
+	transition: background 0.18s;
+}
+
+/* Selected */
+.pianoKey[highlight=true][mouseover=false] {
+	background: #468cc9 !important; /* #3071a9; */
+	border-color: #4081b9 !important; /* #4081b9; */
+}
+
+.pianoKey:focus {
+	outline: none;
+}
+
+/* White keys are divided into upper and lower sections */
 .pianoWhite.pianoBot {
 	border-right: 3px solid #eeeeee;
 	border-bottom: 3px solid #eeeeee;
 	border-radius: 0px 0px 5px 5px;
 }
-.pianoWhite.pianoBot[mouseover=true] {
-	border-right: 3px solid #ff4 !important; /* 5375ff */
-	border-bottom: 3px solid #ff4 !important;
-}
 .pianoWhite.pianoBot[highlight=true][mouseover=false] {
-	border-right: 3px solid #4081b9;
-	border-bottom: 3px solid #4081b9;
+	border-color: #4081b9;
 }
 
 .pianoWhite.pianoTopSmall,
@@ -372,30 +482,15 @@ input[type=range]:focus::-ms-fill-upper {
 	border-right: 3px solid #eeeeee;
 	border-radius: 3px 3px 0px 0px;
 }
-.pianoWhite.pianoTopSmall[mouseover=true],
-.pianoWhite.pianoTopExtraSmall[mouseover=true] {
-	border-right: 3px solid #ff4 !important;
-}
 .pianoWhite.pianoTopSmall[highlight=true][mouseover=false],
 .pianoWhite.pianoTopExtraSmall[highlight=true][mouseover=false] {
-	border-right: 3px solid #4081b9;
+	border-color: #4081b9;
 }
 
 .pianoBlack {
-	background: #202020;
 	border-right: 3px solid #484848;
 	border-bottom: 3px solid #484848;
 	border-radius: 3px 3px 5px 5px;
-}
-.pianoBlack[mouseover=true] {
-	background: #ee2 !important; /* 3355ee */
-	border-right: 3px solid #ff4 !important;
-	border-bottom: 3px solid #ff4 !important;
-}
-.pianoBlack[highlight=true][mouseover=false] {
-	background: #3071a9;
-	border-right: 3px solid #4081b9;
-	border-bottom: 3px solid #4081b9;
 }
 
 .jitterKey {
