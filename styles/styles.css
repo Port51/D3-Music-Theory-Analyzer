@@ -106,7 +106,7 @@ tr.inputHoverRow:hover {
 .modal-content.modal-0 {
 	margin: 2% auto; /* center it, and position Y */
 	width: auto;
-	width: 500px !important; /* piano container is 500px wide */
+	width: 900px !important; /* piano container is 500px wide */
 }
 .modal-content.modal-1 {
 	margin: 4% auto; /* center it, and position Y */

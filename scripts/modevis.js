@@ -28,7 +28,7 @@ ALGO.runSimulation = () => {
 		const graph = convertAnalysisToGraph(algoResults.modes, algoResults.pairs, 2, { svgWidth: width, svgHeight: height, 'settings': settings } );
 		
 		// DEBUG: This is for saving default graphs as JSON objects
-		//console.log(JSON.stringify(graph));
+		console.log(JSON.stringify(graph));
 
 		createD3Graph(graph, exa.name);
 

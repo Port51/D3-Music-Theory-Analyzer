@@ -17,6 +17,15 @@ Scoring algorithm:
 	Filter layer 1 early:						[Comparisons: 27,982]
 	Filter layer 2 early:						[Comparisons: 10,317]
 
+TODO:
+-	Control: Randomness in filtering
+-	Menu button: Reroll
+-	Move unneeded data out of g object
+-	New default
+-	
+
+
+
 
 CONTROLS:
 *	How set are you on these notes? (penalty for removing each = [none, 50%, 100%, multiplicative] )
