@@ -51,10 +51,12 @@ var determineChordsInMode = (mode) => {
 			// Add all chords for this note
 			const newChords = determineChordsForNote(tonic, mode.n);
 
-			// Push info for later analysis
-			chords.push.apply(chords, newChords);
-			// Just push names for display
-			chordsByTonic.push(newChords.map((x) => { return x.label; }));
+			if (newChords.length > 0) {
+				// Push info for later analysis
+				chords.push.apply(chords, newChords);
+				// Just push names for display
+				chordsByTonic.push(newChords.map((x) => { return x.label; }));
+			}
 
 		}
 	}
@@ -78,10 +80,10 @@ var determineChordsForNote = (tonic, n) => {
 		{ label: keyName + "(lyd maj7)", type: "lyd", seventh: "M", req: [4, 6, 11] },
 		{ label: keyName + "m", type: "m", seventh: "", req: [3, 7] },
 		{ label: keyName + "m7", type: "m", seventh: "m", req: [3, 7, 10] },
-		{ label: keyName + "m (maj7)", type: "m", seventh: "M", req: [3, 7, 11] },
+		{ label: keyName + "m(maj7)", type: "m", seventh: "M", req: [3, 7, 11] },
 		{ label: keyName + "dim", type: "dim", seventh: "", req: [3, 6] },
 		{ label: keyName + "dim7", type: "dim", seventh: "m", req: [3, 6, 10] },
-		{ label: keyName + "dim (maj7)", type: "dim", seventh: "M", req: [3, 6, 11] },
+		{ label: keyName + "dim(maj7)", type: "dim", seventh: "M", req: [3, 6, 11] },
 	]
 
 	const noteName = getNoteName(tonic);

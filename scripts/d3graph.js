@@ -348,14 +348,27 @@ var analyzeModeForPanel = (mode) => {
 }
 
 var updateD3Panel = () => {
-	console.log(panel.chordsByTonic);
+	//console.log(panel.chordsByTonic);
 	//panelLinks.title.text(panel.title);
+	console.log(panel.cadences);
 
 	if (panel.chordsByTonic) {
-		for (let i = 0; i < panelLinks.chords.length; ++i) {
-			if (i < panel.chordsByTonic.length) {
-				panelLinks.chords[i].text(panel.chordsByTonic[i].join(' '));
-			}
+		let i = 0;
+		for (i = 0; i < panel.chordsByTonic.length; ++i) {
+			panelLinks.chords[i].text(panel.chordsByTonic[i].join('  '));
+		}
+		for (; i < panelLinks.chords.length; ++i) {
+			panelLinks.chords[i].text('');
+		}
+	}
+
+	if (panel.cadences) {
+		let i = 0;
+		for (i = 0; i < panel.cadences.length; ++i) {
+			panelLinks.cadences[i].text(panel.cadences[i].join('  '));
+		}
+		for (; i < panelLinks.cadences.length; ++i) {
+			panelLinks.cadences[i].text('');
 		}
 	}
 	
@@ -467,7 +480,7 @@ var createD3Panel = (svg, width, height) => {
 	const padding = 10;
 	const panelRect = {
 		wi: 220 * 1.2,
-		hei: height * 0.75,
+		hei: height * 0.9,
 		};
 	panelRect.x0 = width - panelRect.wi - padding;
 	panelRect.y0 = padding;
@@ -508,6 +521,7 @@ var createD3Panel = (svg, width, height) => {
 		.style("fill", "#fff")
 		.text("CHORDS:");
 	
+	// Chord text
 	panelLinks.chords = []
 	for (let i = 0; i < 12; ++i) {
 		const newLabel = svg.append("text")
@@ -521,6 +535,33 @@ var createD3Panel = (svg, width, height) => {
 			.style("fill", "#fff");
 
 		panelLinks.chords.push(newLabel);
+
+	}
+
+	// MODE CADENCES
+	svg.append("text")
+		.attr("x", panelRect.x0 + 10)
+		.attr("y", panelRect.y0 + pianoHei + 330)
+		.attr("text-anchor", "start")
+		.style("font-size", "16px")
+		.style("font-weight", "bold")
+		.style("fill", "#fff")
+		.text("CADENCES:");
+	
+	// Chord text
+	panelLinks.cadences = []
+	for (let i = 0; i < 8; ++i) {
+		const newLabel = svg.append("text")
+			.attr("x", panelRect.x0 + 20)
+			.attr("y", panelRect.y0 + pianoHei + 350 + 20 * i)
+			.attr("dy", 0)
+			//.attr("transform", "translate(" + (panelRect.x0 + 15).toString() + ",0)")
+			.attr("text-anchor", "start")
+			.attr("xml:space", "preserve")
+			.style("font-size", "14px")
+			.style("fill", "#fff");
+
+		panelLinks.cadences.push(newLabel);
 
 	}
 	
