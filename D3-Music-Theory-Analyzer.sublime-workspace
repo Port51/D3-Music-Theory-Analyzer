@@ -245,7 +245,7 @@
 			"file": "scripts/d3graph.js",
 			"settings":
 			{
-				"buffer_size": 19263,
+				"buffer_size": 18481,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -551,7 +551,7 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 2,
 			"sheets":
 			[
 				{
@@ -610,7 +610,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 1,
 					"type": "text"
 				},
 				{
@@ -619,26 +619,27 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 19263,
+						"buffer_size": 18481,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								10002,
-								10002
+								14035,
+								14035
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax"
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 5227.0,
+						"translation.y": 7893.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 0,
 					"type": "text"
 				},
 				{

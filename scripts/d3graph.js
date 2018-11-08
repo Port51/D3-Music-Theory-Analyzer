@@ -350,6 +350,15 @@ var analyzeModeForPanel = (mode) => {
 var updateD3Panel = () => {
 	console.log(panel.chordsByTonic);
 	//panelLinks.title.text(panel.title);
+
+	if (panel.chordsByTonic) {
+		for (let i = 0; i < panelLinks.chords.length; ++i) {
+			if (i < panel.chordsByTonic.length) {
+				panelLinks.chords[i].text(panel.chordsByTonic[i].join(' '));
+			}
+		}
+	}
+	
 	//panelLinks.chords.text(panel.chords.join(' '));
 	//panelLinks.chords.text(panel.chords.join(" "))
 		//.call(wrap, panelLinks.bounds.wi - 5);
@@ -498,15 +507,23 @@ var createD3Panel = (svg, width, height) => {
 		.style("font-weight", "bold")
 		.style("fill", "#fff")
 		.text("CHORDS:");
-	panelLinks.chords = svg.append("text")
-		.attr("x", panelRect.x0 + 10)
-		.attr("y", panelRect.y0 + pianoHei + 85)
-		.attr("dy", 0)
-		.attr("transform", "translate(" + (panelRect.x0 + 15).toString() + ",0)")
-		.attr("text-anchor", "start")
-		.attr("xml:space", "preserve")
-		.style("font-size", "14px")
-		.style("fill", "#fff");
+	
+	panelLinks.chords = []
+	for (let i = 0; i < 12; ++i) {
+		const newLabel = svg.append("text")
+			.attr("x", panelRect.x0 + 20)
+			.attr("y", panelRect.y0 + pianoHei + 85 + 20 * i)
+			.attr("dy", 0)
+			//.attr("transform", "translate(" + (panelRect.x0 + 15).toString() + ",0)")
+			.attr("text-anchor", "start")
+			.attr("xml:space", "preserve")
+			.style("font-size", "14px")
+			.style("fill", "#fff");
+
+		panelLinks.chords.push(newLabel);
+
+	}
+	
 
 	// Default info
 	panel.title = "";
