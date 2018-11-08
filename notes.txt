@@ -21,8 +21,61 @@ TODO:
 -	Control: Randomness in filtering
 -	Menu button: Reroll
 -	Move unneeded data out of g object
--	New default
--	
+X	New default
+X	Limit nodes from right hand menu area
+-	Put chords in rounded boxes, one line for each chord root
+
+
+CADENCES: (all in key of C / Am)
+
+	Resolute
+G7 -> C
+G7 -> Csus4 -> C
+
+	Haunting, peaceful
+Gmaj7 -> C
+Gmaj7 -> Clyd -> C
+
+	Plagal
+F -> C
+
+	Gamma cadence (step-wise)
+G -> Am
+
+	Has characteristic, plagal. Good for Dorian.
+D -> Am
+
+	Lydian
+D -> C
+D7 -> C
+
+	Phrygian
+Bb -> Am
+
+	Borrow the V: (as long as there's a v chord)
+E -> Am
+G -> C
+
+RULES for what sounds GOOD:
+-	Major chords = stronger cadence
+-	Proximity of non-tonic root to tonic
+-	Is characteristic note involved? (adds to it)
+-	Avoids diminished? (that resolves to ionian)
+-	Half step pulls? (b2, maj7, 4->3, #4->5, b6->5, 2->b3)
+
+RULES for what sounds BAD:
+-	Breaking up the half-step pulls (Fmaj7 -> C removes the F -> E resolution)
+
+
+CADENCE EXTENSIONS:
+Replace I with Isus4 -> I
+Replace I with I (lyd) -> I
+
+
+
+
+
+
 
 
 

@@ -17,6 +17,7 @@ var palette_ModeTypes = ["#51d633", "#2191d1", "#2856d6", "#9b30d1", "#ce3227", 
 
 var cornerWi = 180;
 var cornerHei = 100;
+var rightMenuWi = 290;
 var userModeExtraRadius = 9;
 
 // D3 objects
@@ -211,7 +212,7 @@ var createD3Graph = (graph, defaultSelection) => {
 		if (d.x < cornerWi + rad && d.y < cornerHei + rad && d.x > d.y) {
 			return cornerWi + rad;
 		} else {
-			return Math.max(rad, Math.min(width - rad, d.x));
+			return Math.max(rad, Math.min(width - rad - rightMenuWi, d.x));
 		}
 	}
 
@@ -299,14 +300,17 @@ var updateD3UserPianoIcon = () => {
 }
 
 var updateD3Panel = () => {
-    panelLinks.title.text(panel.title);
-    panelLinks.chords.text(panel.chords)
-        .call(wrap, panelLinks.bounds.wi - 5);
+	console.log(panel.chordsByTonic);
+    //panelLinks.title.text(panel.title);
+    //panelLinks.chords.text(panel.chords.join(' '));
+    //panelLinks.chords.text(panel.chords.join(" "))
+        //.call(wrap, panelLinks.bounds.wi - 5);
 
     // Display notes
     if (panel.notes) {
         updateD3Piano(panelLinks.piano, panel.key, panel.notes);
     }
+
 }
 
 var updateD3Piano = (pianoLink, key, notes) => {
@@ -337,7 +341,9 @@ var updateD3Piano = (pianoLink, key, notes) => {
 // User clicks on a node, and it magically appears to the right
 var setPanelMode = (mode) => {
     panel.title = mode.name;
-    panel.chords = mode.analysis.chordsText;
+    panel.chords = mode.analysis.chords;
+    panel.chordsByTonic = mode.analysis.chordsByTonic;
+    panel.cadences = mode.analysis.cadences;
     panel.notes = mode.n;
     panel.key = mode.key;
     updateD3Panel();
@@ -346,8 +352,11 @@ var setPanelMode = (mode) => {
 // Get chords and such
 var analyzeModeForPanel = (mode) => {
     let analysis = {};
-    analysis.chords = determineChordsInMode(mode);
-    analysis.chordsText = analysis.chords.join(' ');
+
+    const res = getChordAnalysis(mode);
+    analysis.chords = res.chords;
+    analysis.chordsByTonic = res.chordsByTonic;
+    analysis.cadences = res.cadences;
 
     return analysis;
 }
@@ -636,7 +645,7 @@ var createD3SideIcons = (svg, width, height) => {
 
 // SOURCE: https://bl.ocks.org/mbostock/7555321
 // Released under the GNU General Public License, version 3.
-function wrap(text, width) {
+/*function wrap(text, width) {
     text.each(function() {
         var text = d3.select(this),
             words = text.text().split(/\s+/).reverse(),
@@ -668,4 +677,4 @@ function wrap(text, width) {
         }
 
     });
-}
+}*/

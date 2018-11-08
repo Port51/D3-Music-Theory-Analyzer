@@ -4,6 +4,34 @@
 		"selected_items":
 		[
 			[
+				"tonic",
+				"tonicChord"
+			],
+			[
+				"scor",
+				"getChordResolutionScore"
+			],
+			[
+				"chor",
+				"chordsByTonic"
+			],
+			[
+				"chords",
+				"chordsByTonic"
+			],
+			[
+				"cho",
+				"chordsByTonic"
+			],
+			[
+				"notes",
+				"notesPulling"
+			],
+			[
+				"root",
+				"rootProximityScore"
+			],
+			[
 				"type",
 				"typeAndName"
 			],
@@ -196,71 +224,20 @@
 	"buffers":
 	[
 		{
-			"contents": "NOTES\n\n\n\nIMPROVING ALGORITHM COMPLEXITY:\n\nStarting with 438,516 comparisons across all 12 keys, for all datasets\nDoing 2-step method: 70,863 comparisons (cut 83.8%)\n\nScoring algorithm:\n-\tStricter for note-wise analysis\n-\tFirst comparison: only score modes that contain the user mode root\n\n2nd iteration:\n\tSTART:\t\t\t\t\t\t\t\t\t\t[Comparisons: 434,650]\n\tCutoffs occur during algorithm:\t\t\t\t[Comparisons: 145,015]\n\tFilter layer 1 early:\t\t\t\t\t\t[Comparisons: 27,982]\n\tFilter layer 2 early:\t\t\t\t\t\t[Comparisons: 10,317]\n\nTODO:\n-\tControl: Randomness in filtering\n-\tMenu button: Reroll\n-\tMove unneeded data out of g object\n-\tNew default\n-\t\n\n\n\n\nCONTROLS:\n*\tHow set are you on these notes? (penalty for removing each = [none, 50%, 100%, multiplicative] )\n\t>\tAdding notes = minor scaling penalty, not big deal\n*\tDo you want to stick to this key? [no factor, 50%, instant disqualification]\n*\t\n*\tGraph max size\t\t||\t\tFilter style [only the best, 80/20 split of best, even distribution, only worst scores]\n\n*\t\n*\tTopology Features\n*\tInterval Topology (melodic options)\n\nSLIDERS:\n\tGas engine thingie with labels\n\tList of lights\n\n\n\n\nMethods:\n\n\tCOMPARE! (let M = # of modes stored)\n*\tStores modes in array of booleans\n*\tCompares via score function\n*\tMassive penalty if root not included from either side\n\tO(12M)\n\n\tOutput nodes, modes w/ keys\n\tLet N = # of nodes <= 12M\n\n*\tCompare each node to each other\n\tO(0.5 * N^2)\n\n\tEntire complexity = O(72M^2 + 12M)\n\n\tGRAPH!\n\tCreate force directed graph with findings\n\tSpecial attention to mystery mode\n\n\n\nCOOL STUFF:\n-\tSpecial FX when press note button...\n\t-\tHave note name fade out or something...\n\t-\tPiano key vibrates\n\nINPUT IDEA:\n\t* Allow multiple scale inputs\n\t* Start graph with them, and similarity edge between them\n\nINPUT:\n\t* Better to add or take away notes? (balance)\n\nINPUT:\n\t* Soft Parameters / Extreme Parameters - makes EVERY score value raised to certain power\n\t* Put this at the end\n\t* Labels: \"Be forgiving\" and \"Stick to parameters\"\n\nCLUSTERING IDEA:\n\tINPUT: graphDepth\n\n\t* Get entire network\n\t* Get list of interesting connections to user scale\n\t* Identical modes => network (not clustered)\n\t* Reduce to clusters based on:\n\t\t- Close scores to user scale\n\t\t- Close scores to each other\n\t* Clusters => network\n\t* Edges between clusters => network\n\t\tCutoff: (1 / graphDepth)\n\t* Modes connected to clusters => network (duplicate each, so not a mess of connections?????)\n\t\tCutoff: (2 / graphDepth)\n\t\tConnect to each other too. Not to user scale\n\t* Modes connected to those...\n\t\tCutoff: (3 / graphDepth)\n\t\tConnect to each other too. Not to user scale\n\n\n\n<!--<svg width=\"500\" height=\"360\">\n        <!-- Piano background\n        <rect x=\"0\" y=\"0\" rx=\"10\" ry=\"10\" width=\"500\" height=\"360\" style=\"fill: #203720; stroke: #405740; stroke-width:3; opacity:1.0\" />\n        <!-- Piano top\n        <rect x=\"0\" y=\"0\" rx=\"5\" ry=\"5\" width=\"500\" height=\"70\" style=\"fill: #304f30; stroke: #506f50; stroke-width:3; opacity:1.0\" />\n        <!-- Root selection circles\n        <!-- Upper part of notes\n        <rect x=\"10\" y=\"70\" rx=\"5\" ry=\"5\" width=\"20\" height=\"70\" style=\"fill: #304f30; stroke: #506f50; stroke-width:3; opacity:1.0\" />\n        <!-- Lower part of notes\n    </svg>-->\n",
 			"file": "notes.txt",
-			"file_size": 3191,
-			"file_write_time": 131853239566305663,
 			"settings":
 			{
-				"buffer_size": 3191,
+				"buffer_size": 4064,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"contents": "using System.Collections;\nusing System.Collections.Generic;\nusing UnityEngine;\n\npublic class CameraFollow : MonoBehaviour {\n    public float xOffset = -16;\n    public int zOffset = 19;\n    public Transform target;\n    Vector3 targetPos, smoothedPos;\n\tpublic float smoothSpeed = 0.125f;\n\tVector3 velocity = Vector3.one;\n\n\tvoid FixedUpdate () {\n        targetPos = new Vector3(target.position.x - xOffset, target.position.y, zOffset);\n        \n\t\tsmoothedPos = Vector3.SmoothDamp (transform.position, targetPos, ref velocity, smoothSpeed);\n\t\tsmoothedPos = new Vector3 (targetPos.x, smoothedPos.y, targetPos.z);\n\t\ttransform.position = smoothedPos;\n\t}\n\n}\n",
-			"file": "/G/Game Development/Group Game Jams/2018_9_22 Shovel Tri/Shovel-Jam-Tri/UnityFolder/Shovel Jam Tri/Assets/Scripts/CameraFollow.cs",
-			"file_size": 707,
-			"file_write_time": 131853310283500455,
+			"file": "scripts/determineChords.js",
 			"settings":
 			{
-				"buffer_size": 650,
-				"encoding": "UTF-8 with BOM",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/G/Game Development/Group Game Jams/2018_9_22 Shovel Tri/Shovel-Jam-Tri/UnityFolder/Shovel Jam Tri/Assets/Scripts/Background/Clouds/CloudLayer.cs",
-			"settings":
-			{
-				"buffer_size": 1295,
-				"encoding": "UTF-8 with BOM",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/G/Game Development/Group Game Jams/2018_9_22 Shovel Tri/Shovel-Jam-Tri/UnityFolder/Shovel Jam Tri/Assets/Scripts/Obstacles/ObstacleCollision.cs",
-			"settings":
-			{
-				"buffer_size": 1220,
-				"encoding": "UTF-8 with BOM",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/G/Game Development/Group Game Jams/2018_9_22 Shovel Tri/Shovel-Jam-Tri/UnityFolder/Shovel Jam Tri/Assets/Scripts/Player/Health.cs",
-			"settings":
-			{
-				"buffer_size": 2475,
-				"encoding": "UTF-8 with BOM",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/G/Game Development/Group Game Jams/2018_9_22 Shovel Tri/Shovel-Jam-Tri/UnityFolder/Shovel Jam Tri/Assets/Scripts/Player/Score.cs",
-			"settings":
-			{
-				"buffer_size": 2618,
-				"encoding": "UTF-8 with BOM",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/G/Game Development/Group Game Jams/2018_9_22 Shovel Tri/Shovel-Jam-Tri/UnityFolder/Shovel Jam Tri/Assets/Scripts/Obstacles/ObstacleSpawner.cs",
-			"settings":
-			{
-				"buffer_size": 8320,
-				"encoding": "UTF-8 with BOM",
+				"buffer_size": 5550,
+				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
 		},
@@ -268,7 +245,33 @@
 			"file": "scripts/d3graph.js",
 			"settings":
 			{
-				"buffer_size": 18963,
+				"buffer_size": 19263,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "scripts/controls.js",
+			"settings":
+			{
+				"buffer_size": 7925,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "templates/largePiano.html",
+			"settings":
+			{
+				"buffer_size": 11133,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "styles/styles.css",
+			"settings":
+			{
+				"buffer_size": 10993,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -314,22 +317,29 @@
 	],
 	"file_history":
 	[
+		"/G/App Development/D3-Music-Theory-Analyzer/scripts/modevis.js",
+		"/G/App Development/D3-Music-Theory-Analyzer/notes.txt",
+		"/G/App Development/D3-Music-Theory-Analyzer/scripts/dataManip.js",
+		"/G/App Development/D3-Music-Theory-Analyzer/scripts/tempData.js",
+		"/G/App Development/D3-Music-Theory-Analyzer/scripts/adaptiveSVG.js",
+		"/G/App Development/D3-Music-Theory-Analyzer/modevis.html",
+		"/G/App Development/D3-Music-Theory-Analyzer/scripts/d3graph.js",
+		"/G/Game Development/Group Game Jams/2018_9_22 Shovel Tri/Shovel-Jam-Tri/UnityFolder/Shovel Jam Tri/Assets/Scripts/Obstacles/ObstacleSpawner.cs",
+		"/G/Game Development/Group Game Jams/2018_9_22 Shovel Tri/Shovel-Jam-Tri/UnityFolder/Shovel Jam Tri/Assets/Scripts/Player/Score.cs",
+		"/G/Game Development/Group Game Jams/2018_9_22 Shovel Tri/Shovel-Jam-Tri/UnityFolder/Shovel Jam Tri/Assets/Scripts/Player/Health.cs",
+		"/G/Game Development/Group Game Jams/2018_9_22 Shovel Tri/Shovel-Jam-Tri/UnityFolder/Shovel Jam Tri/Assets/Scripts/Obstacles/ObstacleCollision.cs",
+		"/G/Game Development/Group Game Jams/2018_9_22 Shovel Tri/Shovel-Jam-Tri/UnityFolder/Shovel Jam Tri/Assets/Scripts/Background/Clouds/CloudLayer.cs",
+		"/G/Game Development/Group Game Jams/2018_9_22 Shovel Tri/Shovel-Jam-Tri/UnityFolder/Shovel Jam Tri/Assets/Scripts/CameraFollow.cs",
 		"/G/App Development/D3-Music-Theory-Analyzer/scripts/scores.js",
 		"/G/App Development/D3-Music-Theory-Analyzer/scripts/similarityAlgorithm/noteOverlap.js",
-		"/G/App Development/D3-Music-Theory-Analyzer/modevis.html",
 		"/G/App Development/D3-Music-Theory-Analyzer/scripts/similarityAlgorithm/mood.js",
 		"/G/App Development/D3-Music-Theory-Analyzer/scripts/similarityAlgorithm/roots.js",
 		"/G/App Development/D3-Music-Theory-Analyzer/scripts/similarityAlgorithm/topologyIntervals.js",
 		"/G/App Development/D3-Music-Theory-Analyzer/scripts/similarityAlgorithm/topologyRegions.js",
 		"/G/App Development/D3-Music-Theory-Analyzer/scripts/controls.js",
-		"/G/App Development/D3-Music-Theory-Analyzer/scripts/adaptiveSVG.js",
-		"/G/App Development/D3-Music-Theory-Analyzer/scripts/modevis.js",
 		"/G/App Development/D3-Music-Theory-Analyzer/scripts/graphPreProcess.js",
-		"/G/App Development/D3-Music-Theory-Analyzer/scripts/tempData.js",
-		"/G/App Development/D3-Music-Theory-Analyzer/scripts/d3graph.js",
 		"/G/App Development/D3-Music-Theory-Analyzer/templates/largePiano.html",
 		"/G/App Development/D3-Music-Theory-Analyzer/styles/styles.css",
-		"/G/App Development/D3-Music-Theory-Analyzer/scripts/dataManip.js",
 		"/G/App Development/D3-Music-Theory-Analyzer/templates/inputSimilarity.html",
 		"/G/App Development/D3-Music-Theory-Analyzer/scripts/filter.js",
 		"/G/Game Development/2018 - Enchanted Apples/Enchanted Apples/Assets/Modules/ActionEssentials/ActionSFX/ActorSFX.cs",
@@ -409,7 +419,7 @@
 	],
 	"find":
 	{
-		"height": 25.0
+		"height": 41.0
 	},
 	"find_in_files":
 	{
@@ -424,6 +434,15 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"getChordResolutionScore",
+			"updateD3Panel",
+			"analysis",
+			"chords",
+			"chordsText",
+			"analyzeModeForPanel",
+			"chords",
+			"filterIdenticalModes",
+			"runStartingGraph",
 			"userModeExtraRadius",
 			"impactRadius",
 			"createSVGPiano",
@@ -532,7 +551,7 @@
 	"groups":
 	[
 		{
-			"selected": 6,
+			"selected": 1,
 			"sheets":
 			[
 				{
@@ -541,15 +560,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 3191,
+						"buffer_size": 4064,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								620,
-								620
+								649,
+								649
 							]
 						],
 						"settings":
@@ -558,91 +577,91 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 576.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 6,
+					"stack_index": 3,
 					"type": "text"
 				},
 				{
 					"buffer": 1,
-					"file": "/G/Game Development/Group Game Jams/2018_9_22 Shovel Tri/Shovel-Jam-Tri/UnityFolder/Shovel Jam Tri/Assets/Scripts/CameraFollow.cs",
+					"file": "scripts/determineChords.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 650,
+						"buffer_size": 5550,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								321,
-								321
+								83,
+								83
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/C#/C#.sublime-syntax"
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 5,
+					"stack_index": 0,
 					"type": "text"
 				},
 				{
 					"buffer": 2,
-					"file": "/G/Game Development/Group Game Jams/2018_9_22 Shovel Tri/Shovel-Jam-Tri/UnityFolder/Shovel Jam Tri/Assets/Scripts/Background/Clouds/CloudLayer.cs",
+					"file": "scripts/d3graph.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1295,
+						"buffer_size": 19263,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								665,
-								665
+								10002,
+								10002
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/C#/C#.sublime-syntax",
-							"translate_tabs_to_spaces": false
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax"
 						},
 						"translation.x": 0.0,
-						"translation.y": 96.0,
+						"translation.y": 5227.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 4,
+					"stack_index": 1,
 					"type": "text"
 				},
 				{
 					"buffer": 3,
-					"file": "/G/Game Development/Group Game Jams/2018_9_22 Shovel Tri/Shovel-Jam-Tri/UnityFolder/Shovel Jam Tri/Assets/Scripts/Obstacles/ObstacleCollision.cs",
+					"file": "scripts/controls.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1220,
+						"buffer_size": 7925,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								362,
-								362
+								666,
+								666
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/C#/C#.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -653,120 +672,60 @@
 				},
 				{
 					"buffer": 4,
-					"file": "/G/Game Development/Group Game Jams/2018_9_22 Shovel Tri/Shovel-Jam-Tri/UnityFolder/Shovel Jam Tri/Assets/Scripts/Player/Health.cs",
+					"file": "templates/largePiano.html",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2475,
+						"buffer_size": 11133,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								5223,
+								5223
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/C#/C#.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
+							"syntax": "Packages/HTML/HTML.sublime-syntax",
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 432.0,
+						"translation.y": 863.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 4,
 					"type": "text"
 				},
 				{
 					"buffer": 5,
-					"file": "/G/Game Development/Group Game Jams/2018_9_22 Shovel Tri/Shovel-Jam-Tri/UnityFolder/Shovel Jam Tri/Assets/Scripts/Player/Score.cs",
+					"file": "styles/styles.css",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2618,
+						"buffer_size": 10993,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2497,
-								2497
+								1727,
+								1727
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/C#/C#.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
+							"syntax": "Packages/CSS/CSS.sublime-syntax",
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 814.0,
+						"translation.y": 1235.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 6,
-					"file": "/G/Game Development/Group Game Jams/2018_9_22 Shovel Tri/Shovel-Jam-Tri/UnityFolder/Shovel Jam Tri/Assets/Scripts/Obstacles/ObstacleSpawner.cs",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 8320,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								2093,
-								2093
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C#/C#.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 1262.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				},
-				{
-					"buffer": 7,
-					"file": "scripts/d3graph.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 18963,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								78,
-								78
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 7,
+					"stack_index": 5,
 					"type": "text"
 				}
 			]
