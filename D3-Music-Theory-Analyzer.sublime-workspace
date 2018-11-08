@@ -236,7 +236,7 @@
 			"file": "scripts/determineChords.js",
 			"settings":
 			{
-				"buffer_size": 5550,
+				"buffer_size": 5588,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -245,7 +245,7 @@
 			"file": "scripts/d3graph.js",
 			"settings":
 			{
-				"buffer_size": 18481,
+				"buffer_size": 19538,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -434,6 +434,8 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"for",
+			"panelLinks",
 			"getChordResolutionScore",
 			"updateD3Panel",
 			"analysis",
@@ -589,15 +591,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 5550,
+						"buffer_size": 5588,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								83,
-								83
+								2364,
+								2364
 							]
 						],
 						"settings":
@@ -607,7 +609,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 1056.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
@@ -619,15 +621,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 18481,
+						"buffer_size": 19538,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								14035,
-								14035
+								9917,
+								9917
 							]
 						],
 						"settings":
@@ -636,7 +638,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 7893.0,
+						"translation.y": 5454.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,

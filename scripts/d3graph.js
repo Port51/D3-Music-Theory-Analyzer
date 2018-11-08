@@ -365,7 +365,7 @@ var updateD3Panel = () => {
 	if (panel.cadences) {
 		let i = 0;
 		for (i = 0; i < panel.cadences.length; ++i) {
-			panelLinks.cadences[i].text(panel.cadences[i].join('  '));
+			panelLinks.cadences[i].text(panel.cadences[i]);
 		}
 		for (; i < panelLinks.cadences.length; ++i) {
 			panelLinks.cadences[i].text('');

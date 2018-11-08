@@ -8,32 +8,48 @@ var getChordAnalysis = (mode) => {
 	const res = determineChordsInMode(mode);
 	const chords = res.chords;
 	const chordsByTonic = res.chordsByTonic;
+	const chordInfoByTonic = res.chordInfoByTonic;
 
 	// Analyze cadences
 	let cadences = [];
-	const tonicChord = chordsByTonic.find((x) => { return x.tonic === mode.root; } )
-	for (let i = 0; i < chordsByTonic.length; ++i) {
-		if (chordsByTonic[i].tonic !== mode.root) {
-			// Try every chord type resolving to tonic
-			for (let j = 0; j < chordsByTonic[i].length; ++j) {
-				const testChord = chordsByTonic[i][j];
+	if (mode.key != null) {
+		const tonicChord = chords.find((x) => { return x.tonic === mode.key; } )
+		if (tonicChord != null) {
+			for (let i = 0; i < chordInfoByTonic.length; ++i) {
+				if (chordInfoByTonic[i].length > 0) {
+					if (chordInfoByTonic[i][0].tonic !== mode.key) {
+						// Try every chord type resolving to tonic
+						for (let j = 0; j < chordInfoByTonic[i].length; ++j) {
+							const testChord = chordInfoByTonic[i][j];
+							if (testChord != null) {
 
-				const score = getChordResolutionScore(testChord, tonicChord);
+								const score = getChordResolutionScore(testChord, tonicChord);
 
-				if (score > 0.0) {
-					cadences.push({ 'label': (testChord.label + " -> " + tonicChord.label), 'score': score });
+								if (score > 0.0) {
+									cadences.push({ 'label': (testChord.label + " -> " + tonicChord.label), 'score': score });
+									console.log("HIT");
+								}
+							}
+
+						}
+
+					}
 				}
-
+				
 			}
-
 		}
-	}
 
-	// Choose best cadences
-	cadences.sort((a, b) => { return a.score > b.score; });
-	if (cadences.length > 10) {
-		cadences = cadences.slice(0, 10);
+		console.log(cadences);
+
+		// Choose best cadences
+		cadences.sort((a, b) => { return a.score < b.score; });
+		if (cadences.length > 8) {
+			cadences = cadences.slice(0, 8);
+		}
+		cadences = cadences.map((x) => { return x.label; })
+
 	}
+	
 
 	return { 'chords': chords, 'chordsByTonic': chordsByTonic, 'cadences': cadences };
 }
@@ -41,6 +57,7 @@ var getChordAnalysis = (mode) => {
 // Returns a list of chord names that work with this mode
 var determineChordsInMode = (mode) => {
 	let chords = [];
+	let chordInfoByTonic = [];
 	let chordsByTonic = [];
 	for (let i = 0; i < mode.c.length; ++i) {
 		// Start from root and move upwards
@@ -54,6 +71,7 @@ var determineChordsInMode = (mode) => {
 			if (newChords.length > 0) {
 				// Push info for later analysis
 				chords.push.apply(chords, newChords);
+				chordInfoByTonic.push(newChords);
 				// Just push names for display
 				chordsByTonic.push(newChords.map((x) => { return x.label; }));
 			}
@@ -61,7 +79,7 @@ var determineChordsInMode = (mode) => {
 		}
 	}
 
-	return { 'chords': chords, 'chordsByTonic': chordsByTonic };
+	return { 'chords': chords, 'chordsByTonic': chordsByTonic, 'chordInfoByTonic': chordInfoByTonic };
 }
 
 // Returns a list of chord names starting with this note
@@ -134,7 +152,6 @@ var determineChordsForNote = (tonic, n) => {
 // Each chord = { tonic: 0-11, type: string, seventh: "m/M/-", n: [] }
 // Returns score in [0.0, 1.0] range
 var getChordResolutionScore = (a, b) => {
-
 	// Diminished chords mostly pull to I chord above them
 	// Handle them as a special case
 	if (a.type === "dim") {
@@ -214,6 +231,9 @@ var getChordResolutionScore = (a, b) => {
 		tensionScore = 1.0;
 	}
 
+	//console.log(a);
+	//console.log(isMajor + " " + hasCharacteristic + " " + notePullScore + " " + rootProximityScore + " " + tensionScore);
+
 	const score =
 		(0.334 * ((isMajor) ? 1.0 : 0.0) +
 		0.333 * ((hasCharacteristic) ? 1.0 : 0.0) +
@@ -221,5 +241,6 @@ var getChordResolutionScore = (a, b) => {
 			(0.8 + 0.2 * rootProximityScore) *
 			(0.8 + 0.2 * tensionScore);
 
+	return score;
 }
 
