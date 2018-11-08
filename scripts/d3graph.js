@@ -289,28 +289,14 @@ var createD3Graph = (graph, defaultSelection) => {
 }
 
 var resetD3Graph = (svg) => {
-    svg.empty();
-    svg.selectAll("*").remove();
-    svg.append("rect").attr("x", "0").attr("y", "0").attr("width", "100%").attr("height", "100%").style("fill", "#000000");
+	svg.empty();
+	svg.selectAll("*").remove();
+	svg.append("rect").attr("x", "0").attr("y", "0").attr("width", "100%").attr("height", "100%").style("fill", "#000000");
 }
 
 var updateD3UserPianoIcon = () => {
 	// Display notes correctly
 	//updateD3Piano(activeSVG.piano, parseInt(rootSel), keySel);
-}
-
-var updateD3Panel = () => {
-	console.log(panel.chordsByTonic);
-    //panelLinks.title.text(panel.title);
-    //panelLinks.chords.text(panel.chords.join(' '));
-    //panelLinks.chords.text(panel.chords.join(" "))
-        //.call(wrap, panelLinks.bounds.wi - 5);
-
-    // Display notes
-    if (panel.notes) {
-        updateD3Piano(panelLinks.piano, panel.key, panel.notes);
-    }
-
 }
 
 var updateD3Piano = (pianoLink, key, notes) => {
@@ -340,180 +326,194 @@ var updateD3Piano = (pianoLink, key, notes) => {
 
 // User clicks on a node, and it magically appears to the right
 var setPanelMode = (mode) => {
-    panel.title = mode.name;
-    panel.chords = mode.analysis.chords;
-    panel.chordsByTonic = mode.analysis.chordsByTonic;
-    panel.cadences = mode.analysis.cadences;
-    panel.notes = mode.n;
-    panel.key = mode.key;
-    updateD3Panel();
+	panel.title = mode.name;
+	panel.chords = mode.analysis.chords;
+	panel.chordsByTonic = mode.analysis.chordsByTonic;
+	panel.cadences = mode.analysis.cadences;
+	panel.notes = mode.n;
+	panel.key = mode.key;
+	updateD3Panel();
 }
 
 // Get chords and such
 var analyzeModeForPanel = (mode) => {
-    let analysis = {};
+	let analysis = {};
 
-    const res = getChordAnalysis(mode);
-    analysis.chords = res.chords;
-    analysis.chordsByTonic = res.chordsByTonic;
-    analysis.cadences = res.cadences;
+	const res = getChordAnalysis(mode);
+	analysis.chords = res.chords;
+	analysis.chordsByTonic = res.chordsByTonic;
+	analysis.cadences = res.cadences;
 
-    return analysis;
+	return analysis;
+}
+
+var updateD3Panel = () => {
+	console.log(panel.chordsByTonic);
+	//panelLinks.title.text(panel.title);
+	//panelLinks.chords.text(panel.chords.join(' '));
+	//panelLinks.chords.text(panel.chords.join(" "))
+		//.call(wrap, panelLinks.bounds.wi - 5);
+
+	// Display notes
+	if (panel.notes) {
+		updateD3Piano(panelLinks.piano, panel.key, panel.notes);
+	}
+
 }
 
 var createSVGPiano = (svg, panelRect, rectBorderCol, startY, internalPadding, pianoHei, vertPadding, scale) => {
-    let piano = {};
-    const wi = (panelRect.wi - 20) * scale;
-    internalPadding *= scale;
+	let piano = {};
+	const wi = (panelRect.wi - 20) * scale;
+	internalPadding *= scale;
 
-    piano.base = svg.append("rect")
-        .attr("x", panelRect.x0 + 10)
-        .attr("y", panelRect.y0 + startY)
-        .attr("rx", 3 * scale)
-        .attr("ry", 3 * scale)
-        .attr("width", wi)
-        .attr("height", pianoHei * scale)
-        .style("fill", "rgba(17, 51, 136, 0.3)")
-        .style("stroke", rectBorderCol)
-        .style("pointer-events", "none");
+	piano.base = svg.append("rect")
+		.attr("x", panelRect.x0 + 10)
+		.attr("y", panelRect.y0 + startY)
+		.attr("rx", 3 * scale)
+		.attr("ry", 3 * scale)
+		.attr("width", wi)
+		.attr("height", pianoHei * scale)
+		.style("fill", "rgba(17, 51, 136, 0.3)")
+		.style("stroke", rectBorderCol)
+		.style("pointer-events", "none");
 
-    // Key data
-    piano.key = [];
-    for (let i = 0; i < 12; ++i)
-        piano.key.push(null);
+	// Key data
+	piano.key = [];
+	for (let i = 0; i < 12; ++i)
+		piano.key.push(null);
 
-    // Add white keys
-    const whiteWi = (wi - internalPadding * 2) / 7;
-    for (let i = 0; i < 7; ++i) {
+	// Add white keys
+	const whiteWi = (wi - internalPadding * 2) / 7;
+	for (let i = 0; i < 7; ++i) {
 
-        // Map to noteID
-        let noteID = 0;
-        if (i == 0) noteID = 0;
-        else if (i == 1) noteID = 2;
-        else if (i == 2) noteID = 4;
-        else if (i == 3) noteID = 5;
-        else if (i == 4) noteID = 7;
-        else if (i == 5) noteID = 9;
-        else if (i == 6) noteID = 11;
+		// Map to noteID
+		let noteID = 0;
+		if (i == 0) noteID = 0;
+		else if (i == 1) noteID = 2;
+		else if (i == 2) noteID = 4;
+		else if (i == 3) noteID = 5;
+		else if (i == 4) noteID = 7;
+		else if (i == 5) noteID = 9;
+		else if (i == 6) noteID = 11;
 
-        piano.key[noteID] = svg.append("rect")
-            .attr("x", panelRect.x0 + 10 + internalPadding + whiteWi * i)
-            .attr("y", panelRect.y0 + startY + 5 * scale + vertPadding)
-            .attr("rx", 2 * scale)
-            .attr("ry", 2 * scale)
-            .attr("width", whiteWi - 1)
-            .attr("height", (pianoHei - 10) * scale - vertPadding * 2)
-            .style("fill", "#eeeeee")
-            .style("stroke", "#101010")
-            .style("pointer-events", "none");
-    }
+		piano.key[noteID] = svg.append("rect")
+			.attr("x", panelRect.x0 + 10 + internalPadding + whiteWi * i)
+			.attr("y", panelRect.y0 + startY + 5 * scale + vertPadding)
+			.attr("rx", 2 * scale)
+			.attr("ry", 2 * scale)
+			.attr("width", whiteWi - 1)
+			.attr("height", (pianoHei - 10) * scale - vertPadding * 2)
+			.style("fill", "#eeeeee")
+			.style("stroke", "#101010")
+			.style("pointer-events", "none");
+	}
 
-    // Add black keys over top
-    const blackWi = whiteWi * 0.75;
-    for (let i = 0; i < 5; ++i) {
+	// Add black keys over top
+	const blackWi = whiteWi * 0.75;
+	for (let i = 0; i < 5; ++i) {
 
-        // Map to noteID
-        let noteID = 0;
-        let nearestWhite = 0;
-        if (i == 0) {
-            noteID = 1;
-            nearestWhite = 0;
-        }
-        else if (i == 1) {
-            noteID = 3;
-            nearestWhite = 1;
-        }
-        else if (i == 2) {
-            noteID = 6;
-            nearestWhite = 3;
-        }
-        else if (i == 3) {
-            noteID = 8;
-            nearestWhite = 4;
-        }
-        else if (i == 4) {
-            noteID = 10;
-            nearestWhite = 5;
-        }
+		// Map to noteID
+		let noteID = 0;
+		let nearestWhite = 0;
+		if (i == 0) {
+			noteID = 1;
+			nearestWhite = 0;
+		}
+		else if (i == 1) {
+			noteID = 3;
+			nearestWhite = 1;
+		}
+		else if (i == 2) {
+			noteID = 6;
+			nearestWhite = 3;
+		}
+		else if (i == 3) {
+			noteID = 8;
+			nearestWhite = 4;
+		}
+		else if (i == 4) {
+			noteID = 10;
+			nearestWhite = 5;
+		}
 
-        piano.key[noteID] = svg.append("rect")
-            .attr("x", panelRect.x0 + 10 + internalPadding + whiteWi * nearestWhite + whiteWi * 0.5 + (whiteWi - blackWi) * 0.5)
-            .attr("y", panelRect.y0 + startY + 5 * scale + vertPadding)
-            .attr("rx", 2 * scale)
-            .attr("ry", 2 * scale)
-            .attr("width", blackWi)
-            .attr("height", (pianoHei - 40) * scale - vertPadding)
-            .style("fill", "#222222")
-            .style("stroke", "#101010")
-            .style("pointer-events", "none");
-    }
+		piano.key[noteID] = svg.append("rect")
+			.attr("x", panelRect.x0 + 10 + internalPadding + whiteWi * nearestWhite + whiteWi * 0.5 + (whiteWi - blackWi) * 0.5)
+			.attr("y", panelRect.y0 + startY + 5 * scale + vertPadding)
+			.attr("rx", 2 * scale)
+			.attr("ry", 2 * scale)
+			.attr("width", blackWi)
+			.attr("height", (pianoHei - 40) * scale - vertPadding)
+			.style("fill", "#222222")
+			.style("stroke", "#101010")
+			.style("pointer-events", "none");
+	}
 
-    return piano;
+	return piano;
 }
 
 // Add panel showing selected mode
 // TODO: Move styles to CSS
 var createD3Panel = (svg, width, height) => {
-    // Settings
-    const padding = 10;
-    const panelRect = {
-        wi: 220 * 1.2,
-        hei: height * 0.75,
-        };
-    panelRect.x0 = width - panelRect.wi - padding;
-    panelRect.y0 = padding;
-    panelRect.x1 = panelRect.x0 + panelRect.wi;
-    panelRect.y1 = panelRect.y0 + panelRect.hei;
-    panelLinks.bounds = panelRect;
+	// Settings
+	const padding = 10;
+	const panelRect = {
+		wi: 220 * 1.2,
+		hei: height * 0.75,
+		};
+	panelRect.x0 = width - panelRect.wi - padding;
+	panelRect.y0 = padding;
+	panelRect.x1 = panelRect.x0 + panelRect.wi;
+	panelRect.y1 = panelRect.y0 + panelRect.hei;
+	panelLinks.bounds = panelRect;
 
-    panelLinks.rect = svg.append("rect")
-        .attr("x", panelRect.x0)
-        .attr("y", panelRect.y0)
-        .attr("rx", 5)
-        .attr("ry", 5)
-        .attr("width", panelRect.wi)
-        .attr("height", panelRect.hei)
-        .style("stroke", "#fff")
-        .style("fill", "rgba(85, 119, 204, 0.11)");
+	panelLinks.rect = svg.append("rect")
+		.attr("x", panelRect.x0)
+		.attr("y", panelRect.y0)
+		.attr("rx", 5)
+		.attr("ry", 5)
+		.attr("width", panelRect.wi)
+		.attr("height", panelRect.hei)
+		.style("stroke", "#fff")
+		.style("fill", "rgba(85, 119, 204, 0.11)");
 
-    // MODE NAME
-    panelLinks.title = svg.append("text")
-        .attr("x", panelRect.x0 + panelRect.wi * 0.5)
-        .attr("y", panelRect.y0 + 20)
-        .attr("text-anchor", "middle")
-        .style("font-size", "18px")
-        .style("font-weight", "bold")
-        .style("fill", "#fff");
+	// MODE NAME
+	panelLinks.title = svg.append("text")
+		.attr("x", panelRect.x0 + panelRect.wi * 0.5)
+		.attr("y", panelRect.y0 + 20)
+		.attr("text-anchor", "middle")
+		.style("font-size", "18px")
+		.style("font-weight", "bold")
+		.style("fill", "#fff");
 
-    // MODE PIANO
-    const pianoHei = 90;
-    panelLinks.piano = createSVGPiano(svg, panelRect, "#ccc", 45, 20, pianoHei - 10, 0, 1.0);
+	// MODE PIANO
+	const pianoHei = 90;
+	panelLinks.piano = createSVGPiano(svg, panelRect, "#ccc", 45, 20, pianoHei - 10, 0, 1.0);
 
-    // MODE CHORDS
-    svg.append("text")
-        .attr("x", panelRect.x0 + 10)
-        .attr("y", panelRect.y0 + pianoHei + 65)
-        .attr("text-anchor", "start")
-        .style("font-size", "16px")
-        .style("font-weight", "bold")
-        .style("fill", "#fff")
-        .text("CHORDS:");
-    panelLinks.chords = svg.append("text")
-        .attr("x", panelRect.x0 + 10)
-        .attr("y", panelRect.y0 + pianoHei + 85)
-        .attr("dy", 0)
-        .attr("transform", "translate(" + (panelRect.x0 + 15).toString() + ",0)")
-        .attr("text-anchor", "start")
-        .attr("xml:space", "preserve")
-        .style("font-size", "14px")
-        .style("fill", "#fff");
+	// MODE CHORDS
+	svg.append("text")
+		.attr("x", panelRect.x0 + 10)
+		.attr("y", panelRect.y0 + pianoHei + 65)
+		.attr("text-anchor", "start")
+		.style("font-size", "16px")
+		.style("font-weight", "bold")
+		.style("fill", "#fff")
+		.text("CHORDS:");
+	panelLinks.chords = svg.append("text")
+		.attr("x", panelRect.x0 + 10)
+		.attr("y", panelRect.y0 + pianoHei + 85)
+		.attr("dy", 0)
+		.attr("transform", "translate(" + (panelRect.x0 + 15).toString() + ",0)")
+		.attr("text-anchor", "start")
+		.attr("xml:space", "preserve")
+		.style("font-size", "14px")
+		.style("fill", "#fff");
 
-    // Default info
-    panel.title = "";
-    panel.chords = "";
+	// Default info
+	panel.title = "";
+	panel.chords = "";
 
-    // Display
-    updateD3Panel();
+	// Display
+	updateD3Panel();
 
 }
 
@@ -646,35 +646,35 @@ var createD3SideIcons = (svg, width, height) => {
 // SOURCE: https://bl.ocks.org/mbostock/7555321
 // Released under the GNU General Public License, version 3.
 /*function wrap(text, width) {
-    text.each(function() {
-        var text = d3.select(this),
-            words = text.text().split(/\s+/).reverse(),
-            word,
-            line = [],
-            lineNumber = 0,
-            lineHeight = 1.35, // ems
-            y = text.attr("y"),
-            dy = parseFloat(text.attr("dy")),
-            tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em");
-        words.shift();
+	text.each(function() {
+		var text = d3.select(this),
+			words = text.text().split(/\s+/).reverse(),
+			word,
+			line = [],
+			lineNumber = 0,
+			lineHeight = 1.35, // ems
+			y = text.attr("y"),
+			dy = parseFloat(text.attr("dy")),
+			tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em");
+		words.shift();
 
-        while (word = words.pop()) {
-            if (word != 'NL,' && word != 'NL' || 1 == 1) {
-                line.push(word);
-                tspan.text(line.join("   "));
-            }
+		while (word = words.pop()) {
+			if (word != 'NL,' && word != 'NL' || 1 == 1) {
+				line.push(word);
+				tspan.text(line.join("   "));
+			}
 
-            if (tspan.node().getComputedTextLength() > width || word == 'NL,' || word == 'NL') {
-                line.pop();
-                tspan.text(line.join("   "));
-                if (word != 'NL,' && word != 'NL') {
-                    line = [word];
-                } else {
-                    line = [];
-                }
-                tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
-            }
-        }
+			if (tspan.node().getComputedTextLength() > width || word == 'NL,' || word == 'NL') {
+				line.pop();
+				tspan.text(line.join("   "));
+				if (word != 'NL,' && word != 'NL') {
+					line = [word];
+				} else {
+					line = [];
+				}
+				tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
+			}
+		}
 
-    });
+	});
 }*/
