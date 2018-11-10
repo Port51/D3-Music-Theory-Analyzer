@@ -10,6 +10,8 @@ var getChordAnalysis = (mode) => {
 	const chordsByTonic = res.chordsByTonic;
 	const chordInfoByTonic = res.chordInfoByTonic;
 
+	console.log(chords);
+
 	// Analyze cadences
 	let cadences = [];
 	if (mode.key != null) {
@@ -27,7 +29,6 @@ var getChordAnalysis = (mode) => {
 
 								if (score > 0.0) {
 									cadences.push({ 'label': (testChord.label + " -> " + tonicChord.label), 'score': score });
-									console.log("HIT");
 								}
 							}
 
@@ -38,8 +39,6 @@ var getChordAnalysis = (mode) => {
 				
 			}
 		}
-
-		console.log(cadences);
 
 		// Choose best cadences
 		cadences.sort((a, b) => { return a.score < b.score; });
@@ -59,12 +58,13 @@ var determineChordsInMode = (mode) => {
 	let chords = [];
 	let chordInfoByTonic = [];
 	let chordsByTonic = [];
+	console.log(mode.c);
 	for (let i = 0; i < mode.c.length; ++i) {
 		// Start from root and move upwards
 		// So we don't have to sort afterwards
 		const tonic = (mode.key + i) % mode.c.length;
 
-		if (mode.n[i]) {
+		if (mode.c[i]) {
 			// Add all chords for this note
 			const newChords = determineChordsForNote(tonic, mode.n);
 

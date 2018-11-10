@@ -4,6 +4,18 @@
 		"selected_items":
 		[
 			[
+				"cho",
+				"chordInfoByTonic"
+			],
+			[
+				"chord",
+				"chordInfoByTonic"
+			],
+			[
+				"notes",
+				"notesWithChords"
+			],
+			[
 				"tonic",
 				"tonicChord"
 			],
@@ -18,14 +30,6 @@
 			[
 				"chords",
 				"chordsByTonic"
-			],
-			[
-				"cho",
-				"chordsByTonic"
-			],
-			[
-				"notes",
-				"notesPulling"
 			],
 			[
 				"root",
@@ -236,7 +240,7 @@
 			"file": "scripts/determineChords.js",
 			"settings":
 			{
-				"buffer_size": 5588,
+				"buffer_size": 6199,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -245,7 +249,7 @@
 			"file": "scripts/d3graph.js",
 			"settings":
 			{
-				"buffer_size": 19538,
+				"buffer_size": 19527,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -553,7 +557,7 @@
 	"groups":
 	[
 		{
-			"selected": 2,
+			"selected": 1,
 			"sheets":
 			[
 				{
@@ -579,7 +583,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 576.0,
+						"translation.y": 512.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 3,
@@ -591,15 +595,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 5588,
+						"buffer_size": 6199,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2364,
-								2364
+								1665,
+								1665
 							]
 						],
 						"settings":
@@ -609,10 +613,10 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 1056.0,
+						"translation.y": 808.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 0,
 					"type": "text"
 				},
 				{
@@ -621,15 +625,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 19538,
+						"buffer_size": 19527,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								9917,
-								9917
+								10280,
+								10280
 							]
 						],
 						"settings":
@@ -638,10 +642,10 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 5454.0,
+						"translation.y": 8393.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 2,
 					"type": "text"
 				},
 				{
@@ -670,7 +674,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 1,
 					"type": "text"
 				},
 				{
