@@ -202,17 +202,17 @@ DATA.getTempData = (datasets) => {
 	if (testType == 0) {
 		str = getData_ForTesting();
 	} else {
-		if (datasets[0]) str += getData_MedievalModes();
-		if (datasets[1]) str += getData_ModifiedMedievalModes();
-		if (datasets[2]) str += getData_Composer();
-		if (datasets[3]) str += getData_Blues();
-		if (datasets[4]) str += getData_Experimental();
-		if (datasets[5]) str += getData_World1();
-		if (datasets[6]) str += getData_World2();
-		if (datasets[7]) str += getData_TwoChord();
-		if (datasets[8]) str += getData_FamousChords();
-		if (datasets[9]) str += getData_FilmThemes();
-		if (datasets[10]) str += getData_Invented();
+		if (datasets[0]) str += DATA.getData_MedievalModes();
+		if (datasets[1]) str += DATA.getData_ModifiedMedievalModes();
+		if (datasets[2]) str += DATA.getData_Composer();
+		if (datasets[3]) str += DATA.getData_Blues();
+		if (datasets[4]) str += DATA.getData_Experimental();
+		if (datasets[5]) str += DATA.getData_World1();
+		if (datasets[6]) str += DATA.getData_World2();
+		if (datasets[7]) str += DATA.getData_TwoChord();
+		if (datasets[8]) str += DATA.getData_FamousChords();
+		if (datasets[9]) str += DATA.getData_FilmThemes();
+		if (datasets[10]) str += DATA.getData_Invented();
 	}
 
 	const spl = str.split(/\[|\]/);

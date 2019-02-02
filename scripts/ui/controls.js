@@ -13,12 +13,12 @@ var allowD3Sticky = true;
 
 var validateInput = (v) => {
 	v = parseFloat(v);
-	switch (v) {
-		case null:
+	switch (true) {
+		case (v == null):
 			return 0.0;
-		case is < 0:
+		case (v < 0):
 			return 0.0;
-		case is > 100:
+		case (v > 100):
 			return 1.0;
 		default:
 			return (v / 100.0);
@@ -58,12 +58,14 @@ var createSettings = () => {
 
 // Create mode based on notes selected by user
 var createUserMode = () => {
+	const key = rootSel;
+	const label = "New Scale";
 	let mode = {
-		"label": "New Scale",
+		"label": label,
 		"isUser": true,
 		"type": 0,
-		"key": rootSel,
-		"name": getNoteName(mode.key) + ' ' + mode.label,
+		"key": key,
+		"name": getNoteName(key) + ' ' + label,
 		"n": [],
 		"c": [],
 		"aliases": [],
@@ -97,7 +99,7 @@ var setAllowD3Sticky = (v) => {
 }
 
 var setModalActive = (id, active) => {
-	console.log("Show modal #" + id);
+	console.log("Show modal window #" + id);
 	const modal = document.getElementById("modal-" + id.toString());
 
 	if (id == 0) {

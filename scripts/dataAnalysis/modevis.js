@@ -28,7 +28,7 @@ ALGO.runSimulation = () => {
 		const graph = convertAnalysisToGraph(algoResults.modes, algoResults.pairs, 2, { svgWidth: width, svgHeight: height, 'settings': settings } );
 		
 		// DEBUG: This is for saving default graphs as JSON objects
-		console.log(JSON.stringify(graph));
+		//console.log(JSON.stringify(graph));
 
 		createD3Graph(graph, exa.name);
 
@@ -187,11 +187,14 @@ ALGO.getTwoLevelSimilarityPairs = (modes, weightFactors, maxNodes, cutoffs) => {
 		}
 	}
 
+	// DEBUG: Output for algorithm testing
+	/*
 	console.log(M);
 	console.log(pairs.layer0_1.length);
 	console.log(pairs.layer1.length);
 	console.log(pairs.layer1_2.length);
 	console.log(pairs.layer2.length);
+	*/
 
 	console.log("COMPLETED! Calculated " + comparisonsRun.toString() + " comparisons total");
 
