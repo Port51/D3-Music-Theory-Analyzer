@@ -537,7 +537,7 @@ var createD3Panel = (svg, width, height) => {
 		.style("font-size", "16px")
 		.style("font-weight", "bold")
 		.style("fill", "#fff")
-		.text("CADENCES:");
+		.text("SUGGESTED CADENCES:");
 	
 	// Chord text
 	panelLinks.cadences = []

@@ -25,10 +25,8 @@ var validateInput = (v) => {
 	}
 }
 
-// Create settings
-var createSettings = () => {
-	// Get input datasets
-	const datasets = [
+var getSelectedDatasets = () => {
+	return [
 		document.getElementById("chk_incl_0").checked,
 		document.getElementById("chk_incl_1").checked,
 		document.getElementById("chk_incl_2").checked,
@@ -41,7 +39,10 @@ var createSettings = () => {
 		document.getElementById("chk_incl_9").checked,
 		document.getElementById("chk_incl_10").checked,
 	];
-	
+}
+
+// Create settings
+var createSettings = (datasets) => {
 	const weightFactors = {
 		"allowMoreNotes": 1.0 - validateInput(document.getElementById("allowMoreNotes").value),
 		"allowDifferentRoots": validateInput(document.getElementById("allowDifferentRoots").value),
@@ -49,7 +50,7 @@ var createSettings = () => {
 	};
 
 	return {
-		"datasets":  			datasets,
+		"datasets":  			getSelectedDatasets(),
 		"weightFactors": 		weightFactors,
 		"displayNumResults": 	Math.ceil(3 + 20 * validateInput(document.getElementById("displayNumResults").value)),
 	}
@@ -236,25 +237,24 @@ var setKeyColors = () => {
 	}
 }
 
-var buttonRunFromSettings = () => {
-	console.log("buttonRunFromSettings");
-
-	// Close modal window
-	setModalActive(1, false);
-
-	// Run analysis
-	ALGO.runSimulation();
-
-}
-
 var buttonRunFromPiano = () => {
 	console.log("Button click: buttonRunFromPiano");
+
+	const settings = createSettings();
 
 	// Check for any notes selected
 	let numNotes = 0;
 	for (let i = 0; i < 12; ++i) {
 		if (keySel[i]) {
 			numNotes++;
+		}
+	}
+
+	// Check for any data sources selected
+	let numDataSources = 0;
+	for (let i = 0; i < 12; ++i) {
+		if (settings.datasets[i]) {
+			numDataSources++;
 		}
 	}
 
@@ -267,6 +267,8 @@ var buttonRunFromPiano = () => {
 		validInput = confirm("You haven't selected any notes. Are you sure you want to continue?");
 	} else if (!rootIncluded) {
 		validInput = confirm("Your root (yellow circle) is not included in the scale. Are you sure you want to continue?");
+	} else if (numDataSources == 0) {
+		validInput = confirm("You haven't selected any data sources. Are you sure you want to continue?");
 	}
 
 	if (validInput) {
@@ -274,7 +276,7 @@ var buttonRunFromPiano = () => {
 		setModalActive(0, false);
 
 		// Run analysis
-		ALGO.runSimulation();
+		ALGO.runSimulation(settings);
 	}
 
 }
@@ -284,7 +286,6 @@ var setInstructionsInputFunctions = () => {
 }
 
 var setSliderInputFunctions = () => {
-	$("#runFromSettings").click(buttonRunFromSettings);
 	$("#cancelSettings").click(buttonCancelSettings);
 	$("#setSlidersZero").click(slidersZero);
 	$("#setSlidersMid").click(slidersMid);

@@ -4,13 +4,11 @@ var ALGO = ALGO || {};
 
 const NOTES_IN_SCALE = 12;
 
-ALGO.runSimulation = () => {
+ALGO.runSimulation = (settings) => {
 	console.log("Starting algorithm...")
 
 	// Trigger collapse settings
 	$('#settings-collapse').trigger('click');
-
-	const settings = createSettings();
 	const exa = createUserMode();
 
 	const useGraph = true;
