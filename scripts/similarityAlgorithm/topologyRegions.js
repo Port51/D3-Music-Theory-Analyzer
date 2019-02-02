@@ -15,10 +15,8 @@ SCORES.getTopoRange = (mode, min, max) => {
 		} else {
 			numMissing++;
 		}
-
 	}
 	return { 'key': key, 'numMissing': numMissing, 'hasNone': !hasAny };
-
 }
 
 SCORES.getTopoDifference = (r1, r2, testNum, scoreIfHasAll, scoreIfHasNone) => {
@@ -34,9 +32,7 @@ SCORES.getTopoDifference = (r1, r2, testNum, scoreIfHasAll, scoreIfHasNone) => {
 
 	} else {
 		return 0.0;
-
 	}
-	
 }
 
 // scoreIfDoubled => multiplier to situations like "both 3rds vs minor 3rd"

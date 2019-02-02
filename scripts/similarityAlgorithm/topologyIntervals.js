@@ -15,13 +15,9 @@ SCORES.getTopoIntervalCounts = (mode, factorRootEmphasis) => {
 				const weightThis = (n === 0) ? factorRootEmphasis : 1.0;
 				numPossible += weightThis;
 				allPossible += weightThis;
-
 			}
-
 		}
-
 		intervals.push( { 'name': iNames[i - 1], 'count': numPossible } );
-
 	}
 
 	if (allPossible === 0) {
@@ -31,7 +27,6 @@ SCORES.getTopoIntervalCounts = (mode, factorRootEmphasis) => {
 	// Compute percentages
 	for (let i = 0; i < intervals.length; ++i) {
 		intervals[i].perc = intervals[i].count / allPossible;
-
 	}
 
 	return intervals;
@@ -51,7 +46,6 @@ SCORES.getTopoMelodyScore = (a, b, isComparedToUser, factorRootEmphasis, factorE
 		if (d < 0) d *= -1;
 
 		sumDiff += d;
-
 	}
 
 	const avgDiff = sumDiff / intervals[0].length;
@@ -66,9 +60,6 @@ SCORES.getTopoMelodyScore = (a, b, isComparedToUser, factorRootEmphasis, factorE
 
 	const smallest = (c1 < c2) ? c1 : c2;
 	const lowerImpact = (smallest < 6) ? Math.min(1.0, multForEachUnder6 * (6 - smallest)) : 0.0;
-	//if (c1 > 10 || c2 > 10) {
-	//	console.log(lowerImpact + " from " + smallest + " with " + multForEachUnder7);
-	//}
 
 	return score * (1.0 - lowerImpact) + lowerImpact;
 

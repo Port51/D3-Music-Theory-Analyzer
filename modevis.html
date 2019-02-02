@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<title>Music Mode Analysis</title>
+		<title>Music Mode Buddy</title>
 
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -10,8 +10,8 @@
 		<meta name="author" content="">
 
 		<!-- Load jQuery and D3 -->
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-		<script src="https://d3js.org/d3.v4.min.js"></script>
+		<script src="lib/jquery3.3.1.min.js"></script>
+		<script src="lib/d3.v4.min.js"></script>
 
 		<!-- Load algorithm score factors -->
 		<script src="scripts/similarityAlgorithm/topologyRegions.js"></script>
@@ -19,25 +19,26 @@
 		<script src="scripts/similarityAlgorithm/noteOverlap.js"></script>
 		<script src="scripts/similarityAlgorithm/mood.js"></script>
 
+		<!-- Load temporary data (front-end app) -->
+		<script src="scripts/data/tempData.js"></script>
+
 		<!-- Load control scripts -->
-		<script src="scripts/tempData.js"></script>
-		<script src="scripts/dataManip.js"></script>
-		<script src="scripts/stats.js"></script>
-		<script src="scripts/scores.js"></script>
-		<script src="scripts/modevis.js"></script>
+		<script src="scripts/dataAnalysis/dataManip.js"></script>
+		<script src="scripts/dataAnalysis/stats.js"></script>
+		<script src="scripts/dataAnalysis/scores.js"></script>
+		<script src="scripts/dataAnalysis/modevis.js"></script>
 
 		<!-- Load graph display scripts -->
-		<script src="scripts/filter.js"></script>
-		<script src="scripts/graphPreProcess.js"></script>
-		<script src="scripts/d3graph.js"></script>
-		<script src="scripts/adaptiveSVG.js"></script>
-		<script src="scripts/determineChords.js"></script>
-		<script src="scripts/textManip.js"></script>
+		<script src="scripts/d3graph/filter.js"></script>
+		<script src="scripts/d3graph/graphPreProcess.js"></script>
+		<script src="scripts/d3graph/d3graph.js"></script>
+		<script src="scripts/d3graph/adaptiveSVG.js"></script>
+		<script src="scripts/d3graph/determineChords.js"></script>
+		<script src="scripts/d3graph/textManip.js"></script>
 
 		<!-- Load UI scripts -->
-		<script src="scripts/controls.js"></script>
-		<script src="scripts/loadTemplates.js"></script>
-
+		<script src="scripts/ui/controls.js"></script>
+		<script src="scripts/ui/loadTemplates.js"></script>
 
 		<!-- Load styles -->
 		<link rel="stylesheet" type="text/css" href="styles/styles.css">
@@ -46,12 +47,14 @@
 
 	<body>
 
+		<!-- Modal window -->
 		<div id="modal-0" class="modal-window">
 			<div class="modal-content modal-0">
 				<span class="loadTemplate" value="templates/largePiano.html" onload="pianoButtons"></span>
 			</div>
 		</div>
 
+		<!-- D3 graph -->
 		<div class="svg-container">
 			<svg class="svg-content" preserveAspectRatio="xMidYMid meet" viewBox="0 0 1440 675"><rect width="100%" height="100%" fill="black"></rect></svg>
 		</div>

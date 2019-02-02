@@ -78,11 +78,8 @@ SCORES.getScore = (a, b, weightFactors) => {
 		if (debugPrintAll) {
 			//console.log(a.name + " compared to " + b.name + " = disqualified with penalty = " + diffPenalty);
 		}
-
 		return 0.0;
-
 	}
-	
 }
 
 SCORES.avgScores = (a, b) => {

@@ -21,7 +21,10 @@ SCORES.getNoteDifferencePenalty = (a, b, isComparedToUser, loseFactor, loseLenie
 		}
 	}
 
-	const penalty = (Math.max(0.0, notesLost - loseLenience) * loseFactor) + (Math.pow(Math.max(0.0, notesGained - gainLenience), 1.5) * gainFactor);
+	const penalty =
+		(Math.max(0.0, notesLost - loseLenience) * loseFactor)
+		+ (Math.pow(Math.max(0.0, notesGained - gainLenience), 1.5)
+		* gainFactor);
 	
 	return penalty;
 

@@ -13,10 +13,16 @@ var allowD3Sticky = true;
 
 var validateInput = (v) => {
 	v = parseFloat(v);
-	if (v == null) return 0.0;
-	else if (v < 0) return 0.0;
-	else if (v > 100) return 1.0;
-	else return (v / 100.0);
+	switch (v) {
+		case null:
+			return 0.0;
+		case is < 0:
+			return 0.0;
+		case is > 100:
+			return 1.0;
+		default:
+			return (v / 100.0);
+	}
 }
 
 // Create settings
@@ -45,32 +51,31 @@ var createSettings = () => {
 	return {
 		"datasets":  			datasets,
 		"weightFactors": 		weightFactors,
-		"displayNumResults": 		Math.ceil(3 + 20 * validateInput(document.getElementById("displayNumResults").value)),
+		"displayNumResults": 	Math.ceil(3 + 20 * validateInput(document.getElementById("displayNumResults").value)),
 	}
 
 }
 
 // Create mode based on notes selected by user
 var createUserMode = () => {
-	let mode = {};
-	mode.label = "New Scale";
-	mode.isUser = true;
-	mode.type = 0;
-	mode.key = rootSel;
-	mode.name = getNoteName(mode.key) + ' ' + mode.label;
-
-	mode.n = [];
+	let mode = {
+		"label": "New Scale",
+		"isUser": true,
+		"type": 0,
+		"key": rootSel,
+		"name": getNoteName(mode.key) + ' ' + mode.label,
+		"n": [],
+		"c": [],
+		"aliases": [],
+	};
 	for (let i = 0; i < 12; ++i) {
 		mode.n.push(keySel[i]);
 	}
 
 	// Un-transpose to static version
-	mode.c = [];
 	for (let i = 0; i < 12; ++i) {
 		mode.c.push(mode.n[(i + mode.key) % 12]);
 	}
-
-	mode.aliases = [];
 
 	return mode;
 }
@@ -173,7 +178,10 @@ var hoverKeyOff = function() {
 
 var resetAnimation = (elem, animName) => {
 	elem.each(function() {
-		$(this).removeClass(animName).width($(this).width()).addClass(animName);
+		// Remove previous animations
+		$(this).removeClass("jitterKey").removeClass("jitterKeySlow");
+		// Add new animation
+		$(this).width($(this).width()).addClass(animName);
 	});
 
 }
@@ -203,11 +211,14 @@ var setKeyColors = () => {
 			// Change color
 			if (keySel[i]) {
 				$(".pianoKey[value=" + i + "]").attr('highlight', 'true');
-				// Trigger animation
+				// Trigger selected animation
 				resetAnimation($('.pianoKey[value="' + i + '"]'), "jitterKey");
 			}
-			else
+			else {
 				$(".pianoKey[value=" + i + "]").attr('highlight', 'false');
+				// Trigger unselected animation
+				resetAnimation($('.pianoKey[value="' + i + '"]'), "jitterKeySlow");
+			}
 
 			// Remember
 			keySelVis[i] = keySel[i];
@@ -265,12 +276,6 @@ var buttonRunFromPiano = () => {
 	}
 
 }
-
-// Quick slider manip functions
-var slidersZero = () => { const rememberFilter = $("#filterResultMax").val(); $(".slider").val("0"); $("#filterResultMax").val(rememberFilter); }
-var slidersMid = () => { const rememberFilter = $("#filterResultMax").val(); $(".slider").val("50"); $("#filterResultMax").val(rememberFilter); }
-var slidersDefault = () => { const rememberFilter = $("#filterResultMax").val(); $(".slider").each(function() { $(this).val($(this).attr('def')) }); $("#filterResultMax").val(rememberFilter); }
-var slidersFull = () => { const rememberFilter = $("#filterResultMax").val(); $(".slider").val("100"); $("#filterResultMax").val(rememberFilter); }
 
 var setInstructionsInputFunctions = () => {
 	$("#closeInstructions").click(buttonCloseInstructions);

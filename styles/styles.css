@@ -498,16 +498,34 @@ input[type=range]:focus::-ms-fill-upper {
 	left: 0px;
 	top: 0px;
 	animation-name: jitterTheKey;
-	animation-duration: 0.34s;
+	animation-duration: 0.25s;
 	animation-iteration-count: 2;
+}
+
+.jitterKeySlow {
+	position: relative;
+	left: 0px;
+	top: 0px;
+	animation-name: jitterTheKeySlow;
+	animation-duration: 0.4s;
+	animation-iteration-count: 1;
 }
 
 @keyframes jitterTheKey {
 	0% { left: 0px; top 0px; }
-	15% { left: 3px; top -3px; }
-	33% { left: -3px; top -5px; }
-	66% { left: 3px; top 2px; }
-	85% { left: -3px; top 6px; }
+	15% { left: 2px; top -3px; }
+	33% { left: -2px; top -4px; }
+	66% { left: 1px; top 1px; }
+	85% { left: -1px; top -1px; }
+	100% { left: 0px; top 0px; }
+}
+
+@keyframes jitterTheKeySlow {
+	0% { left: 0px; top 0px; }
+	15% { left: 2px; top -1px; }
+	33% { left: -2px; top -2px; }
+	66% { left: 2px; top 1px; }
+	85% { left: -2px; top 5px; }
 	100% { left: 0px; top 0px; }
 }
 

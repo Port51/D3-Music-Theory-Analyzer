@@ -39,7 +39,7 @@ ALGO.runSimulation = () => {
 ALGO.runAnalysis = (settings, exa) => {
 
 	// Construct list of modes
-	let modes = getTempData(settings.datasets);
+	let modes = DATA.getTempData(settings.datasets);
 	
 	modes = filterIdenticalModes(modes);
 
