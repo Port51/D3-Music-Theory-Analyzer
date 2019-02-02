@@ -202,6 +202,12 @@ tr.inputHoverRow:hover {
 	margin: auto;
 }
 
+.svg-piano-key {
+	fill: rgba(17, 51, 136, 0.3);
+	-webkit-transition: fill 1s ease;
+	transition: fill 1s ease;
+}
+
 
 
 

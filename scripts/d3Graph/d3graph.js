@@ -410,6 +410,7 @@ var createSVGPiano = (svg, panelRect, rectBorderCol, startY, internalPadding, pi
 		else if (i == 6) noteID = 11;
 
 		piano.key[noteID] = svg.append("rect")
+			.attr("class", "svg-piano-key")
 			.attr("x", panelRect.x0 + 10 + internalPadding + whiteWi * i)
 			.attr("y", panelRect.y0 + startY + 5 * scale + vertPadding)
 			.attr("rx", 2 * scale)
@@ -450,6 +451,7 @@ var createSVGPiano = (svg, panelRect, rectBorderCol, startY, internalPadding, pi
 		}
 
 		piano.key[noteID] = svg.append("rect")
+			.attr("class", "svg-piano-key")
 			.attr("x", panelRect.x0 + 10 + internalPadding + whiteWi * nearestWhite + whiteWi * 0.5 + (whiteWi - blackWi) * 0.5)
 			.attr("y", panelRect.y0 + startY + 5 * scale + vertPadding)
 			.attr("rx", 2 * scale)
