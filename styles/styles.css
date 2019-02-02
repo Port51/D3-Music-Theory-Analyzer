@@ -62,6 +62,19 @@ tr.inputHoverRow:hover {
 	transition: background: 0.25s;
 }
 
+.credits-container {
+	color: black;
+	padding-left: 15px;
+}
+
+.credits {
+	color: black;
+}
+
+.credits a {
+	color: blue;
+}
+
 .svg-container {
 	display: inline-block;
 	position: relative;
