@@ -663,6 +663,19 @@ var createButton = (svg, sideRect, id, label) => {
 	return newButton;
 }
 
+var drawInstructionsLine = (svg, text, x, y, lineNum) => {
+	svg.append("text")
+		.attr("x", x)
+		.attr("y", y + 19 * lineNum)
+		.attr("text-anchor", "start")
+		.style("font-size", "15px")
+		.style("font-weight", "normal")
+		.style("fill", "#fff")
+		.style("pointer-events", "none")
+		.style("opacity", 0.7)
+		.text(text);
+}
+
 // Add panel showing selected mode
 // TODO: Move styles to CSS
 var createD3SideIcons = (svg, width, height) => {
@@ -681,9 +694,17 @@ var createD3SideIcons = (svg, width, height) => {
 
 	// Reset buttons
 	activeSVG.buttons = [
-		createButton(svg, sideRect, 0, "Select Notes"),
+		createButton(svg, sideRect, 0, "Select Piano Notes"),
 		createButton(svg, sideRect, 1, "Pose Graph: ON"),
 	];
+
+	// Instructions text
+	const instructionsStartX = sideRect.x0 + 4;
+	const instructionsStartY = sideRect.y0 + (65 * scaleAll);
+	drawInstructionsLine(svg, "Click nodes for more info", instructionsStartX, instructionsStartY, 0);
+	drawInstructionsLine(svg, "Drag nodes to pose graph", instructionsStartX, instructionsStartY + 5, 1);
+	drawInstructionsLine(svg, "Press 'Select Piano Notes'", instructionsStartX, instructionsStartY + 10, 2);
+	drawInstructionsLine(svg, "to choose algorithm inputs.", instructionsStartX, instructionsStartY + 10, 3);
 
 }
 
