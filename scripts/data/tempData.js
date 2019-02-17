@@ -172,6 +172,7 @@ DATA.getData_FilmThemes = () => {
 
 DATA.getData_Invented = () => {
 	return "4,Samara Scale		[## #  ## # #]" +
+	"4,Malicious Minor			[# ## ####  #]" +
 	"";
 }
 
@@ -196,26 +197,26 @@ DATA.getData_ForTesting = () => {
 
 // Get modes from test data
 DATA.getTempData = (datasets) => {
-	let str = "";
+	let dataString = "";
 
 	const testType = 1;
 	if (testType == 0) {
-		str = getData_ForTesting();
+		dataString = getData_ForTesting();
 	} else {
-		if (datasets[0]) str += DATA.getData_MedievalModes();
-		if (datasets[1]) str += DATA.getData_ModifiedMedievalModes();
-		if (datasets[2]) str += DATA.getData_Composer();
-		if (datasets[3]) str += DATA.getData_Blues();
-		if (datasets[4]) str += DATA.getData_Experimental();
-		if (datasets[5]) str += DATA.getData_World1();
-		if (datasets[6]) str += DATA.getData_World2();
-		if (datasets[7]) str += DATA.getData_TwoChord();
-		if (datasets[8]) str += DATA.getData_FamousChords();
-		if (datasets[9]) str += DATA.getData_FilmThemes();
-		if (datasets[10]) str += DATA.getData_Invented();
+		if (datasets[0]) dataString += DATA.getData_MedievalModes();
+		if (datasets[1]) dataString += DATA.getData_ModifiedMedievalModes();
+		if (datasets[2]) dataString += DATA.getData_Composer();
+		if (datasets[3]) dataString += DATA.getData_Blues();
+		if (datasets[4]) dataString += DATA.getData_Experimental();
+		if (datasets[5]) dataString += DATA.getData_World1();
+		if (datasets[6]) dataString += DATA.getData_World2();
+		if (datasets[7]) dataString += DATA.getData_TwoChord();
+		if (datasets[8]) dataString += DATA.getData_FamousChords();
+		if (datasets[9]) dataString += DATA.getData_FilmThemes();
+		if (datasets[10]) dataString += DATA.getData_Invented();
 	}
 
-	const spl = str.split(/\[|\]/);
+	const spl = dataString.split(/\[|\]/);
 
 	let i = 0;
 	let modes = [];
@@ -291,6 +292,9 @@ DATA.randomMode = () => {
 		}
 		else if (rr < 220) {
 			i += 4;
+		}
+		else if (rr < 235) {
+			i += (1 + Math.random() * 11);
 		}
 		else {
 			i += 2;

@@ -189,6 +189,28 @@ var resetAnimation = (elem, animName) => {
 
 }
 
+var addChord = () => {
+	const chordRoot = parseInt($("#chordInputRoot").val());
+	const chordAdditions = ("0" + $("#chordInputType").val() + $("#chordInputSeventh").val());
+
+	console.log(chordAdditions);
+
+	for (let i = 0; i < chordAdditions.length; ++i) {
+		let interval = 0;
+		if (chordAdditions.charAt(i) == 'B') {
+			interval = 11;
+		} else if (chordAdditions.charAt(i) == 'A') {
+			interval = 10;
+		} else {
+			interval = parseInt(chordAdditions.charAt(i));
+		}
+		
+		// Select the note
+		keySel[(chordRoot + interval) % 12] = true;
+	}
+	setKeyColors();
+}
+
 // Update colors for root selection
 var setRootSelectColors = () => {
 	for (let i = 0; i < 12; ++i) {
@@ -301,6 +323,7 @@ var setPianoInputFunctions = () => {
 	$(".rootSelect").each(function() {
 		$(this).click({ note: parseInt($(this).attr('value')) }, clickRootSelect);
 	});
+	$("#addChord").click(addChord);
 
 	// Special handling
 	$("body").on('click', '#resetScale', buttonResetScale);
