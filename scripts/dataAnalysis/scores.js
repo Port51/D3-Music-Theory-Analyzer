@@ -8,7 +8,6 @@ var numScoresPrinted1 = 0;
 	Calculates score from 0.0 to 1.0 based on how similar two modes are
 */
 SCORES.getScore = (a, b, weightFactors) => {
-	//const debugPrintAll = (a.isUser == b.isUser && (a.label == b.label && a.label == "Chromatic Scale")) && true;
 	const debugPrintAll = (a.isUser != b.isUser) && false;
 	const isComparedToUser = (a.isUser || b.isUser);
 
@@ -23,10 +22,10 @@ SCORES.getScore = (a, b, weightFactors) => {
 	// SETTINGS: [losePenalty, loseLenience, gainPenalty, gainLenience]
 	//	*	Generally good: [0.4, 0.2, 0.1, 0.5]
 	//	*	Fill in scale: [1.0, 0.0, 0.0, 0.5]
-	const debugUseDiffPenalty = false;
+	const debugUseDiffPenalty = true;
 	const settings1 = [0.375 + 0.625 * openness, 0.2 * (1.0 - openness), 0.1 * (1.0 - openness), 0.5];
 
-	const diffPenalty = (debugUseDiffPenalty) ? getNoteDifferencePenalty(a, b, isComparedToUser, settings1[0], settings1[1], settings1[2], settings1[3]) : 0.0;
+	const diffPenalty = (debugUseDiffPenalty) ? SCORES.getNoteDifferencePenalty(a, b, isComparedToUser, settings1[0], settings1[1], settings1[2], settings1[3]) : 0.0;
 	const rootPenalty = (a.key !== b.key) ? (1.0 - weightFactors.allowDifferentRoots) : 0.0;
 	const initialScore = saturate(1.0 - diffPenalty - rootPenalty);
 
